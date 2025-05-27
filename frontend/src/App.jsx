@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import PianoVisualizer from './routes/PianoVisualizer.jsx';
+import Home from './routes/Home.jsx';
 
-import PianoVisualizer from './components/PianoVisualizer.jsx'
 function App() {
-
   return (
-    <>
-      <PianoVisualizer />
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/piano" element={<PianoVisualizer />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,40 @@
+services:
+
+  # flask-server:
+  #   build: ./flask-server
+  #   container_name: flask-server
+  #   restart: always
+  #   expose:
+  #     - "8000"
+  #   volumes:
+  #     - ./flask-server:/app
+  #   environment:
+  #     FLASK_ENV: development
+  #     DB_HOST: mariadb
+  #     DB_USER: user
+  #     DB_PASSWORD: password
+  #     DB_NAME: mydb
+  #   networks:
+  #     - x_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./frontend/dist:/app/dist
+      - ./nginx/prod.conf:/etc/nginx/conf.d/prod.conf
+      - ./certs/vps:/etc/nginx/ssl
+    networks:
+      - x_network
+
+networks:
+  x_network:
+    name: x_network 
+    driver: bridge
+  
+
+
