@@ -17,7 +17,6 @@ export default function PianoKeys({ width, height }) {
             style={{
                 height,
                 width,
-
             }}
         >
             {/* White Keys */}

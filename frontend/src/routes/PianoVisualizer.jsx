@@ -53,7 +53,7 @@ export default function PianoVisualizer() {
 
     return (
         <div id="piano-app">
-            <input type="file" id="select-midi" accept=".mid" onChange={handleFileChange} />
+            <input type="file" id="select-midi" accept=".mid,.midi,audio/midi,audio/x-midi" onChange={handleFileChange} />
             <PianoKeys width={canvasWidth} height={pianoHeight} />
             <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} />
         </div>

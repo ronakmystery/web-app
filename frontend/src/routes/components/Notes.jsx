@@ -31,7 +31,6 @@ export default function Notes({ notes, width, scrollSpeed }) {
             id="piano-notes"
             style={{
                 height: scrollableHeight,
-                width: width,
             }}
         >
             {notes.map((note, i) => {
