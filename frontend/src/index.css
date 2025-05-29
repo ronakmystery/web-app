@@ -5,7 +5,7 @@ body {
 
 #piano-app {
   position: relative;
-    padding-top: 200px;
+  padding-top: 200px;
 
 }
 
@@ -13,7 +13,7 @@ body {
   display: flex;
   height: 100px;
   position: fixed;
-  bottom: 0;
+  bottom: 100px;
   z-index: 100;
   opacity: .5;
   overflow: hidden;
@@ -27,14 +27,30 @@ body {
 
 }
 
-#play-notes{
-  position: fixed;top:0;right: 0;margin: 20px;
+#play-notes {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 20px;
   z-index: 100;
 }
 
-#select-midi{
+#select-midi {
+
+}
+
+#piano-controls {
+  color: black;
   position: fixed;
-  margin: 20px;
-  top:0;left: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  background: white;
+  height: 100px;
   z-index: 100;
+  justify-content: center;
+  button{
+    margin: 10px;
+  }
 }

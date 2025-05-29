@@ -26,6 +26,16 @@ export default function Notes({ notes, width, scrollSpeed }) {
         }
     }, [notes]);
 
+    function noteColor(isB, track) {
+        if (track === 1) {
+            // Left hand: Blue palette
+            return isB ? "#1565C0" : "#42A5F5";
+        } else {
+            // Right hand: Green palette
+            return isB ? "#2E7D32" : "#66BB6A";
+        }
+    }
+
     return (
         <div
             id="piano-notes"
@@ -53,7 +63,7 @@ export default function Notes({ notes, width, scrollSpeed }) {
                             top: y,
                             width: noteWidth,
                             height: h,
-                            backgroundColor: isB ? "#2E7D32" : "#66BB6A",
+                            backgroundColor: noteColor(isB, note?.track),
                             borderRadius: 10,
                             zIndex: isB ? 2 : 1,
                         }}

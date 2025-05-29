@@ -59,7 +59,7 @@ export default function PianoKeys({ width, height }) {
                                     position: "absolute",
                                     left,
                                     width: whiteKeyWidth * 0.6,
-                                    height: height * 0.6,
+                                    height: height * 0.5,
                                     backgroundColor: "black",
                                     borderBottomLeftRadius: 4,
                                     borderBottomRightRadius: 4,
