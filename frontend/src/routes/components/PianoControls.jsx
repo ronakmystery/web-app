@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Midi } from "@tonejs/midi";
 
-export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes }) {
+export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes,setHighlightHeight }) {
 
     const parseMidi = (midi) => {
-        console.log("Track count:", midi.tracks.length);
+
+    let savedScrollSpeed = localStorage.getItem("scrollSpeed");
 
         const allNotes = [];
         midi.tracks.forEach((track, trackIndex) => {
@@ -19,6 +20,11 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
         });
 
         setNotes(allNotes);
+
+        
+        setScrollSpeed(parseInt(savedScrollSpeed) || 100);
+
+
     };
 
 
@@ -54,6 +60,14 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
                 <button onClick={() => setScrollSpeed((s) => s + 10)}>➕ </button>
                 <button onClick={() => setScrollSpeed((s) => Math.max(10, s - 10))}>➖  </button>
             </div>
+
+            <div>
+                🔍
+                <button onClick={() => setHighlightHeight((s) => s + 10)}>➕ </button>
+                <button onClick={() => setHighlightHeight((s) => Math.max(10, s - 10))}>➖  </button>
+            </div>
+
+        
 
             <input type="file" id="select-midi"
                 accept=".mid,.midi,audio/midi"

@@ -40,7 +40,7 @@ export default function Notes({ notes, width, scrollSpeed }) {
         <div
             id="piano-notes"
             style={{
-                height: scrollableHeight,
+                height: scrollableHeight
             }}
         >
             {notes.map((note, i) => {

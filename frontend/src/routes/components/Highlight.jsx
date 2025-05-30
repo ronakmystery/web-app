@@ -1,0 +1,26 @@
+import React from "react";
+
+export default function Highlight({ keyHeight, height }) {
+  const style = {
+    position: "fixed",
+    bottom: 120 + keyHeight,
+    height,
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+  };
+
+  const blockStyle = {
+    flex: 1,
+    backgroundColor: "rgba(255, 255, 0, 0.3)",
+    borderBottom: "1px solid gold",
+  };
+
+  return (
+    <div id="highlight" style={style}>
+      <div style={blockStyle} />
+      <div style={blockStyle} />
+      <div style={blockStyle} />
+    </div>
+  );
+}
