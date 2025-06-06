@@ -27,6 +27,7 @@ export default function PianoKeys({ width, height }) {
                         const left = getWhiteIndex(midi) * whiteKeyWidth;
                         keys.push(
                             <div
+                                className="white-key"
                                 key={`white-${midi}`}
                                 style={{
                                     position: "absolute",
@@ -54,6 +55,7 @@ export default function PianoKeys({ width, height }) {
                         const left = whiteIndex * whiteKeyWidth - whiteKeyWidth * 0.3;
                         keys.push(
                             <div
+                                className="black-key"
                                 key={`black-${midi}`}
                                 style={{
                                     position: "absolute",

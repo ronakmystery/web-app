@@ -36,6 +36,27 @@ export default function Notes({ notes, width, scrollSpeed }) {
         }
     }
 
+    useEffect(() => {
+        if (window.innerWidth < 400) return;
+
+        const saveScroll = () => {
+            localStorage.setItem("pianoScrollY", window.scrollY.toString());
+        };
+
+        window.addEventListener("scroll", saveScroll);
+        return () => window.removeEventListener("scroll", saveScroll);
+    }, []);
+
+
+    useEffect(() => {
+        if (notes.length) {
+            const saved = localStorage.getItem("pianoScrollY");
+            const y = saved ? parseInt(saved) : document.body.scrollHeight;
+            window.scrollTo({ top: y, behavior: "auto" });
+        }
+    }, [notes]);
+
+
     return (
         <div
             id="piano-notes"
@@ -56,6 +77,7 @@ export default function Notes({ notes, width, scrollSpeed }) {
 
                 return (
                     <div
+                        className="piano-note"
                         key={i}
                         style={{
                             position: "absolute",

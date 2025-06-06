@@ -1,10 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  base: './',
   server: {
-    host: true, // 👈 or use '0.0.0.0'
-    port: 5173, // or any port you want
-  },
-})
+    watch: {
+      usePolling: true, // Enables polling to detect file changes
+    },
+    cors: true, 
+    allowedHosts: true, 
+    headers: {
+      "Access-Control-Allow-Origin": "*", //  Ensures CORS works across all origins
+    },
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: true,
+  }
+  
+});

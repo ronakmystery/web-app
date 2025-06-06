@@ -1,3 +1,9 @@
+:root {
+  --shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 3px 6px rgba(0, 0, 0, .23);
+  --inset-shadow: #000 1px 1px 3px 0 inset;
+}
+
+
 body {
   margin: 0;
   padding: 0;
@@ -13,10 +19,14 @@ body {
   display: flex;
   height: 100px;
   position: fixed;
-  bottom: 100px;
+  bottom: 0px;
   z-index: 100;
   opacity: .5;
   overflow: hidden;
+
+  .black-key{
+    box-shadow: var(--shadow);
+  }
 }
 
 #piano-notes {
@@ -24,6 +34,11 @@ body {
   overflow-y: scroll;
   padding-bottom: 200px;
   position: relative;
+
+  .piano-note{
+    box-shadow: var(--shadow) ;
+  }
+  
 
 }
 
@@ -37,20 +52,36 @@ body {
 
 
 #piano-controls {
+    box-shadow: var(--shadow);
   color: black;
   position: fixed;
-  bottom: 0;
-  left: 0;
+  top: 0;
+  right: 0;
   display: flex;
   background: white;
   height: 100px;
   z-index: 100;
-  button{
+  width: 20%;
+  display: flow;
+  bottom: 0;
+  padding: 10px;
+  height: 100vh;
+  z-index: 200;
+  background: white;
+
+  button {
     font-size: 10px;
     margin: 10px;
   }
 }
 
-#highlight{
+#highlight {
   width: 100%;
+}
+
+
+@media (max-width: 400px) {
+  #piano-controls {
+    display: none;
+  }
 }

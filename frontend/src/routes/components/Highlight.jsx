@@ -3,7 +3,7 @@ import React from "react";
 export default function Highlight({ keyHeight, height }) {
   const style = {
     position: "fixed",
-    bottom: 120 + keyHeight,
+    bottom:keyHeight,
     height,
     width: "100%",
     display: "flex",
@@ -13,7 +13,7 @@ export default function Highlight({ keyHeight, height }) {
   const blockStyle = {
     flex: 1,
     backgroundColor: "rgba(255, 255, 0, 0.3)",
-    borderBottom: "1px solid gold",
+    border: "1px solid gold",
   };
 
   return (

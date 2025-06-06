@@ -5,11 +5,31 @@ import PianoControls from "./components/PianoControls";
 import Highlight from "./components/Highlight";
 
 export default function PianoVisualizer() {
+
+    let initialWidth = window.innerWidth < 400
+        ? window.innerWidth
+        : window.innerWidth * 0.8;
+
     const [notes, setNotes] = useState([]);
-    const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
+    const [canvasWidth, setCanvasWidth] = useState(initialWidth);
     const [pianoHeight, setPianoHeight] = useState(60);
     const [scrollSpeed, setScrollSpeed] = useState(40);
     const [highlightHeight, setHighlightHeight] = useState(230);
+
+    
+    useEffect(() => {
+        const update = () => {
+            const width = window.innerWidth < 400
+                ? window.innerWidth
+                : window.innerWidth * 0.8;
+            setCanvasWidth(width);
+        };
+
+        window.addEventListener("resize", update);
+        update(); // ensure it's correct on first load too
+        return () => window.removeEventListener("resize", update);
+    }, []);
+
 
     useEffect(() => {
         const savedHeight = localStorage.getItem("pianoHeight");
@@ -33,19 +53,13 @@ export default function PianoVisualizer() {
     usePersistSetting("pianoHeight", pianoHeight);
     usePersistSetting("highlightHeight", highlightHeight);
 
-    useEffect(() => {
-        const update = () => setCanvasWidth(window.innerWidth);
-        window.addEventListener("resize", update);
-        return () => window.removeEventListener("resize", update);
-    }, []);
 
 
 
     return (
         <div id="piano-app">
-            <Highlight keyHeight={pianoHeight} height={highlightHeight} />
-            <PianoKeys width={canvasWidth} height={pianoHeight} />
-            <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} />
+
+
 
             <PianoControls
                 pianoHeight={pianoHeight}
@@ -55,6 +69,13 @@ export default function PianoVisualizer() {
                 setNotes={setNotes}
                 setHighlightHeight={setHighlightHeight}
             />
+
+
+            <div id="piano-canvas">
+                <Highlight keyHeight={pianoHeight} height={highlightHeight} />
+                <PianoKeys width={canvasWidth} height={pianoHeight} />
+                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} />
+            </div>
 
 
         </div>
