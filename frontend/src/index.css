@@ -79,6 +79,12 @@ body {
   width: 100%;
 }
 
+#select-midi{
+  overflow: scroll;
+  height: 200px;
+  box-shadow: var(--inset-shadow);
+}
+
 
 @media (max-width: 400px) {
   #piano-controls {

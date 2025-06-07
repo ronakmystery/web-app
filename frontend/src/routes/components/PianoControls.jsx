@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Midi } from "@tonejs/midi";
+import SelectMidi from "./SelectMidi";
 
-export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes,setHighlightHeight }) {
+export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes, setHighlightHeight }) {
 
     const parseMidi = (midi) => {
 
-    let savedScrollSpeed = localStorage.getItem("scrollSpeed");
+        let savedScrollSpeed = localStorage.getItem("scrollSpeed");
 
         const allNotes = [];
         midi.tracks.forEach((track, trackIndex) => {
@@ -21,22 +22,23 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
 
         setNotes(allNotes);
 
-        
+
         setScrollSpeed(parseInt(savedScrollSpeed) || 100);
 
 
     };
 
+    const loadMidi = async (path) => {
+        const res = await fetch(path);
+        const buffer = await res.arrayBuffer();
+        const midi = new Midi(buffer);
+        parseMidi(midi);
+    };
 
     // ✅ Load default MIDI on mount
     useEffect(() => {
-        const loadDefault = async () => {
-            const res = await fetch("/n1.mid");
-            const buffer = await res.arrayBuffer();
-            const midi = new Midi(buffer);
-            parseMidi(midi);
-        };
-        loadDefault();
+
+        loadMidi("/midis/chopin/N1.mid");
     }, []);
 
     // ✅ Handle custom file
@@ -67,11 +69,13 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
                 <button onClick={() => setHighlightHeight((s) => Math.max(10, s - 10))}>➖  </button>
             </div>
 
-        
 
-            <input type="file" id="select-midi"
+
+            <input type="file" id="upload-midi"
                 accept=".mid,.midi,audio/midi"
                 onChange={handleFileChange} />
+
+            <SelectMidi parseMidi={parseMidi} loadMidi={loadMidi} />
         </div>
     );
 }
