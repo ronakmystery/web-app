@@ -4,6 +4,9 @@ import SelectMidi from "./SelectMidi";
 
 export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes, setHighlightHeight }) {
 
+    const [selectedMidiPath, setSelectedMidiPath] = useState("/midis/chopin/N1.mid");
+
+
     const parseMidi = (midi) => {
 
         let savedScrollSpeed = localStorage.getItem("scrollSpeed");
@@ -33,13 +36,15 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
         const buffer = await res.arrayBuffer();
         const midi = new Midi(buffer);
         parseMidi(midi);
+        setSelectedMidiPath(path);
+        localStorage.setItem("selectedMidiPath", path);
     };
 
-    // ✅ Load default MIDI on mount
     useEffect(() => {
-
-        loadMidi("/midis/chopin/N1.mid");
+        const saved = localStorage.getItem("selectedMidiPath");
+        loadMidi(saved || "/midis/chopin/N1.mid");
     }, []);
+
 
     // ✅ Handle custom file
     const handleFileChange = async (e) => {
@@ -75,7 +80,12 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
                 accept=".mid,.midi,audio/midi"
                 onChange={handleFileChange} />
 
-            <SelectMidi parseMidi={parseMidi} loadMidi={loadMidi} />
+            <SelectMidi
+                parseMidi={parseMidi}
+                loadMidi={loadMidi}
+                selectedMidiPath={selectedMidiPath}
+            />
+
         </div>
     );
 }

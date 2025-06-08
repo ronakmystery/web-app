@@ -16,12 +16,11 @@ body {
 }
 
 #piano-keys {
+     border-top: 2px solid #D32F2F;
+
   display: flex;
-  height: 100px;
   position: fixed;
   bottom: 0px;
-  z-index: 100;
-  opacity: .5;
   overflow: hidden;
 
   .black-key{
@@ -76,18 +75,27 @@ body {
 }
 
 #highlight {
-  width: 100%;
+    position: fixed;
+    width: 100%;
+    display: flex;
 }
 
 #select-midi{
   overflow: scroll;
-  height: 200px;
+  height: 100px;
   box-shadow: var(--inset-shadow);
+  padding:10px 20px;
 }
 
+#selected-midi{
+  background: red;
+}
 
 @media (max-width: 400px) {
   #piano-controls {
+    display: none;
+  }
+  #highlight{
     display: none;
   }
 }

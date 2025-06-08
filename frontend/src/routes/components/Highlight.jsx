@@ -2,11 +2,8 @@ import React from "react";
 
 export default function Highlight({ keyHeight, height }) {
   const style = {
-    position: "fixed",
     bottom:keyHeight,
     height,
-    width: "100%",
-    display: "flex",
     flexDirection: "column",
   };
 

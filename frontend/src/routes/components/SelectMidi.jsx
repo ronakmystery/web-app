@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 
-export default function SelectMidi({ parseMidi, loadMidi }) {
+export default function SelectMidi({ parseMidi, loadMidi ,selectedMidiPath}) {
     const [collection, setCollection] = useState(null);
 
     useEffect(() => {
@@ -22,10 +22,13 @@ export default function SelectMidi({ parseMidi, loadMidi }) {
                 Object.entries(collection).map(([composer, files]) => (
                     <div key={composer}>
                         <h3>{composer.charAt(0).toUpperCase() + composer.slice(1)}</h3>
-                        {files.map((item, i) => {
+                        {files.sort((a,b)=>a.path -b.path).map((item, i) => {
                             const fileName = item.path.split("/").pop().replace(".mid", "").replace("_", " ");
                             return (
-                                <button key={i} onClick={() => loadMidi(item.path)}>
+                                <button key={i} onClick={() => loadMidi(item.path)}
+                                    id={`${item.path === selectedMidiPath ? "selected-midi" : ""}`}
+
+                                >
                                     🎵 {fileName}
                                 </button>
                             );
