@@ -5,39 +5,21 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 
-async function registerServiceWorker() {
-  if (!('serviceWorker' in navigator)) return;
 
-  try {
-    const registration = await navigator.serviceWorker.register("/sw.js", {
-      updateViaCache: "none",
-    });
+import { registerSW } from 'virtual:pwa-register';
 
-    // 🔄 Force check for new version
-    registration.update();
+const updateSW = registerSW({
+  onNeedRefresh() {
+    if (confirm("🔄 New version available. Reload now?")) {
+      updateSW(true);
+    }
+  },
+  onOfflineReady() {
+    console.log("✅ App ready to work offline");
+  },
+});
 
-    // 📦 Handle update found
-    registration.onupdatefound = () => {
-      const newWorker = registration.installing;
-      if (!newWorker) return;
 
-      newWorker.onstatechange = () => {
-        if (
-          newWorker.state === "installed" &&
-          navigator.serviceWorker.controller
-        ) {
-          // 🚨 Update is ready, ask user to reload
-          if (confirm("🔄 A new version is available. Reload now?")) {
-            window.location.reload();
-          }
-        }
-      };
-    };
-  } catch (err) {
-    console.error("❌ Service Worker registration failed:", err);
-  }
-}
-registerServiceWorker();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
