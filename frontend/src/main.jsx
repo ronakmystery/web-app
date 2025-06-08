@@ -11,7 +11,7 @@ async function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
 
   try {
-    const registration = await navigator.serviceWorker.register("/sw.js", {
+    const registration = await navigator.serviceWorker.register("/sw2.js", {
       updateViaCache: "none"
     });
     console.log("✅ Service Worker Registered!", registration);
