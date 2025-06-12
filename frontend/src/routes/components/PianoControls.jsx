@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Midi } from "@tonejs/midi";
 import SelectMidi from "./SelectMidi";
 
-export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes, setHighlightHeight }) {
+export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes, setHighlightHeight,audioRef }) {
 
     const [selectedMidiPath, setSelectedMidiPath] = useState("/midis/chopin/N1.mid");
 
@@ -57,6 +57,11 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
 
     return (
         <div id="piano-controls">
+
+                  <audio 
+                  ref={audioRef}
+                  src={selectedMidiPath.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
+
             <div>
                 🎹
                 <button onClick={() => setPianoHeight((h) => h + 20)}>➕ </button>

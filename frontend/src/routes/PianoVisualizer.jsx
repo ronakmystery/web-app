@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import PianoKeys from "./components/PianoKeys";
 import Notes from "./components/Notes";
 import PianoControls from "./components/PianoControls";
@@ -16,7 +16,8 @@ export default function PianoVisualizer() {
     const [scrollSpeed, setScrollSpeed] = useState(40);
     const [highlightHeight, setHighlightHeight] = useState(230);
 
-    
+
+
     useEffect(() => {
         const update = () => {
             const width = window.innerWidth < 400
@@ -54,6 +55,24 @@ export default function PianoVisualizer() {
     usePersistSetting("highlightHeight", highlightHeight);
 
 
+    const audioRef = useRef(null);
+
+    let setCurrentTime = (time) => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        audio.pause();            // ⏹️ Stop current playback
+        audio.currentTime = time; // ⏱️ Seek to new time
+        audio.play();             // ▶️ Start playback
+
+        // ⏳ Stop after 2 seconds
+        setTimeout(() => {
+            audio.pause();
+        }, 2000);
+    };
+
+
+
 
 
     return (
@@ -68,13 +87,15 @@ export default function PianoVisualizer() {
                 setScrollSpeed={setScrollSpeed}
                 setNotes={setNotes}
                 setHighlightHeight={setHighlightHeight}
+                audioRef={audioRef}
+
             />
 
 
             <div id="piano-canvas">
                 <Highlight keyHeight={pianoHeight} height={highlightHeight} />
                 <PianoKeys width={canvasWidth} height={pianoHeight} />
-                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} />
+                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} setCurrentTime={setCurrentTime} />
             </div>
 
 

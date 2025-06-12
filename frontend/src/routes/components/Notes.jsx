@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function Notes({ notes, width, scrollSpeed }) {
+export default function Notes({ notes, width, scrollSpeed,setCurrentTime}) {
     const whiteKeyCount = 52;
     const whiteKeyWidth = width / whiteKeyCount;
 
@@ -77,6 +77,9 @@ export default function Notes({ notes, width, scrollSpeed }) {
 
                 return (
                     <div
+                    onClick={()=>{
+                       setCurrentTime(note.time+note.duration/2);
+                    }}
                         className="piano-note"
                         key={i}
                         style={{
