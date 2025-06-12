@@ -1,27 +1,14 @@
-const CACHE_NAME = "v3";
-const FILES_TO_CACHE = ["/", "/index.html", "/logo.png"];
+const CACHE_NAME = "v3.1.0"; // Increment this to force update
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(FILES_TO_CACHE);
-    })
-  );
+  self.skipWaiting(); // Immediately activate
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
-    )
-  );
-  return self.clients.claim();
+  clients.claim(); // Take control right away
 });
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request);
-    })
-  );
+  // 🚫 No caching — always go to network
+  event.respondWith(fetch(event.request));
 });
