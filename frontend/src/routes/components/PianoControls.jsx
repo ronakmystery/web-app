@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Midi } from "@tonejs/midi";
 import SelectMidi from "./SelectMidi";
 
-export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes, setHighlightHeight,audioRef }) {
+export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed, setScrollSpeed, setNotes, setHighlightHeight, audioRef }) {
 
     const [selectedMidiPath, setSelectedMidiPath] = useState("/midis/chopin/N1.mid");
 
@@ -58,26 +58,27 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
     return (
         <div id="piano-controls">
 
-                  <audio 
-                  ref={audioRef}
-                  src={selectedMidiPath.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
+            <audio
+            style={{ display: "none" }}
+                ref={audioRef}
+                src={selectedMidiPath.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
 
             <div>
                 🎹
-                <button onClick={() => setPianoHeight((h) => h + 20)}>➕ </button>
-                <button onClick={() => setPianoHeight((h) => Math.max(20, h - 20))}>➖ </button>
+                <button onClick={() => setPianoHeight((h) => h + 5)}>➕ </button>
+                <button onClick={() => setPianoHeight((h) => Math.max(5, h - 5))}>➖ </button>
             </div>
             <div>
                 🎵
-                <button onClick={() => setScrollSpeed((s) => s + 10)}>➕ </button>
-                <button onClick={() => setScrollSpeed((s) => Math.max(10, s - 10))}>➖  </button>
+                <button onClick={() => setScrollSpeed((s) => s + 5)}>➕ </button>
+                <button onClick={() => setScrollSpeed((s) => Math.max(5, s - 5))}>➖  </button>
             </div>
 
-            <div>
+            {/* <div>
                 🔍
                 <button onClick={() => setHighlightHeight((s) => s + 10)}>➕ </button>
                 <button onClick={() => setHighlightHeight((s) => Math.max(10, s - 10))}>➖  </button>
-            </div>
+            </div> */}
 
 
 

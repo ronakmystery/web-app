@@ -1,6 +1,7 @@
 :root {
   --shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 3px 6px rgba(0, 0, 0, .23);
   --inset-shadow: #000 1px 1px 3px 0 inset;
+  --green: rgb(102, 187, 106)
 }
 
 
@@ -11,19 +12,19 @@ body {
 
 #piano-app {
   position: relative;
-  padding-top: 200px;
+  padding-top: 100px;
 
 }
 
 #piano-keys {
-     border-top: 2px solid #D32F2F;
+  border-top: 2px solid #D32F2F;
 
   display: flex;
   position: fixed;
   bottom: 0px;
   overflow: hidden;
 
-  .black-key{
+  .black-key {
     box-shadow: var(--shadow);
   }
 }
@@ -31,15 +32,19 @@ body {
 #piano-notes {
   overflow-x: hidden;
   overflow-y: scroll;
-  padding-bottom: 200px;
+  padding-bottom:100px;
   position: relative;
 
-  .piano-note{
-    box-shadow: var(--shadow) ;
+  .piano-note {
+    box-shadow: var(--shadow);
+
+   
   }
-  
+
 
 }
+
+
 
 #play-notes {
   position: fixed;
@@ -51,7 +56,7 @@ body {
 
 
 #piano-controls {
-    box-shadow: var(--shadow);
+  box-shadow: var(--shadow);
   color: black;
   position: fixed;
   top: 0;
@@ -75,27 +80,50 @@ body {
 }
 
 #highlight {
-    position: fixed;
-    width: 100%;
-    display: flex;
+  position: fixed;
+  width: 100%;
+  opacity: .5;
+  display: flex;
 }
 
-#select-midi{
+#select-midi {
   overflow: scroll;
-  height: 100px;
+  height: 200px;
   box-shadow: var(--inset-shadow);
-  padding:10px 20px;
+  padding: 10px 20px;
 }
 
-#selected-midi{
+#selected-midi {
   background: red;
 }
+
+#piano-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('/chopin.jpg') no-repeat center center fixed;
+  background-size: cover;
+  z-index: -100;
+  filter: brightness(0.6);
+
+}
+
+@keyframes pop {
+  0% { transform: scaleY(-1) scale(1); }
+  50% { transform: scaleY(-1) scale(1.4); }
+  100% { transform: scaleY(-1) scale(1); }
+}
+
+
 
 @media (max-width: 400px) {
   #piano-controls {
     display: none;
   }
-  #highlight{
+
+  #highlight {
     display: none;
   }
 }

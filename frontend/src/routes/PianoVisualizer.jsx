@@ -57,18 +57,25 @@ export default function PianoVisualizer() {
 
     const audioRef = useRef(null);
 
-    let setCurrentTime = (time) => {
+    const timeoutRef = useRef(null);
+    const setCurrentTime = (time) => {
         const audio = audioRef.current;
         if (!audio) return;
 
-        audio.pause();            // ⏹️ Stop current playback
-        audio.currentTime = time; // ⏱️ Seek to new time
-        audio.play();             // ▶️ Start playback
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
 
-        // ⏳ Stop after 2 seconds
-        setTimeout(() => {
-            audio.pause();
-        }, 2000);
+        if (audio.paused) {
+            audio.currentTime = time;  // ⏱️ Seek to new time
+            audio.play(); // ▶️ Start playback if paused
+        } else {
+            audio.pause(); // ⏹️ Stop playback if already playing
+        }
+
+
+
     };
 
 
@@ -77,8 +84,6 @@ export default function PianoVisualizer() {
 
     return (
         <div id="piano-app">
-
-
 
             <PianoControls
                 pianoHeight={pianoHeight}
@@ -93,10 +98,16 @@ export default function PianoVisualizer() {
 
 
             <div id="piano-canvas">
-                <Highlight keyHeight={pianoHeight} height={highlightHeight} />
+                {/* <Highlight keyHeight={pianoHeight} height={highlightHeight} /> */}
                 <PianoKeys width={canvasWidth} height={pianoHeight} />
-                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} setCurrentTime={setCurrentTime} />
+
+
+                <div id="piano-background"></div>
+
+                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} setCurrentTime={setCurrentTime} audioRef={audioRef} />
             </div>
+
+
 
 
         </div>

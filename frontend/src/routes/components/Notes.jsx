@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function Notes({ notes, width, scrollSpeed,setCurrentTime}) {
+export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audioRef }) {
+    const [currentTime, setCurrentTimeInternal] = useState(0);
+
     const whiteKeyCount = 52;
     const whiteKeyWidth = width / whiteKeyCount;
 
@@ -19,22 +21,11 @@ export default function Notes({ notes, width, scrollSpeed,setCurrentTime}) {
 
     const scrollableHeight = maxTime * scrollSpeed;
 
-    // Scroll to bottom when notes change
     useEffect(() => {
         if (notes.length) {
             window.scrollTo({ top: document.body.scrollHeight, behavior: "auto" });
         }
     }, [notes]);
-
-    function noteColor(isB, track) {
-        if (track === 1) {
-            // Left hand: Blue palette
-            return isB ? "#1565C0" : "#42A5F5";
-        } else {
-            // Right hand: Green palette
-            return isB ? "#2E7D32" : "#66BB6A";
-        }
-    }
 
     useEffect(() => {
         if (window.innerWidth < 400) return;
@@ -47,7 +38,6 @@ export default function Notes({ notes, width, scrollSpeed,setCurrentTime}) {
         return () => window.removeEventListener("scroll", saveScroll);
     }, []);
 
-
     useEffect(() => {
         if (notes.length) {
             const saved = localStorage.getItem("pianoScrollY");
@@ -56,12 +46,52 @@ export default function Notes({ notes, width, scrollSpeed,setCurrentTime}) {
         }
     }, [notes]);
 
+    // Sync currentTime from audioRef using requestAnimationFrame
+    useEffect(() => {
+        let frameId;
+
+        const update = () => {
+            if (audioRef.current) {
+                setCurrentTimeInternal(audioRef.current.currentTime);
+            }
+            frameId = requestAnimationFrame(update);
+        };
+
+        frameId = requestAnimationFrame(update);
+        return () => cancelAnimationFrame(frameId);
+    }, [audioRef]);
+
+    function noteColor(isB, track) {
+        return track === 1
+            ? isB ? "#1565C0" : "#42A5F5"
+            : isB ? "#2E7D32" : "#66BB6A";
+    }
+    
+    useEffect(() => {
+        const y = currentTime * scrollSpeed;
+        window.scrollTo({ top: scrollableHeight-window.innerHeight/3-y, });
+    }, [currentTime, scrollSpeed]);
+
+
 
     return (
         <div
             id="piano-notes"
             style={{
                 height: scrollableHeight
+            }}
+            onClick={(event) => {
+                const container = event.currentTarget;
+                const boundingRect = container.getBoundingClientRect();
+                const relativeY = event.clientY - boundingRect.top;
+
+                let position = relativeY;
+                let duration = audioRef.current.duration;
+                let scaler = scrollableHeight / duration;
+                let time = position / scaler;
+                let newTime = duration - time;
+
+                setCurrentTime(newTime);
             }}
         >
             {notes.map((note, i) => {
@@ -75,27 +105,36 @@ export default function Notes({ notes, width, scrollSpeed,setCurrentTime}) {
                     : whiteIndex * whiteKeyWidth;
                 const noteWidth = isB ? whiteKeyWidth * 0.6 : whiteKeyWidth;
 
+                const isActive = currentTime >= note.time && currentTime <= note.time + note.duration;
+                
+                
+                const color = noteColor(isB, note?.track, isActive);
+
+
                 return (
                     <div
-                    onClick={()=>{
-                       setCurrentTime(note.time+note.duration/2);
-                    }}
-                        className="piano-note"
                         key={i}
+                        onClick={() => console.log(note)}
+                        className="piano-note"
                         style={{
+
                             position: "absolute",
                             left,
                             top: y,
                             width: noteWidth,
                             height: h,
-                            backgroundColor: noteColor(isB, note?.track),
+                            backgroundColor: isActive ? "white" : color,
                             borderRadius: 10,
                             zIndex: isB ? 2 : 1,
+                            transform: isActive ? "scale(1.5) scaleY(-1)" : "scale(1) scaleY(-1)",
+                            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                            boxShadow: isActive ? `0 0 10px 4px ${color}` : "none",
+                            animation: isActive ? "pop 0.3s forwards" : "none",
+
                         }}
                     />
                 );
             })}
         </div>
-
     );
 }
