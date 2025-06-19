@@ -104,7 +104,7 @@ export default function PianoVisualizer() {
 
                 <div id="piano-background"></div>
 
-                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} setCurrentTime={setCurrentTime} audioRef={audioRef} />
+                <Notes notes={notes} width={canvasWidth} scrollSpeed={scrollSpeed} setCurrentTime={setCurrentTime} audioRef={audioRef} pianoHeight={pianoHeight}/>
             </div>
 
 

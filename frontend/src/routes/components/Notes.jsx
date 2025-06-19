@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audioRef }) {
+export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audioRef,pianoHeight }) {
     const [currentTime, setCurrentTimeInternal] = useState(0);
 
     const whiteKeyCount = 52;
@@ -69,7 +69,8 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
     
     useEffect(() => {
         const y = currentTime * scrollSpeed;
-        window.scrollTo({ top: scrollableHeight-window.innerHeight/3-y, });
+        console.log(pianoHeight)
+        window.scrollTo({ top: scrollableHeight-window.innerHeight+pianoHeight+200-y, });
     }, [currentTime, scrollSpeed]);
 
 

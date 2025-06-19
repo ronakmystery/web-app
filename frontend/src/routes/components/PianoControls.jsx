@@ -58,21 +58,21 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
     return (
         <div id="piano-controls">
 
-            <audio
-            style={{ display: "none" }}
-                ref={audioRef}
-                src={selectedMidiPath.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
+            <div id="resize">
 
-            <div>
-                🎹
-                <button onClick={() => setPianoHeight((h) => h + 5)}>➕ </button>
-                <button onClick={() => setPianoHeight((h) => Math.max(5, h - 5))}>➖ </button>
+                <div>
+                    <button onClick={() => setPianoHeight(h => h + 5)}>➕</button>🎹
+                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>➖</button>
+                </div>
+
+                <div>
+                    <button onClick={() => setScrollSpeed(s => s + 5)}>➕</button>🎵
+                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>➖</button>
+                </div>
+
             </div>
-            <div>
-                🎵
-                <button onClick={() => setScrollSpeed((s) => s + 5)}>➕ </button>
-                <button onClick={() => setScrollSpeed((s) => Math.max(5, s - 5))}>➖  </button>
-            </div>
+
+
 
             {/* <div>
                 🔍
@@ -81,10 +81,10 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
             </div> */}
 
 
-
+            {/* 
             <input type="file" id="upload-midi"
                 accept=".mid,.midi,audio/midi"
-                onChange={handleFileChange} />
+                onChange={handleFileChange} /> */}
 
             <SelectMidi
                 parseMidi={parseMidi}
@@ -92,6 +92,14 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
                 selectedMidiPath={selectedMidiPath}
             />
 
+
+
+
+
+            <audio
+                style={{ display: "none" }}
+                ref={audioRef}
+                src={selectedMidiPath.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
         </div>
     );
 }

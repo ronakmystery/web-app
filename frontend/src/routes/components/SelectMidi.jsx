@@ -20,8 +20,10 @@ export default function SelectMidi({ parseMidi, loadMidi ,selectedMidiPath}) {
 
             {collection &&
                 Object.entries(collection).map(([composer, files]) => (
-                    <div key={composer}>
-                        <h3>{composer.charAt(0).toUpperCase() + composer.slice(1)}</h3>
+                    <div key={composer} className="composer">
+                        <div className="composer-image"> <img src={`/composers/${composer}.jpeg`} alt={composer} /></div>
+                       
+                        {composer.charAt(0).toUpperCase() + composer.slice(1)}
                         {files.sort((a,b)=>a.path -b.path).map((item, i) => {
                             const fileName = item.path.split("/").pop().replace(".mid", "").replace("_", " ");
                             return (
@@ -29,7 +31,7 @@ export default function SelectMidi({ parseMidi, loadMidi ,selectedMidiPath}) {
                                     id={`${item.path === selectedMidiPath ? "selected-midi" : ""}`}
 
                                 >
-                                    🎵 {fileName}
+                                    {fileName}
                                 </button>
                             );
                         })}
