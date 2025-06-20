@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, use } from "react";
+import { useEffect, useState, useRef } from "react";
 import PianoKeys from "./components/PianoKeys";
 import Notes from "./components/Notes";
 import PianoControls from "./components/PianoControls";
@@ -8,7 +8,7 @@ export default function PianoVisualizer() {
 
     let initialWidth = window.innerWidth < 400
         ? window.innerWidth
-        : window.innerWidth * 0.8;
+        : window.innerWidth * 0.7;
 
     const [notes, setNotes] = useState([]);
     const [canvasWidth, setCanvasWidth] = useState(initialWidth);
@@ -22,7 +22,7 @@ export default function PianoVisualizer() {
         const update = () => {
             const width = window.innerWidth < 400
                 ? window.innerWidth
-                : window.innerWidth * 0.8;
+                : window.innerWidth * 0.7;
             setCanvasWidth(width);
         };
 

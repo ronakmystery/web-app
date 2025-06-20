@@ -6,14 +6,12 @@ export default function Home() {
     return (
         <div
             id="home">
-            Ronak Mistry
-             <a href="https://www.linkedin.com/in/ronakmystery/" target="_blank">
+            <a href="https://www.linkedin.com/in/ronakmystery/" target="_blank" className='app-link'>
                 <button>💼 LinkedIn</button>
             </a>
 
-            <Link to="/piano" >
-                <button>        Piano Visualizer
-                </button>
+            <Link to="/piano" className='app-link'>
+                <button>Piano</button>
             </Link>
         </div>
     );

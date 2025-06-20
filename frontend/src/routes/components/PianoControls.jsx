@@ -46,14 +46,7 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
     }, []);
 
 
-    // ✅ Handle custom file
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const buffer = await file.arrayBuffer();
-        const midi = new Midi(buffer);
-        parseMidi(midi);
-    };
+  
 
     return (
         <div id="piano-controls">
@@ -81,10 +74,7 @@ export default function PianoControls({ pianoHeight, setPianoHeight, scrollSpeed
             </div> */}
 
 
-            {/* 
-            <input type="file" id="upload-midi"
-                accept=".mid,.midi,audio/midi"
-                onChange={handleFileChange} /> */}
+         
 
             <SelectMidi
                 parseMidi={parseMidi}

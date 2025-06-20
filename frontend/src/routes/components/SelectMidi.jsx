@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import Composers from "./subcomponents/Composers";
+import ComposerPieces from "./subcomponents/ComposerPieces";
+import Pro from "./subcomponents/Pro";
 
 
-export default function SelectMidi({ parseMidi, loadMidi ,selectedMidiPath}) {
+export default function SelectMidi({ parseMidi, loadMidi, selectedMidiPath }) {
     const [collection, setCollection] = useState(null);
+    const [selectedComposer, setSelectedComposer] = useState("chopin");
 
     useEffect(() => {
         fetch("/midis.json")
@@ -15,28 +19,44 @@ export default function SelectMidi({ parseMidi, loadMidi ,selectedMidiPath}) {
             .catch((err) => console.error("Failed to load MIDI list", err));
     }, []);
 
+
+    const [layer,setLayer] = useState("samples");
+
+    let layers={
+        "samples":<div id="samples">  <Composers selectedComposer={selectedComposer}
+                setSelectedComposer={setSelectedComposer}
+                collection={collection} />
+
+                <ComposerPieces selectedComposer={selectedComposer}
+                    collection={collection}
+                    selectedMidiPath={selectedMidiPath}
+                    loadMidi={loadMidi}
+                /></div>,
+                "pro":<Pro parseMidi={parseMidi} selectedMidiPath={selectedMidiPath}/>,
+    }
+
     return (
         <div id="select-midi">
 
-            {collection &&
-                Object.entries(collection).map(([composer, files]) => (
-                    <div key={composer} className="composer">
-                        <div className="composer-image"> <img src={`/composers/${composer}.jpeg`} alt={composer} /></div>
-                       
-                        {composer.charAt(0).toUpperCase() + composer.slice(1)}
-                        {files.sort((a,b)=>a.path -b.path).map((item, i) => {
-                            const fileName = item.path.split("/").pop().replace(".mid", "").replace("_", " ");
-                            return (
-                                <button key={i} onClick={() => loadMidi(item.path)}
-                                    id={`${item.path === selectedMidiPath ? "selected-midi" : ""}`}
+            <div>
+                {
+                    Object.keys(layers).map((key) => (
+                        <button key={key} onClick={() => setLayer(key)}
+                            className={`${layer === key ? "selected-layer" : ""}`}
+                        >
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                        </button>
+                    ))
+                }
 
-                                >
-                                    {fileName}
-                                </button>
-                            );
-                        })}
-                    </div>
-                ))}
+            </div>
+
+            
+            {
+                layers[layer]
+            }
+
+
 
 
 

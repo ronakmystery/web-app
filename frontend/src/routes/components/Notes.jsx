@@ -69,7 +69,6 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
     
     useEffect(() => {
         const y = currentTime * scrollSpeed;
-        console.log(pianoHeight)
         window.scrollTo({ top: scrollableHeight-window.innerHeight+pianoHeight+200-y, });
     }, [currentTime, scrollSpeed]);
 
@@ -129,7 +128,7 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
                             zIndex: isB ? 2 : 1,
                             transform: isActive ? "scale(1.5) scaleY(-1)" : "scale(1) scaleY(-1)",
                             transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                            boxShadow: isActive ? `0 0 10px 4px ${color}` : "none",
+                            boxShadow: isActive ? `0 0 10px 2px ${color}` : "none",
                             animation: isActive ? "pop 0.3s forwards" : "none",
 
                         }}
