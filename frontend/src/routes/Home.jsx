@@ -6,13 +6,27 @@ export default function Home() {
     return (
         <div
             id="home">
+
+            <div>Ronak Mistry</div>
+            <div>Software Engineer and Classical Pianist</div>
+
             <a href="https://www.linkedin.com/in/ronakmystery/" target="_blank" className='app-link'>
-                <button>💼 LinkedIn</button>
+                <button>LinkedIn</button>
             </a>
 
-            <Link to="/piano" className='app-link'>
-                <button>Piano</button>
-            </Link>
+            <a href="https://www.youtube.com/@mysteryclassicalpianist" target='_black' className='app-link'>
+                <button>YouTube</button>
+            </a>
+
+
+            <div>Projects<br/>
+
+                <Link to="/piano" className='app-link'>
+                    <button>Piano</button>
+                </Link>
+
+            </div>
+
         </div>
     );
 }

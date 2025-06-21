@@ -4,7 +4,12 @@ import Home from './routes/Home.jsx';
 
 import Test from './routes/Test.jsx';
 
+
+import { useGlobal } from "./GlobalContext.jsx";
+
 function App() {
+
+    const { user } = useGlobal();
   return (
     <Routes>
       <Route path="/" element={<Home />} />

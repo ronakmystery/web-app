@@ -6,7 +6,6 @@ import App from './App.jsx'
 import './index.css'
 
 console.log("register service worker");
-
 async function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
 
@@ -41,12 +40,17 @@ async function registerServiceWorker() {
     console.error("❌ Service Worker registration failed", err);
   }
 }
-
 registerServiceWorker();
 
 
+import { GlobalProvider } from "./GlobalContext.jsx";
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+ <GlobalProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </GlobalProvider>
+
 )
