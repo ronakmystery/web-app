@@ -1,6 +1,35 @@
 #composers {
     box-shadow: var(--shadow);
     overflow: scroll;
+    box-sizing: border-box;
+    padding: 10px;
+
+    .composer {
+        display: inline-block;
+
+        .composer-name {
+            font-size: 10px;
+            margin: 5px 10px;
+            height: 0;
+            overflow: hidden;
+            transition: .3s;
+        }
+
+
+        .composer-image {
+            width: 100%;
+            overflow: hidden;
+            display: inline-block;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+            max-height: 70px;
+        }
+
+        .composer-image img {
+            width: 100%;
+            object-fit: cover;
+        }
+    }
 
     .selected-composer {
         .composer-info {
@@ -11,32 +40,9 @@
         }
 
         .composer-name {
-            display: block;
-        }
-    }
-
-    .composer {
-        padding: 5px 10px;
-        display: inline-block;
-
-        .composer-name {
             font-size: 10px;
-            margin: 5px 10px;
-        }
-
-        .composer-image {
-            width: 100%;
-            overflow: hidden;
-            display: inline-block;
-            border-radius: 5px;
-            box-shadow: var(--shadow);
-            max-height: 100px;
-            max-width: 100px;
-        }
-
-        .composer-image img {
-            width: 100%;
-            object-fit: cover;
+            padding: 0 0 5px 0;
+            height: fit-content;
         }
     }
 

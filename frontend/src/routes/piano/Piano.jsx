@@ -30,7 +30,7 @@ export default function Piano() {
         return () => window.removeEventListener("resize", update);
     }, []);
 
-    const [panelState, setPanelState] = useState(false)
+    const [panelState, setPanelState] = useState(true)
     return (
 
         <div id="piano-app">

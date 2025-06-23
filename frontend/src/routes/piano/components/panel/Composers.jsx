@@ -19,7 +19,7 @@ export default function Composers() {
 
                         <div className="composer-info">
                             <div className="composer-image">
-                                <img src={`/composers/${composer}.jpg`} alt={composer} />
+                                <img src={`/composers/compressed/${composer}.jpg`} alt={composer} />
 
 
                             </div>

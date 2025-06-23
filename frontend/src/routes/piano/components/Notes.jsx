@@ -36,8 +36,7 @@ export default function Notes({ width }) {
     //scroll to bottom or saved scroll position
     useEffect(() => {
         if (notes.length) {
-            const saved = localStorage.getItem("pianoScrollY");
-            const y = saved ? parseInt(saved) : document.body.scrollHeight;
+            const y = document.body.scrollHeight;
             window.scrollTo({ top: y, behavior: "auto" });
         }
     }, [notes]);
@@ -45,7 +44,6 @@ export default function Notes({ width }) {
     //autoscroll 
     useEffect(() => {
         const y = currentTime * scrollSpeed;
-        console.log(window.innerHeight)
         window.scrollTo({ top: scrollableHeight - window.innerHeight + pianoHeight + 300 - y, });
     }, [currentTime, scrollSpeed]);
 

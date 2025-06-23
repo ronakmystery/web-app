@@ -4,6 +4,7 @@ import { usePiano } from "../PianoContext"
 import Composers from "./panel/Composers";
 import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
+import About from "./panel/About";
 
 import "./Panel.css"
 
@@ -25,6 +26,7 @@ export default function Panel({ setPanelState }) {
     let layers = {
         "samples": <DefaultLayer />,
         "pro": <Pro />,
+        "about": <About />
     }
 
 
