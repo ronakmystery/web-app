@@ -1,4 +1,12 @@
-export default function PianoKeys({ width, height }) {
+
+import { usePiano } from "../PianoContext"
+import "./Keys.css"
+
+export default function Keys({ width }) {
+
+    const { pianoHeight } = usePiano()
+
+
     const whiteKeyCount = 52;
     const whiteKeyWidth = width / whiteKeyCount;
 
@@ -11,13 +19,12 @@ export default function PianoKeys({ width, height }) {
         return index;
     };
 
+
+
     return (
         <div
             id="piano-keys"
-            style={{
-                height,
-                width,
-            }}
+            style={{ height: pianoHeight, width }}
         >
             {/* White Keys */}
             {(() => {
@@ -61,7 +68,7 @@ export default function PianoKeys({ width, height }) {
                                     position: "absolute",
                                     left,
                                     width: whiteKeyWidth * 0.6,
-                                    height: height * 0.5,
+                                    height: pianoHeight * 0.5,
                                     backgroundColor: "black",
                                     borderBottomLeftRadius: 4,
                                     borderBottomRightRadius: 4,

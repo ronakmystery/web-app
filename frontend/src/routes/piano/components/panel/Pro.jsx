@@ -3,8 +3,8 @@ import { Midi } from "@tonejs/midi";
 
 
 
-export default function Pro({ parseMidi,selectedMidiPath }) {
-  // ✅ Handle custom file
+export default function Pro({ parseMidi, selectedMidiPath }) {
+    // ✅ Handle custom file
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -17,10 +17,10 @@ export default function Pro({ parseMidi,selectedMidiPath }) {
     return (
         <div id="pro">
 
-               
-                        <input type="file" id="upload-midi"
-                            accept=".mid,.midi,audio/midi"
-                            onChange={handleFileChange} />
+
+            <input type="file" id="upload-midi"
+                accept=".mid,.midi,audio/midi"
+                onChange={handleFileChange} />
 
             <div>pro mode</div>
 

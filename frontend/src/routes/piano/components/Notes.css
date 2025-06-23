@@ -1,0 +1,23 @@
+   #piano-notes {
+       overflow-x: hidden;
+       overflow-y: scroll;
+       padding-bottom: 100px;
+       position: relative;
+
+
+
+       @keyframes pop {
+           0% {
+               transform: scaleY(-1) scale(1);
+           }
+
+           50% {
+               transform: scaleY(-1) scale(1.4);
+           }
+
+           100% {
+               transform: scaleY(-1) scale(1);
+           }
+       }
+
+   }

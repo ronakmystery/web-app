@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
 
+import { usePiano } from "../../PianoContext"
+import "./Composers.css"
 
-export default function Composers({ selectedComposer,setSelectedComposer, collection }) {
+export default function Composers() {
 
+    const { selectedComposer, setSelectedComposer, collection } = usePiano()
 
     return (
         <div id="composers">
@@ -12,7 +14,7 @@ export default function Composers({ selectedComposer,setSelectedComposer, collec
                     <div key={composer}
                         id={composer}
                         onClick={() => setSelectedComposer(composer)}
-                        className={`composer ${selectedComposer === composer && "selected-composer"}`}
+                        className={`composer ${selectedComposer === composer ? "selected-composer" : ''}`}
                     >
 
                         <div className="composer-info">

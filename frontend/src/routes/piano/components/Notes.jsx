@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react";
 
-export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audioRef,pianoHeight }) {
-    const [currentTime, setCurrentTimeInternal] = useState(0);
+import { useEffect } from "react";
+import { usePiano } from "../PianoContext"
+import "./Notes.css"
+
+export default function Notes({ width }) {
+
+    const { notes, scrollSpeed, audioRef, pianoHeight, currentTime, setCurrentTime } = usePiano()
+
 
     const whiteKeyCount = 52;
     const whiteKeyWidth = width / whiteKeyCount;
@@ -21,14 +26,32 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
 
     const scrollableHeight = maxTime * scrollSpeed;
 
+
+    function noteColor(isB, track) {
+        return track === 1
+            ? isB ? "#1565C0" : "#42A5F5"
+            : isB ? "#2E7D32" : "#66BB6A";
+    }
+
+    //scroll to bottom or saved scroll position
     useEffect(() => {
         if (notes.length) {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: "auto" });
+            const saved = localStorage.getItem("pianoScrollY");
+            const y = saved ? parseInt(saved) : document.body.scrollHeight;
+            window.scrollTo({ top: y, behavior: "auto" });
         }
     }, [notes]);
 
+    //autoscroll 
     useEffect(() => {
-        if (window.innerWidth < 400) return;
+        const y = currentTime * scrollSpeed;
+        console.log(window.innerHeight)
+        window.scrollTo({ top: scrollableHeight - window.innerHeight + pianoHeight + 300 - y, });
+    }, [currentTime, scrollSpeed]);
+
+
+    //save scroll position
+    useEffect(() => {
 
         const saveScroll = () => {
             localStorage.setItem("pianoScrollY", window.scrollY.toString());
@@ -38,62 +61,33 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
         return () => window.removeEventListener("scroll", saveScroll);
     }, []);
 
-    useEffect(() => {
-        if (notes.length) {
-            const saved = localStorage.getItem("pianoScrollY");
-            const y = saved ? parseInt(saved) : document.body.scrollHeight;
-            window.scrollTo({ top: y, behavior: "auto" });
-        }
-    }, [notes]);
-
-    // Sync currentTime from audioRef using requestAnimationFrame
-    useEffect(() => {
-        let frameId;
-
-        const update = () => {
-            if (audioRef.current) {
-                setCurrentTimeInternal(audioRef.current.currentTime);
-            }
-            frameId = requestAnimationFrame(update);
-        };
-
-        frameId = requestAnimationFrame(update);
-        return () => cancelAnimationFrame(frameId);
-    }, [audioRef]);
-
-    function noteColor(isB, track) {
-        return track === 1
-            ? isB ? "#1565C0" : "#42A5F5"
-            : isB ? "#2E7D32" : "#66BB6A";
-    }
-    
-    useEffect(() => {
-        const y = currentTime * scrollSpeed;
-        window.scrollTo({ top: scrollableHeight-window.innerHeight+pianoHeight+200-y, });
-    }, [currentTime, scrollSpeed]);
-
-
 
     return (
         <div
             id="piano-notes"
+
             style={{
                 height: scrollableHeight
             }}
+
+
             onClick={(event) => {
                 const container = event.currentTarget;
                 const boundingRect = container.getBoundingClientRect();
                 const relativeY = event.clientY - boundingRect.top;
 
                 let position = relativeY;
-                let duration = audioRef.current.duration;
+                let duration = audioRef?.current.duration;
                 let scaler = scrollableHeight / duration;
                 let time = position / scaler;
                 let newTime = duration - time;
 
+                console.log(newTime)
+
                 setCurrentTime(newTime);
             }}
         >
+
             {notes.map((note, i) => {
                 const isB = isBlack(note.midi);
                 const h = note.duration * scrollSpeed;
@@ -106,12 +100,13 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
                 const noteWidth = isB ? whiteKeyWidth * 0.6 : whiteKeyWidth;
 
                 const isActive = currentTime >= note.time && currentTime <= note.time + note.duration;
-                
-                
+
+
                 const color = noteColor(isB, note?.track, isActive);
 
 
                 return (
+
                     <div
                         key={i}
                         onClick={() => console.log(note)}
@@ -133,8 +128,12 @@ export default function Notes({ notes, width, scrollSpeed, setCurrentTime, audio
 
                         }}
                     />
+
+
+
                 );
             })}
+
         </div>
     );
 }

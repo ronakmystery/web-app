@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+
+import { usePiano } from "../../PianoContext"
 
 
-export default function ComposerPieces({ selectedComposer, collection,selectedMidiPath,loadMidi }) {
+export default function ComposerPieces() {
+
+
+    const { selectedMidiPath, selectedComposer, collection, loadMidi } = usePiano()
 
 
     return (

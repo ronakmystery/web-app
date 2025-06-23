@@ -1,0 +1,43 @@
+#composers {
+    box-shadow: var(--shadow);
+    overflow: scroll;
+
+    .selected-composer {
+        .composer-info {
+            background: var(--green);
+            transition: all .2s ease-in-out;
+            box-shadow: 0 0 10px 0px white;
+            border-radius: 5px;
+        }
+
+        .composer-name {
+            display: block;
+        }
+    }
+
+    .composer {
+        padding: 5px 10px;
+        display: inline-block;
+
+        .composer-name {
+            font-size: 10px;
+            margin: 5px 10px;
+        }
+
+        .composer-image {
+            width: 100%;
+            overflow: hidden;
+            display: inline-block;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+            max-height: 100px;
+            max-width: 100px;
+        }
+
+        .composer-image img {
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+}

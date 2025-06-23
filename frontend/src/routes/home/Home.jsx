@@ -1,13 +1,13 @@
 // src/components/Home.jsx
 import { Link } from 'react-router-dom';
-import "./home.css";
+import "./Home.css";
 
 export default function Home() {
     return (
         <div
             id="home">
 
-            <div>Ronak Mistry</div>
+            <div id="name">Ronak Mistry</div>
             <div>Software Engineer and Classical Pianist</div>
 
             <a href="https://www.linkedin.com/in/ronakmystery/" target="_blank" className='app-link'>
@@ -19,7 +19,7 @@ export default function Home() {
             </a>
 
 
-            <div>Projects<br/>
+            <div>Projects<br />
 
                 <Link to="/piano" className='app-link'>
                     <button>Piano</button>

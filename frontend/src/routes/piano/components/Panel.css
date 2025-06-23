@@ -1,0 +1,74 @@
+#panel {
+    width: 100%;
+    height: 250px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    box-sizing: border-box;
+    z-index: 100;
+
+    button {
+        color: white;
+    }
+
+    #controls {
+        display: grid;
+        place-items: center;
+        box-shadow: var(--shadow);
+
+        button {
+            font-size: 12px;
+        }
+    }
+
+    #select-layer {
+        box-shadow: var(--shadow);
+        width: 70px;
+    }
+
+    #selected-layers {
+        display: flex;
+    }
+
+    #current-layer {
+        display: flex;
+
+        #composers {
+            overflow: scroll;
+            width: 100px
+        }
+
+        #composer-pieces {
+            overflow: scroll;
+            width: 100%;
+        }
+
+    }
+
+
+
+
+    #selected-midi,
+    #selected-layer {
+        background: var(--green);
+        transition: all .2s ease-in-out;
+        box-shadow: 0 0 10px 0px white;
+    }
+
+
+
+
+}
+
+@media screen and (orientation: landscape) {
+    #panel {
+        width: 50%;
+        height: 100%;
+        right: 0;
+    }
+}

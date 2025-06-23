@@ -1,0 +1,17 @@
+#home {
+    margin: 20px;
+
+    a {
+        cursor: pointer;
+    }
+
+    #name {
+        margin: 20px 0;
+        font-size: 20px;
+    }
+
+    button {
+        background: white;
+        cursor: pointer;
+    }
+}
