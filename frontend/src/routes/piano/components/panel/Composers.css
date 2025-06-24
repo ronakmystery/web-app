@@ -6,10 +6,10 @@
 
     .composer {
         display: inline-block;
+        margin-bottom: 10px;
 
         .composer-name {
             font-size: 10px;
-            margin: 5px 10px;
             height: 0;
             overflow: hidden;
             transition: .3s;
@@ -28,6 +28,7 @@
         .composer-image img {
             width: 100%;
             object-fit: cover;
+            height: 70px;
         }
     }
 

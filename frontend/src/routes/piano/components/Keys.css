@@ -5,8 +5,28 @@
       position: fixed;
       bottom: 0px;
       overflow: hidden;
+      z-index: 100;
+
+      .piano-key {
+          transition: .3s;
+          border-radius: 0 0 2px 2px;
+
+
+      }
+
+      .white-key {
+          background: white;
+      }
 
       .black-key {
+          background: rgb(50, 50, 50);
+
           box-shadow: var(--shadow);
       }
+
+      .pressed {
+          box-shadow: var(--inset-shadow);
+      }
+
+
   }

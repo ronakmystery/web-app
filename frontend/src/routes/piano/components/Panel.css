@@ -10,7 +10,8 @@
     position: fixed;
     top: 0;
     box-sizing: border-box;
-    z-index: 100;
+    z-index: 200;
+
 
     button {
         color: white;
@@ -28,6 +29,10 @@
         padding: 10px;
         box-shadow: var(--shadow);
         background: rgba(255, 255, 255, 0.05);
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
 
         button {
             font-size: 12px;
@@ -45,6 +50,7 @@
 
     #current-layer {
         display: flex;
+        padding-right: 60px;
 
         #composers {
             overflow: scroll;
@@ -55,6 +61,9 @@
             overflow: scroll;
             width: 100%;
         }
+
+
+
 
     }
 

@@ -22,7 +22,7 @@ export default function Panel({ setPanelState }) {
 
     const { setPianoHeight, setScrollSpeed } = usePiano()
 
-    const [layer, setLayer] = useState("samples");
+    const [layer, setLayer] = useState("pro");
     let layers = {
         "samples": <DefaultLayer />,
         "pro": <Pro />,
@@ -33,28 +33,13 @@ export default function Panel({ setPanelState }) {
     return (
         <motion.div
             id="panel"
-            initial={{ y: -200, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -200, opacity: 0 }}
+            initial={{ x: 200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 200, opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
 
-            <div id="controls">
 
-                <div>
-                    <button onClick={() => setPianoHeight(h => h + 5)}>+</button>🎹
-                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>-</button>
-                </div>
-
-                <div
-                    onClick={() => setPanelState(false)}
-                >👍</div>
-                <div>
-                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>🎵
-                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
-                </div>
-
-            </div>
 
             <div id="select-layer">
                 {
@@ -76,7 +61,22 @@ export default function Panel({ setPanelState }) {
             </div>
 
 
+            <div id="controls">
 
+                <div>
+                    <button onClick={() => setPianoHeight(h => h + 5)}>+</button>🎹
+                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>-</button>
+                </div>
+
+                <div
+                    onClick={() => setPanelState(false)}
+                >👍</div>
+                <div>
+                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>🎵
+                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
+                </div>
+
+            </div>
 
 
 

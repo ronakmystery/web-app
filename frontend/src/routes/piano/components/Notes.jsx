@@ -49,7 +49,6 @@ export default function Notes({ width }) {
             top: scrollableHeight - y + 100
         });
 
-        console.log(y)
 
 
     }, [currentTime, scrollSpeed]);
@@ -80,6 +79,9 @@ export default function Notes({ width }) {
             audio.play();
         }
     }
+
+
+
 
     return (
         <div
@@ -133,7 +135,7 @@ export default function Notes({ width }) {
                             zIndex: isB ? 2 : 1,
                             transform: isActive ? "scale(1.5) scaleY(-1)" : "scale(1) scaleY(-1)",
                             transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                            boxShadow: isActive ? `0 0 10px 2px ${color}` : "none",
+                            boxShadow: isActive ? `0 0 10px 2px ${color}` : "",
                             animation: isActive ? "pop 0.3s forwards" : "none",
 
                         }}

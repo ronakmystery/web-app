@@ -4,7 +4,7 @@ import "./Keys.css"
 
 export default function Keys({ width }) {
 
-    const { pianoHeight } = usePiano()
+    const { pianoHeight, notes, currentTime } = usePiano()
 
 
     const whiteKeyCount = 52;
@@ -20,6 +20,9 @@ export default function Keys({ width }) {
     };
 
 
+    const activeMidiNotes = notes
+        .filter(n => currentTime >= n.time && currentTime <= n.time + n.duration)
+        .map(n => n.midi);
 
     return (
         <div
@@ -32,17 +35,21 @@ export default function Keys({ width }) {
                 for (let midi = 21; midi <= 108; midi++) {
                     if (!isBlack(midi)) {
                         const left = getWhiteIndex(midi) * whiteKeyWidth;
+
+                        const isActive = activeMidiNotes.includes(midi);
+
                         keys.push(
                             <div
-                                className="white-key"
+                                className={`piano-key white-key  ${isActive ? "pressed" : ""}`}
+
                                 key={`white-${midi}`}
                                 style={{
                                     position: "absolute",
                                     left,
                                     width: whiteKeyWidth,
                                     height: "100%",
-                                    backgroundColor: "white",
-                                    border: "1px solid #ccc",
+                                    border: ".11px solid #ccc",
+                                    borderTop: "none",
                                     boxSizing: "border-box",
                                     zIndex: 1,
                                 }}
@@ -60,18 +67,17 @@ export default function Keys({ width }) {
                 for (let midi = 21; midi <= 108; midi++) {
                     if (isBlack(midi)) {
                         const left = whiteIndex * whiteKeyWidth - whiteKeyWidth * 0.3;
+                        const isActive = activeMidiNotes.includes(midi);
+
                         keys.push(
                             <div
-                                className="black-key"
+                                className={`piano-key black-key ${isActive ? "pressed" : ""}`}
                                 key={`black-${midi}`}
                                 style={{
                                     position: "absolute",
                                     left,
                                     width: whiteKeyWidth * 0.6,
                                     height: pianoHeight * 0.5,
-                                    backgroundColor: "black",
-                                    borderBottomLeftRadius: 4,
-                                    borderBottomRightRadius: 4,
                                     zIndex: 2,
                                 }}
                             />
