@@ -33,7 +33,10 @@ export default function Piano() {
     const [panelState, setPanelState] = useState(true)
     return (
 
-        <div id="piano-app">
+        <div id="piano-app"
+
+
+        >
             <AnimatePresence>
                 {panelState ? (
                     <Panel setPanelState={setPanelState} key="panel" />
@@ -52,7 +55,20 @@ export default function Piano() {
                 )}
             </AnimatePresence>
 
-            <div id="piano-canvas">
+            <div id="piano-canvas"
+
+                onClick={() => {
+                    const audio = audioRef.current;
+
+                    if (!audio.paused) {
+                        audio.pause();
+                    } else {
+                        audio.play()
+                    }
+
+
+                }}
+            >
                 <Keys width={canvasWidth} />
                 <Notes width={canvasWidth} />
             </div>

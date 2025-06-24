@@ -15,15 +15,10 @@ export function PianoProvider({ children }) {
 
     //load collection
     useEffect(() => {
-        fetch("/midis.json")
+        fetch(`/midis.json?cb=${Date.now()}`)  // ⬅ Cache-busting query param
             .then((res) => res.json())
-            .then((data) => {
-
-                setCollection(data)
-            }
-            )
+            .then((data) => setCollection(data))
             .catch((err) => console.error("Failed to load MIDI list", err));
-
     }, []);
 
 
@@ -38,6 +33,7 @@ export function PianoProvider({ children }) {
         const update = () => {
             if (audioRef.current) {
                 setCurrentTimeInternal(audioRef.current.currentTime);
+
             }
             frameId = requestAnimationFrame(update);
         };
@@ -45,17 +41,7 @@ export function PianoProvider({ children }) {
         frameId = requestAnimationFrame(update);
         return () => cancelAnimationFrame(frameId);
     }, [audioRef]);
-    const setCurrentTime = (time) => {
-        const audio = audioRef.current;
-        if (!audio) return;
 
-        if (audio.paused) {
-            audio.currentTime = time;  // ⏱️ Seek to new time
-            audio.play(); // ▶️ Start playback if paused
-        } else {
-            audio.pause(); // ⏹️ Stop playback if already playing
-        }
-    };
 
 
     const [collection, setCollection] = useState(null);
@@ -125,7 +111,7 @@ export function PianoProvider({ children }) {
             notes, setNotes,
             pianoHeight, setPianoHeight,
             scrollSpeed, setScrollSpeed,
-            audioRef, currentTime, setCurrentTimeInternal, setCurrentTime,
+            audioRef, currentTime, setCurrentTimeInternal,
             selectedMidiPath, parseMidi, loadMidi,
             collection, selectedComposer, setSelectedComposer
         }}>

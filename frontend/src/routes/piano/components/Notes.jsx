@@ -5,7 +5,7 @@ import "./Notes.css"
 
 export default function Notes({ width }) {
 
-    const { notes, scrollSpeed, audioRef, pianoHeight, currentTime, setCurrentTime } = usePiano()
+    const { notes, scrollSpeed, audioRef, pianoHeight, currentTime } = usePiano()
 
 
     const whiteKeyCount = 52;
@@ -44,15 +44,27 @@ export default function Notes({ width }) {
     //autoscroll 
     useEffect(() => {
         const y = currentTime * scrollSpeed;
-        window.scrollTo({ top: scrollableHeight - window.innerHeight + pianoHeight + 300 - y, });
+
+        window.scrollTo({
+            top: scrollableHeight - y + 100
+        });
+
+        console.log(y)
+
+
     }, [currentTime, scrollSpeed]);
+
 
 
     //save scroll position
     useEffect(() => {
 
         const saveScroll = () => {
+            let n = scrollableHeight - window.scrollY
+            let z = n / scrollSpeed
             localStorage.setItem("pianoScrollY", window.scrollY.toString());
+            localStorage.setItem("pianoCurrentTime", z.toString());
+
         };
 
         window.addEventListener("scroll", saveScroll);
@@ -60,30 +72,26 @@ export default function Notes({ width }) {
     }, []);
 
 
+
+    let playpause = (time) => {
+        const audio = audioRef.current;
+        audio.currentTime = time
+        if (audio.paused) {
+            audio.play();
+        }
+    }
+
     return (
         <div
             id="piano-notes"
 
             style={{
-                height: scrollableHeight
+                height: scrollableHeight + 100
             }}
 
 
-            onClick={(event) => {
-                const container = event.currentTarget;
-                const boundingRect = container.getBoundingClientRect();
-                const relativeY = event.clientY - boundingRect.top;
 
-                let position = relativeY;
-                let duration = audioRef?.current.duration;
-                let scaler = scrollableHeight / duration;
-                let time = position / scaler;
-                let newTime = duration - time;
 
-                console.log(newTime)
-
-                setCurrentTime(newTime);
-            }}
         >
 
             {notes.map((note, i) => {
@@ -107,7 +115,11 @@ export default function Notes({ width }) {
 
                     <div
                         key={i}
-                        onClick={() => console.log(note)}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            playpause(note.time)
+
+                        }}
                         className="piano-note"
                         style={{
 

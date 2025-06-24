@@ -1,7 +1,6 @@
    #piano-notes {
        overflow-x: hidden;
        overflow-y: scroll;
-       padding-bottom: 100px;
        position: relative;
 
 

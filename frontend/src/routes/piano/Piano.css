@@ -1,5 +1,4 @@
 #piano-app {
-    padding-top: 200px;
 
     #piano-background {
         position: fixed;
@@ -10,8 +9,12 @@
         background: url('/background.jpg') no-repeat center center fixed;
         background-size: cover;
         z-index: -100;
-        filter: brightness(0.6);
+        filter: brightness(0.5);
 
+    }
+
+    #piano-canvas {
+        padding-top: calc(100vh - 50px);
     }
 
     #hide-panel {
