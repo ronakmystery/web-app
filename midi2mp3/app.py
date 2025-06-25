@@ -9,6 +9,20 @@ SF2_PATH = "piano.sf2"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
+@app.route('/')
+def test():
+    return jsonify("server running")
+    
+
+@app.route('/converted/<filename>')
+def serve_file(filename):
+    path = os.path.join(UPLOAD_FOLDER, filename)
+    if not os.path.exists(path):
+        return "File not found", 404
+    return send_file(path)
+
+
 @app.route('/list')
 def list_midis():
     files = os.listdir(UPLOAD_FOLDER)

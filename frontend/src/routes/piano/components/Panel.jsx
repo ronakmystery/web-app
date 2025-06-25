@@ -70,7 +70,20 @@ export default function Panel({ setPanelState }) {
 
                 <div
                     onClick={() => setPanelState(false)}
-                >👍</div>
+                >
+
+                    <img
+                        id="close-panel"
+                        src="logo.png"
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                            transformOrigin: "center center",
+                        }}
+                    />
+
+                </div>
                 <div>
                     <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>🎵
                     <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
