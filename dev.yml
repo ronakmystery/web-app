@@ -17,6 +17,22 @@ services:
   #   networks:
   #     - x_network
 
+  midi2mp3:
+    build: ./midi2mp3
+    container_name: midi2mp3
+    restart: always
+    volumes:
+      - ./midi2mp3:/app                   # sync source code (hot reload)
+      - ./midi2mp3/converted:/app/converted        # sync output folder
+      - ./midi2mp3/piano.sf2:/app/piano.sf2        # make sure SoundFont is accessible
+    environment:
+      - FLASK_ENV=development
+    command: flask --app app run --host=0.0.0.0 --port=5000 --reload
+    expose:
+      - "5000"
+    networks:
+      - x_network
+
   frontend:
     build: ./frontend
     container_name: react-frontend
