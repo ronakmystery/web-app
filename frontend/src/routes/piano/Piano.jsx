@@ -12,7 +12,8 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function Piano() {
 
 
-    const { audioRef, selectedMidiPath } = usePiano()
+    const { audioRef, selectedMidiPath, isPlaying, setIsPlaying } = usePiano()
+
 
     const [canvasWidth, setCanvasWidth] = useState(0);
 
@@ -31,29 +32,41 @@ export default function Piano() {
     }, []);
 
     const [panelState, setPanelState] = useState(true)
+
+
+
+
     return (
 
         <div id="piano-app"
 
 
         >
-            <AnimatePresence>
-                {panelState ? (
-                    <Panel setPanelState={setPanelState} key="panel" />
-                ) : (
-                    <motion.div
-                        id="hide-panel"
-                        key="show-btn"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        onClick={() => setPanelState(true)}
-                    >
-                        ⚙️
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {panelState ? (
+                <Panel setPanelState={setPanelState} key="panel" />
+            ) : (
+                <motion.div
+                    id="show-panel"
+                    onClick={() => setPanelState(true)}
+                    style={{
+                        display: "inline-block",
+                    }}
+                    className={isPlaying ? 'playing' : ''}
+
+                >
+
+                    <img
+
+                        src="logo.png"
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                            transformOrigin: "center center",
+                        }}
+                    />
+                </motion.div>
+            )}
 
             <div id="piano-canvas"
 
@@ -62,8 +75,11 @@ export default function Piano() {
 
                     if (!audio.paused) {
                         audio.pause();
+                        setIsPlaying(false)
                     } else {
                         audio.play()
+                        setPanelState(false)
+                        setIsPlaying(true)
                     }
 
 

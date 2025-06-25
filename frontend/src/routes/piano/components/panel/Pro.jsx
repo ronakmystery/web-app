@@ -20,6 +20,7 @@ export default function Pro({ parseMidi, selectedMidiPath }) {
 
             <input type="file" id="upload-midi"
                 accept=".mid,.midi,audio/midi"
+
                 onChange={handleFileChange} />
 
             <div>pro mode</div>

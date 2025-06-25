@@ -5,7 +5,7 @@ import "./Notes.css"
 
 export default function Notes({ width }) {
 
-    const { notes, scrollSpeed, audioRef, pianoHeight, currentTime } = usePiano()
+    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime } = usePiano()
 
 
     const whiteKeyCount = 52;
@@ -77,6 +77,8 @@ export default function Notes({ width }) {
         audio.currentTime = time
         if (audio.paused) {
             audio.play();
+            setIsPlaying(true)
+
         }
     }
 

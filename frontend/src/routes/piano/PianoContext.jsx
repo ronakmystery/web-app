@@ -27,6 +27,7 @@ export function PianoProvider({ children }) {
 
     const audioRef = useRef(null);
     const [currentTime, setCurrentTimeInternal] = useState(0)
+    const [isPlaying, setIsPlaying] = useState(false);
     useEffect(() => {
         let frameId;
 
@@ -113,7 +114,8 @@ export function PianoProvider({ children }) {
             scrollSpeed, setScrollSpeed,
             audioRef, currentTime, setCurrentTimeInternal,
             selectedMidiPath, parseMidi, loadMidi,
-            collection, selectedComposer, setSelectedComposer
+            collection, selectedComposer, setSelectedComposer,
+            isPlaying, setIsPlaying
         }}>
             {children}
         </PianoContext.Provider>
