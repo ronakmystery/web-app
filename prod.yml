@@ -1,22 +1,5 @@
 services:
 
-  # flask-server:
-  #   build: ./flask-server
-  #   container_name: flask-server
-  #   restart: always
-  #   expose:
-  #     - "8000"
-  #   volumes:
-  #     - ./flask-server:/app
-  #   environment:
-  #     FLASK_ENV: development
-  #     DB_HOST: mariadb
-  #     DB_USER: user
-  #     DB_PASSWORD: password
-  #     DB_NAME: mydb
-  #   networks:
-  #     - x_network
-
   nginx:
     image: nginx:latest
     container_name: nginx

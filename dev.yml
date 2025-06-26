@@ -1,22 +1,5 @@
 services:
 
-  # flask-server:
-  #   build: ./flask-server
-  #   container_name: flask-server
-  #   restart: always
-  #   expose:
-  #     - "8000"
-  #   volumes:
-  #     - ./flask-server:/app
-  #   environment:
-  #     FLASK_ENV: development
-  #     DB_HOST: mariadb
-  #     DB_USER: user
-  #     DB_PASSWORD: password
-  #     DB_NAME: mydb
-  #   networks:
-  #     - x_network
-
   midi2mp3:
     build: ./midi2mp3
     container_name: midi2mp3
@@ -27,7 +10,7 @@ services:
       - ./midi2mp3/piano.sf2:/app/piano.sf2        # make sure SoundFont is accessible
     environment:
       - FLASK_ENV=development
-    command: flask --app app run --host=0.0.0.0 --port=5000 --reload
+    command: flask --app app run --host=0.0.0.0 --port=5000 --reload --with-threads
     expose:
       - "5000"
     networks:
