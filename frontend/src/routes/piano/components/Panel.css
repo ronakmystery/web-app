@@ -37,6 +37,15 @@
         button {
             font-size: 12px;
         }
+
+        #close-panel {
+            box-sizing: border-box;
+            border-radius: 50%;
+            width: 40px;
+            transition: .3s;
+            ;
+        }
+
     }
 
     #select-layer {
@@ -49,19 +58,27 @@
     }
 
     #current-layer {
-        display: flex;
-        padding-right: 60px;
+        height: 100%;
 
-        #composers {
-            overflow: scroll;
-            width: 100px
+        #default {
+            height: 100%;
         }
 
-        #composer-pieces {
-            overflow: scroll;
-            width: 100%;
-        }
+        #samples {
+            display: flex;
+            padding-right: 60px;
+            height: 100%;
 
+            #composers {
+                overflow: scroll;
+                width: 100px
+            }
+
+            #composer-pieces {
+                overflow: scroll;
+                width: 100%;
+            }
+        }
 
 
 
@@ -84,7 +101,7 @@
 
 @media screen and (orientation: landscape) {
     #panel {
-        width: 50%;
+        width: 400px;
         height: 100%;
         right: 0;
     }

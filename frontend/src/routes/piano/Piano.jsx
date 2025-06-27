@@ -6,7 +6,6 @@ import { usePiano } from "./PianoContext"
 import Panel from "./components/Panel";
 import Keys from "./components/Keys";
 import Notes from "./components/Notes"
-import { AnimatePresence, motion } from "framer-motion";
 
 
 export default function Piano() {
@@ -16,22 +15,38 @@ export default function Piano() {
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
+    const [panelState, setPanelState] = useState(false)
+
 
     useEffect(() => {
-        let portraitLimit = 400
         const update = () => {
-            let width = window.innerWidth < portraitLimit
+            const isPortrait = window.innerHeight > window.innerWidth;
+            console.log(panelState)
+
+            const width = isPortrait
                 ? window.innerWidth
-                : window.innerWidth * 1;
+                : panelState
+                    ? window.innerWidth - 400
+                    : window.innerWidth;
+
             setCanvasWidth(width);
         };
 
         window.addEventListener("resize", update);
         update();
         return () => window.removeEventListener("resize", update);
-    }, []);
+    }, [panelState]);
 
-    const [panelState, setPanelState] = useState(true)
+
+
+    useEffect(() => {
+        if (isPlaying) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+    }, [isPlaying]);
+
 
 
 
@@ -43,11 +58,20 @@ export default function Piano() {
 
         >
             {panelState ? (
-                <Panel setPanelState={setPanelState} key="panel" />
+                <Panel setPanelState={setPanelState}
+                    setCanvasWidth={setCanvasWidth}
+                    key="panel" />
             ) : (
-                <motion.div
+                <div
                     id="show-panel"
-                    onClick={() => setPanelState(true)}
+                    onClick={() => {
+                        setPanelState(true)
+
+                        if (window.innerWidth > window.innerHeight) {
+                            setCanvasWidth(window.innerWidth - 400)
+                        }
+
+                    }}
                     style={{
                         display: "inline-block",
                     }}
@@ -65,11 +89,10 @@ export default function Piano() {
                             transformOrigin: "center center",
                         }}
                     />
-                </motion.div>
+                </div>
             )}
 
             <div id="piano-canvas"
-
                 onClick={() => {
                     const audio = audioRef.current;
 
@@ -78,7 +101,6 @@ export default function Piano() {
                         setIsPlaying(false)
                     } else {
                         audio.play()
-                        setPanelState(false)
                         setIsPlaying(true)
                     }
 

@@ -10,19 +10,20 @@ import "./Panel.css"
 
 import { motion } from "framer-motion";
 
-const DefaultLayer = () => (
-    <>
-        <Composers />
-        <ComposerPieces />
-    </>
+const DefaultLayer = ({ visible }) => (
+    <div id="default" style={{ display: visible ? "block" : "none" }}>
+        <div id="samples"> <Composers />
+            <ComposerPieces /></div>
+
+    </div>
 );
 
-export default function Panel({ setPanelState }) {
+export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
-    const { setPianoHeight, setScrollSpeed } = usePiano()
+    const { setPianoHeight, setScrollSpeed, isPlaying } = usePiano()
 
-    const [layer, setLayer] = useState("pro");
+    const [layer, setLayer] = useState("samples");
     let layers = {
         "samples": <DefaultLayer />,
         "pro": <Pro />,
@@ -54,10 +55,10 @@ export default function Panel({ setPanelState }) {
             </div>
 
             <div id="current-layer">
+                <DefaultLayer visible={layer === "samples"} />
+                <Pro visible={layer === "pro"} />
+                <About visible={layer === "about"} />
 
-                {
-                    layers[layer]
-                }
             </div>
 
 
@@ -69,15 +70,19 @@ export default function Panel({ setPanelState }) {
                 </div>
 
                 <div
-                    onClick={() => setPanelState(false)}
+                    onClick={() => {
+                        setPanelState(false)
+                        setCanvasWidth(window.innerWidth)
+
+                    }}
                 >
 
                     <img
+                        className={isPlaying ? 'playing' : ''}
+
                         id="close-panel"
                         src="logo.png"
                         style={{
-                            width: "100%",
-                            height: "100%",
                             objectFit: "contain",
                             transformOrigin: "center center",
                         }}

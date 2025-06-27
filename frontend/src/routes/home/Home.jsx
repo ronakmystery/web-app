@@ -14,9 +14,15 @@ export default function Home() {
                 <button>LinkedIn</button>
             </a>
 
-            <a href="https://www.youtube.com/@mysteryclassicalpianist" target='_black' className='app-link'>
+            <a href="https://www.youtube.com/@mysteryclassicalpianist" target='_blank' className='app-link'>
                 <button>YouTube</button>
             </a>
+
+            <a href="mailto:ronakmystery@gmail.com" className="app-link"
+                target='_blank' >
+                <button>Email</button>
+            </a>
+
 
 
             <div>Projects<br />

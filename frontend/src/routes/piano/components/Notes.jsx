@@ -93,9 +93,6 @@ export default function Notes({ width }) {
                 height: scrollableHeight + 100
             }}
 
-
-
-
         >
 
             {notes.map((note, i) => {
