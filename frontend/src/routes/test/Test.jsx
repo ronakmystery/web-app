@@ -40,7 +40,7 @@ export default function Test() {
     });
 
     if (!res.ok) {
-      setStatus("❌ Upload failed");
+      setStatus(`❌ Upload failed ${res.statusText}`);
       setUploading(false);
       return;
     }
@@ -80,14 +80,35 @@ export default function Test() {
     <div>
       <h2>🎵 Uploaded MIDI Files</h2>
 
-      <form onSubmit={handleUpload} style={{ marginBottom: "1rem" }}>
-        <input type="file" name="file"
+      <form
+        onSubmit={handleUpload}
+        style={{
+          marginBottom: "1rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+          flexWrap: "wrap"
+        }}
+      >
+        <input
+          type="file"
+          name="file"
           accept=".mid,.midi,audio/midi"
-          disabled={uploading} />
+          disabled={uploading}
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (file && file.size > 200 * 1024) {
+              alert(`❌ File too large. Max allowed is ${70}KB.`);
+              e.target.value = "";
+            }
+          }}
+        />
+
         <button type="submit" disabled={uploading}>
-          {uploading ? "Processing..." : "Upload MIDI"}
+          {uploading ? "🎶 Processing..." : "⬆️ Upload MIDI"}
         </button>
       </form>
+
 
       {loading ? (
         <p>Loading...</p>
@@ -97,13 +118,17 @@ export default function Test() {
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {files.map((f) => (
             <div key={f.id} style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-              <audio controls src={`/backend/${f.mp3}`} style={{ flex: 1 }} />
+              <audio
+                controls
+                src={`/backend/${f.mp3.replace(/^\/+/, "")}`} // ✅ strip leading slashes
+                style={{ flex: 1 }}
+              />
               <button onClick={() => handleDelete(f.id)}>🗑️ Delete</button>
             </div>
           ))}
-
         </div>
       )}
+
     </div>
   );
 }

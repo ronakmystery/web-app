@@ -15,18 +15,17 @@ export default function Piano() {
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
-    const [panelState, setPanelState] = useState(false)
+    const [panelState, setPanelState] = useState(true)
 
 
     useEffect(() => {
         const update = () => {
             const isPortrait = window.innerHeight > window.innerWidth;
-            console.log(panelState)
 
             const width = isPortrait
                 ? window.innerWidth
                 : panelState
-                    ? window.innerWidth - 400
+                    ? window.innerWidth - 300
                     : window.innerWidth;
 
             setCanvasWidth(width);
@@ -68,7 +67,7 @@ export default function Piano() {
                         setPanelState(true)
 
                         if (window.innerWidth > window.innerHeight) {
-                            setCanvasWidth(window.innerWidth - 400)
+                            setCanvasWidth(window.innerWidth - 300)
                         }
 
                     }}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePiano } from "../PianoContext"
 
 import Composers from "./panel/Composers";
@@ -29,14 +29,30 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
         "pro": <Pro />,
         "about": <About />
     }
+    const layerNames = {
+        samples: " 🎶",
+        pro: " 👑",
+        about: "📜"
+    };
+
+
+
+    const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
+
+    useEffect(() => {
+        const update = () => setIsPortrait(window.innerHeight > window.innerWidth);
+        window.addEventListener("resize", update);
+        return () => window.removeEventListener("resize", update);
+    }, []);
+
 
 
     return (
         <motion.div
             id="panel"
-            initial={{ x: 200, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 200, opacity: 0 }}
+            initial={isPortrait ? { y: -200, opacity: 0 } : { x: 200, opacity: 0 }}
+            animate={isPortrait ? { y: 0, opacity: 1 } : { x: 0, opacity: 1 }}
+            exit={isPortrait ? { y: -200, opacity: 0 } : { x: 200, opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
 
@@ -48,7 +64,13 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                         <button key={key} onClick={() => setLayer(key)}
                             id={`${layer === key ? "selected-layer" : ""}`}
                         >
-                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                            {layer === key ? (
+                                layerNames[key]
+                            ) : (
+                                <>
+                                    {layerNames[key]} {key}
+                                </>
+                            )}
                         </button>
                     ))
                 }
@@ -90,7 +112,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
                 </div>
                 <div>
-                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>🎵
+                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>🎼
                     <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
                 </div>
 

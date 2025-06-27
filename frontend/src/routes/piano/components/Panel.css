@@ -51,10 +51,18 @@
     #select-layer {
         box-shadow: var(--shadow);
         width: 70px;
-    }
 
-    #selected-layers {
-        display: flex;
+        button {
+            width: 50px;
+            height: 40px;
+        }
+
+        #selected-layer {
+            font-size: 15px;
+
+
+        }
+
     }
 
     #current-layer {
@@ -71,12 +79,17 @@
 
             #composers {
                 overflow: scroll;
-                width: 100px
+                width: 50%
             }
 
             #composer-pieces {
                 overflow: scroll;
-                width: 100%;
+                width: 50%;
+
+                button {
+                    width: 70%;
+                    overflow: hidden;
+                }
             }
         }
 
@@ -101,7 +114,7 @@
 
 @media screen and (orientation: landscape) {
     #panel {
-        width: 400px;
+        width: 300px;
         height: 100%;
         right: 0;
     }

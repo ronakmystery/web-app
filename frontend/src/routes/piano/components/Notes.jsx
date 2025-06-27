@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePiano } from "../PianoContext"
 import "./Notes.css"
 
@@ -55,23 +55,6 @@ export default function Notes({ width }) {
 
 
 
-    //save scroll position
-    useEffect(() => {
-
-        const saveScroll = () => {
-            let n = scrollableHeight - window.scrollY
-            let z = n / scrollSpeed
-            localStorage.setItem("pianoScrollY", window.scrollY.toString());
-            localStorage.setItem("pianoCurrentTime", z.toString());
-
-        };
-
-        window.addEventListener("scroll", saveScroll);
-        return () => window.removeEventListener("scroll", saveScroll);
-    }, []);
-
-
-
     let playpause = (time) => {
         const audio = audioRef.current;
         audio.currentTime = time
@@ -81,6 +64,10 @@ export default function Notes({ width }) {
 
         }
     }
+
+
+
+
 
 
 
@@ -133,7 +120,6 @@ export default function Notes({ width }) {
                             borderRadius: 10,
                             zIndex: isB ? 2 : 1,
                             transform: isActive ? "scale(1.5) scaleY(-1)" : "scale(1) scaleY(-1)",
-                            transition: "transform 0.2s ease, box-shadow 0.2s ease",
                             boxShadow: isActive ? `0 0 10px 2px ${color}` : "",
                             animation: isActive ? "pop 0.3s forwards" : "none",
 
