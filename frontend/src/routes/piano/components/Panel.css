@@ -11,6 +11,7 @@
     top: 0;
     box-sizing: border-box;
     z-index: 200;
+    padding-right: 50px;
 
 
     button {
@@ -28,7 +29,7 @@
         gap: 10px;
         padding: 10px;
         box-shadow: var(--shadow);
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(66, 165, 245, 0.05);
         position: absolute;
         right: 0;
         top: 0;
@@ -49,46 +50,58 @@
     }
 
     #select-layer {
+        background: rgba(102, 187, 106, 0.05);
         box-shadow: var(--shadow);
-        width: 70px;
+        width: 80px;
 
         button {
-            width: 50px;
+            text-transform: uppercase;
             height: 40px;
+            width: 60px;
+            font-size: 8px;
         }
 
         #selected-layer {
-            font-size: 15px;
-
-
+            font-size: 14px;
+            background: var(--green);
+            transition: all .2s ease-in-out;
+            box-shadow: 0 0 10px 0px white;
         }
 
     }
 
     #current-layer {
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.05);
         height: 100%;
+        width: calc(100% - 90px);
 
-        #default {
+        #samples {
             height: 100%;
         }
 
-        #samples {
+        #samples-container {
             display: flex;
-            padding-right: 60px;
             height: 100%;
 
-            #composers {
-                overflow: scroll;
-                width: 50%
-            }
+
 
             #composer-pieces {
                 overflow: scroll;
-                width: 50%;
+                width: 60%;
+                height: calc(100% - 20px);
+                padding: 10px 0;
 
                 button {
-                    width: 70%;
+                    width: calc(100% - 20px);
+                    text-overflow: ellipsis;
                     overflow: hidden;
+                }
+
+                #selected-midi {
+                    background: var(--green);
+                    transition: all .2s ease-in-out;
+                    box-shadow: 0 0 10px 0px white;
                 }
             }
         }
@@ -100,12 +113,6 @@
 
 
 
-    #selected-midi,
-    #selected-layer {
-        background: var(--green);
-        transition: all .2s ease-in-out;
-        box-shadow: 0 0 10px 0px white;
-    }
 
 
 

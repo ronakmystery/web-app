@@ -17,14 +17,10 @@ export default function Composers() {
                         className={`composer ${selectedComposer === composer ? "selected-composer" : ''}`}
                     >
 
-                        <div className="composer-info">
-                            <div className="composer-image">
-                                <img src={`/composers/compressed/${composer}.jpg`} alt={composer} />
-
-
-                            </div>
-                            <div className="composer-name">  {composer.charAt(0).toUpperCase() + composer.slice(1)}</div>
-                        </div>
+                        <img
+                            className="composer-image   "
+                            src={`/composers/compressed/${composer}.jpg`} alt={composer} />
+                        <div className="composer-name">  {composer.charAt(0).toUpperCase() + composer.slice(1)}</div>
 
 
                     </div>

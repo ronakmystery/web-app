@@ -10,10 +10,15 @@ import "./Panel.css"
 
 import { motion } from "framer-motion";
 
-const DefaultLayer = ({ visible }) => (
-    <div id="default" style={{ display: visible ? "block" : "none" }}>
-        <div id="samples"> <Composers />
-            <ComposerPieces /></div>
+const Samples = ({ visible }) => (
+    <div id="samples" style={{ display: visible ? "block" : "none" }}>
+        <div
+            id="samples-container"
+        >
+            <Composers />
+            <ComposerPieces />
+        </div>
+
 
     </div>
 );
@@ -25,12 +30,12 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
     const [layer, setLayer] = useState("samples");
     let layers = {
-        "samples": <DefaultLayer />,
+        "samples": <Samples />,
         "pro": <Pro />,
         "about": <About />
     }
     const layerNames = {
-        samples: " 🎶",
+        samples: " 🎵",
         pro: " 👑",
         about: "📜"
     };
@@ -77,10 +82,9 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
             </div>
 
             <div id="current-layer">
-                <DefaultLayer visible={layer === "samples"} />
+                <Samples visible={layer === "samples"} />
                 <Pro visible={layer === "pro"} />
                 <About visible={layer === "about"} />
-
             </div>
 
 
@@ -112,7 +116,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
                 </div>
                 <div>
-                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>🎼
+                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>↕️
                     <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
                 </div>
 

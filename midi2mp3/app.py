@@ -3,110 +3,77 @@ import os, uuid, subprocess, time
 import threading
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 200 * 1024  
+app.config['MAX_CONTENT_LENGTH'] = 200 * 1024  # 200 KB max upload
 
-UPLOAD_FOLDER = "converted"
-SF2_PATH = "piano.sf2"
+BASE_FOLDER = "data"
+SF2_PATH = "sf2/wii.sf2"
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-
-
-# from datetime import datetime
-# LOG_FILE = "visitors.log"
-# @app.before_request
-# def log_visitor():
-#     ip = request.remote_addr
-#     time_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-#     log_line = f"{time_str} | {ip}\n"
-
-#     with open(LOG_FILE, "a") as f:
-#         f.write(log_line)
-
-#     print(f"📘 Logged visit: {log_line.strip()}")
-
-# @app.route("/visits")
-# def show_logs():
-#     if not os.path.exists(LOG_FILE):
-#         return "No visits yet."
-    
-#     with open(LOG_FILE, "r") as f:
-#         return "<br>".join(f.readlines())
-
-
-
-
-
-
-
-
-
-@app.route("/status_stream/<uid>")
-def stream(uid):
-    def event_stream():
-        status_file = os.path.join(UPLOAD_FOLDER, f"{uid}.status")
-        while True:
-            if os.path.exists(status_file):
-                with open(status_file) as f:
-                    status = f.read().strip()
-                yield f"data: {status}\n\n"
-                if status == "done":
-                    break
-            time.sleep(1)
-    return Response(event_stream(), content_type="text/event-stream")
+os.makedirs(BASE_FOLDER, exist_ok=True)
 
 @app.route('/')
 def test():
     return jsonify("server running")
-    
-
-@app.route('/converted/<filename>')
-def serve_file(filename):
-    path = os.path.join(UPLOAD_FOLDER, filename)
-    if not os.path.exists(path):
-        return "File not found", 404
-    return send_file(path)
 
 
-@app.route('/list')
-def list_midis():
-    files = os.listdir(UPLOAD_FOLDER)
-    midi_ids = set(f.split('.')[0] for f in files if f.endswith('.mid'))
+import pretty_midi
 
-    result = [
-        {
-            "id": fid,
-            "midi": f"/converted/{fid}.mid",
-            "mp3": f"/converted/{fid}.mp3"
-        } for fid in sorted(midi_ids)
-    ]
-    return jsonify(result)
+def reverse_midi(input_path):
+    midi = pretty_midi.PrettyMIDI(input_path)
+    total_time = midi.get_end_time()
+
+    reversed_midi = pretty_midi.PrettyMIDI()
+    for inst in midi.instruments:
+        new_inst = pretty_midi.Instrument(program=inst.program, is_drum=inst.is_drum, name=inst.name)
+        for note in inst.notes:
+            new_note = pretty_midi.Note(
+                velocity=note.velocity,
+                pitch=note.pitch,
+                start=total_time - note.end,
+                end=total_time - note.start
+            )
+            new_inst.notes.append(new_note)
+        reversed_midi.instruments.append(new_inst)
+
+    reversed_midi.write(input_path)
+
 
 @app.route('/upload', methods=['POST'])
 def upload_midi():
+    global SF2_PATH
     file = request.files.get('file')
+    userid = request.form.get('userid')
+    reverse_flag = request.form.get("reverse") == "true"
+    retro_flag = request.form.get("retro") == "true"
+    if retro_flag:
+        SF2_PATH = "sf2/8b.sf2"
+    else:
+        SF2_PATH = "sf2/wii.sf2"
 
-    if not file or not file.filename.endswith('.mid'):
-        return jsonify({
-            "error": "InvalidFileType",
-            "message": "Only .mid files are allowed"
-        }), 400
+    if not file or not userid:
+        return jsonify({"error": "MissingFileOrUser", "message": "Both file and userid are required"}), 400
 
-    if file.content_type not in ['audio/midi', 'audio/x-midi', 'application/octet-stream']:
-        return jsonify({
-            "error": "InvalidContentType",
-            "message": "MIME type must be audio/midi or similar"
-        }), 400
+    print(f"📥 Received file from user {userid}: {file.filename}")
 
     uid = str(uuid.uuid4())
-    midi_path = os.path.join(UPLOAD_FOLDER, f"{uid}.mid")
-    wav_path = os.path.join(UPLOAD_FOLDER, f"{uid}.wav")
-    mp3_path = os.path.join(UPLOAD_FOLDER, f"{uid}.mp3")
-    status_path = os.path.join(UPLOAD_FOLDER, f"{uid}.status")
+    user_base = os.path.join(BASE_FOLDER, userid)
+    working_folder = os.path.join(user_base, "working")
+    final_folder = os.path.join(user_base, "processed", "converted")
+
+    os.makedirs(working_folder, exist_ok=True)
+    os.makedirs(final_folder, exist_ok=True)
+
+    midi_path = os.path.join(working_folder, f"{uid}.mid")
+    wav_path = os.path.join(working_folder, f"{uid}.wav")
+    mp3_path = os.path.join(working_folder, f"{uid}.mp3")
+    status_path = os.path.join(working_folder, f"{uid}.status")
 
     try:
         file.save(midi_path)
+
+        # Check if reverse flag is set
+        if request.form.get("reverse") == "true":
+            reverse_midi(midi_path)
+
         with open(status_path, "w") as f:
             f.write("processing")
 
@@ -116,43 +83,100 @@ def upload_midi():
         with open(status_path, "w") as f:
             f.write("done")
 
-        # Delayed cleanup
         def delayed_cleanup():
-            time.sleep(2)
+            time.sleep(1)
+
+            # Clean up intermediate files
             for path in [wav_path, status_path]:
                 if os.path.exists(path):
                     os.remove(path)
 
+
+            # Derive original base name (without extension)
+            original_base = os.path.splitext(file.filename)[0]
+            if reverse_flag:
+                original_base += "_reversed"
+            if retro_flag:
+                original_base += "_retro"
+            
+
+            # Move and rename to original filename
+            for ext in [".mid", ".mp3"]:
+                src = os.path.join(working_folder, f"{uid}{ext}")
+                dst = os.path.join(final_folder, f"{original_base}{ext}")
+                if os.path.exists(src):
+                    os.rename(src, dst)
+                    print(f"✅ Moved {src} → {dst}")
+
+
         threading.Thread(target=delayed_cleanup, daemon=True).start()
 
-        return jsonify({
-            "id": uid
-        })
+        return jsonify({"id": uid})
 
     except subprocess.CalledProcessError as e:
-        return jsonify({
-            "error": "ProcessingError",
-            "message": f"Error during audio processing: {e}"
-        }), 500
+        return jsonify({"error": "ProcessingError", "message": str(e)}), 500
 
     except Exception as e:
-        return jsonify({
-            "error": "InternalError",
-            "message": str(e)
-        }), 500
+        return jsonify({"error": "InternalError", "message": str(e)}), 500
 
 
+@app.route('/converted/<userid>/<filename>')
+def serve_file(userid, filename):
+    path = os.path.join(BASE_FOLDER, userid, "processed", "converted", filename)
+    if not os.path.exists(path):
+        return "File not found", 404
+    return send_file(path)
 
-@app.route("/delete/<uid>", methods=["DELETE"])
-def delete_file(uid):
-    base = os.path.join(UPLOAD_FOLDER, uid)
+
+@app.route('/status_stream/<userid>/<uid>')
+def stream(userid, uid):
+    status_file = os.path.join(BASE_FOLDER, userid, "working", f"{uid}.status")
+
+    def event_stream():
+        while True:
+            if os.path.exists(status_file):
+                with open(status_file) as f:
+                    status = f.read().strip()
+                yield f"data: {status}\n\n"
+                if status == "done":
+                    break
+            time.sleep(1)
+
+    return Response(event_stream(), content_type="text/event-stream")
+
+@app.route('/list')
+def list_midis():
+    result = []
+
+    for userid in os.listdir(BASE_FOLDER):
+        converted_path = os.path.join(BASE_FOLDER, userid, "processed", "converted")
+        if not os.path.isdir(converted_path):
+            continue
+
+        for file in os.listdir(converted_path):  # ✅ Moved this inside the user loop
+            if file.endswith(".mid"):
+                name = os.path.splitext(file)[0]
+                mp3_file = f"{name}.mp3"
+                result.append({
+                    "userid": userid,
+                    "id": name,
+                    "midi": f"/converted/{userid}/{file}",
+                    "mp3": f"/converted/{userid}/{mp3_file}" if os.path.exists(os.path.join(converted_path, mp3_file)) else None
+                })
+
+    return jsonify(sorted(result, key=lambda x: (x["userid"], x["id"])))
+
+
+@app.route("/delete/<userid>/<uid>", methods=["DELETE"])
+def delete_file(userid, uid):
+    converted_path = os.path.join(BASE_FOLDER, userid, "processed", "converted")
     removed = []
 
-    for ext in [".mid",".mp3"]:
-        path = f"{base}{ext}"
-        if os.path.exists(path):
+    # Remove files that start with uid or contain it as a hidden tag (if added later)
+    for filename in os.listdir(converted_path):
+        if uid in filename and filename.endswith(('.mid', '.mp3')):
+            path = os.path.join(converted_path, filename)
             os.remove(path)
-            removed.append(path)
+            removed.append(filename)
 
     return jsonify({"status": "deleted", "files": removed})
-

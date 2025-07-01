@@ -1,50 +1,58 @@
 #composers {
+
+    overflow: scroll;
+    width: 40%;
+    height: 100%;
     box-shadow: var(--shadow);
     overflow: scroll;
     box-sizing: border-box;
-    padding: 10px;
+    padding-bottom: 20px;
 
     .composer {
         display: inline-block;
-        margin-bottom: 10px;
+        margin: 10px;
+        margin-bottom: 0;
+        box-shadow: var(--shadow);
+
+        width: calc(100% - 20px);
 
         .composer-name {
             font-size: 10px;
-            height: 0;
+            height: 0px;
             overflow: hidden;
             transition: .3s;
+
         }
 
 
         .composer-image {
-            width: 100%;
             overflow: hidden;
-            display: inline-block;
+            box-shadow: var(--inset-shadow);
+            display: block;
             border-radius: 5px;
-            box-shadow: var(--shadow);
-            max-height: 70px;
-        }
-
-        .composer-image img {
             width: 100%;
-            object-fit: cover;
-            height: 70px;
+            margin: auto;
         }
-    }
 
-    .selected-composer {
-        .composer-info {
+        &.selected-composer {
             background: var(--green);
             transition: all .2s ease-in-out;
             box-shadow: 0 0 10px 0px white;
             border-radius: 5px;
+
+            .composer-name {
+                height: 10px;
+                padding: 5px 0;
+            }
+
+
         }
 
-        .composer-name {
-            font-size: 10px;
-            padding: 0 0 5px 0;
-            height: fit-content;
-        }
+
+
+
+
+
     }
 
 }

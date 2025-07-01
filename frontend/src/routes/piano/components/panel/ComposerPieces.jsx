@@ -46,7 +46,7 @@ export default function ComposerPieces() {
                             id={`${item.path === selectedMidiPath ? "selected-midi" : ""}`}
 
                         >
-                            🎵 {fileName}
+                            🎵  {fileName}
                         </button>
                     );
                 })
@@ -54,25 +54,6 @@ export default function ComposerPieces() {
 
             }
 
-            {loading ? (
-                <p>Loading...</p>
-            ) : files.length === 0 ? (
-                <p>No MIDI files found.</p>
-            ) : (
-                <div>
-                    {files.map((f) => {
-                        const path = `/backend/converted/${f.id}.mid`;
-                        return (
-                            <button
-                                key={f.id}
-                                onClick={() => loadMidi(path)}
-                            >
-                                {f.id.replace(/_/g, " ")}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
 
 
 

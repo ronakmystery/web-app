@@ -9,8 +9,7 @@
 
       .piano-key {
           border-radius: 0 0 2px 2px;
-          transition: .2s;
-
+          transition: .3s;
       }
 
       .white-key {

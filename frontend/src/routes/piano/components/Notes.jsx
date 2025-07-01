@@ -46,7 +46,7 @@ export default function Notes({ width }) {
         const y = currentTime * scrollSpeed;
 
         window.scrollTo({
-            top: scrollableHeight - y + 100
+            top: scrollableHeight - y + 100,behavior: "auto"
         });
 
 
@@ -122,6 +122,7 @@ export default function Notes({ width }) {
                             transform: isActive ? "scale(1.5) scaleY(-1)" : "scale(1) scaleY(-1)",
                             boxShadow: isActive ? `0 0 10px 2px ${color}` : "",
                             animation: isActive ? "pop 0.3s forwards" : "none",
+                            transition: "transform 0.3s, box-shadow 0.3s",
 
                         }}
                     />
