@@ -47,7 +47,7 @@ export function PianoProvider({ children }) {
 
     const [collection, setCollection] = useState(null);
     const [selectedComposer, setSelectedComposer] = useState("chopin");
-    const [selectedMidiPath, setSelectedMidiPath] = useState("/midis/chopin/N1.mid");
+    const [selectedMidiPath, setSelectedMidiPath] = useState(null);
     const parseMidi = (midi) => {
 
 
@@ -70,8 +70,8 @@ export function PianoProvider({ children }) {
         const res = await fetch(path);
         const buffer = await res.arrayBuffer();
         const midi = new Midi(buffer);
-        parseMidi(midi);
         setSelectedMidiPath(path);
+        parseMidi(midi);
     };
 
 
@@ -80,28 +80,22 @@ export function PianoProvider({ children }) {
         if (!raw) return;
 
         try {
-            const { pianoHeight, scrollSpeed, selectedMidiPath, selectedComposer } = JSON.parse(raw);
+            const { pianoHeight, scrollSpeed } = JSON.parse(raw);
 
             if (pianoHeight !== undefined) setPianoHeight(pianoHeight);
             if (scrollSpeed !== undefined) setScrollSpeed(scrollSpeed);
-            if (selectedComposer !== undefined) setSelectedComposer(selectedComposer);
-
-            if (selectedMidiPath !== undefined) {
-                setSelectedMidiPath(selectedMidiPath);
-                loadMidi(selectedMidiPath); // ✅ load immediately
-            }
 
         } catch {
             console.warn("⚠️ Invalid localStorage settings");
         }
+
+
     }, []);
 
     useEffect(() => {
         const settings = {
             pianoHeight,
             scrollSpeed,
-            selectedMidiPath,
-            selectedComposer
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     }, [pianoHeight, scrollSpeed, selectedMidiPath, selectedComposer]);

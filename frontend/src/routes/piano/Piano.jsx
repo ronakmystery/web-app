@@ -117,7 +117,7 @@ export default function Piano() {
             <audio
                 style={{ display: "none" }}
                 ref={audioRef}
-                src={selectedMidiPath.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
+                src={selectedMidiPath?.replace("/midis/", "/mp3s/").replace(/\.mid$/, ".mp3")} controls />
 
 
         </div>

@@ -28,15 +28,16 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
     const { setPianoHeight, setScrollSpeed, isPlaying } = usePiano()
 
-    const [layer, setLayer] = useState("samples");
+    const [layer, setLayer] = useState("about");
     let layers = {
+        "about": <About />,
         "samples": <Samples />,
         "pro": <Pro />,
-        "about": <About />
+
     }
     const layerNames = {
         samples: " 🎵",
-        pro: " 👑",
+        pro: "🧑‍💻",
         about: "📜"
     };
 
@@ -83,7 +84,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
             <div id="current-layer">
                 <Samples visible={layer === "samples"} />
-                <Pro visible={layer === "pro"} />
+                <Pro visible={layer === "pro"} setLayer={setLayer} />
                 <About visible={layer === "about"} />
             </div>
 

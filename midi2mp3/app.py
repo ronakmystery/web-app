@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, jsonify, Response
 import os, uuid, subprocess, time
 import threading
+import json
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024  # 200 KB max upload
@@ -14,6 +15,38 @@ os.makedirs(BASE_FOLDER, exist_ok=True)
 def test():
     return jsonify("server running")
 
+
+USERS_FILE = "users.json"
+CODE_FILE = "code.json"
+
+def load_json(path):
+    if not os.path.exists(path):
+        return {}
+    with open(path, "r") as f:
+        return json.load(f)
+
+def save_json(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+@app.route("/verify", methods=["POST"])
+def verify():
+    data = request.json
+    email = data.get("email")
+    code = data.get("code")
+    
+    users = load_json(USERS_FILE)
+    pro_code = load_json(CODE_FILE)
+
+    if pro_code["code"] != code:
+        return jsonify({"error": "Invalid code"}), 401
+
+    if email not in users:
+        users[email] = str(uuid.uuid4())
+        save_json(USERS_FILE, users)
+
+    return jsonify({"uuid": users[email], "status": "pro_verified"})
 
 import pretty_midi
 
@@ -145,26 +178,28 @@ def stream(userid, uid):
     return Response(event_stream(), content_type="text/event-stream")
 
 @app.route('/list')
-def list_midis():
+def list_user_midis():
+    uuid = request.args.get("uuid")
+    if not uuid:
+        return jsonify({"error": "Missing uuid"}), 400
+
+    user_folder = os.path.join(BASE_FOLDER, uuid, "processed", "converted")
+    if not os.path.isdir(user_folder):
+        return jsonify([])  # No files yet
+
     result = []
+    for file in os.listdir(user_folder):
+        if file.endswith(".mid"):
+            name = os.path.splitext(file)[0]
+            mp3_file = f"{name}.mp3"
+            result.append({
+                "userid": uuid,
+                "id": name,
+                "midi": f"/converted/{uuid}/{file}",
+                "mp3": f"/converted/{uuid}/{mp3_file}" if os.path.exists(os.path.join(user_folder, mp3_file)) else None
+            })
 
-    for userid in os.listdir(BASE_FOLDER):
-        converted_path = os.path.join(BASE_FOLDER, userid, "processed", "converted")
-        if not os.path.isdir(converted_path):
-            continue
-
-        for file in os.listdir(converted_path):  # ✅ Moved this inside the user loop
-            if file.endswith(".mid"):
-                name = os.path.splitext(file)[0]
-                mp3_file = f"{name}.mp3"
-                result.append({
-                    "userid": userid,
-                    "id": name,
-                    "midi": f"/converted/{userid}/{file}",
-                    "mp3": f"/converted/{userid}/{mp3_file}" if os.path.exists(os.path.join(converted_path, mp3_file)) else None
-                })
-
-    return jsonify(sorted(result, key=lambda x: (x["userid"], x["id"])))
+    return jsonify(sorted(result, key=lambda x: x["id"]))
 
 
 @app.route("/delete/<userid>/<uid>", methods=["DELETE"])
