@@ -146,7 +146,7 @@ export default function Pro({ visible, setLayer }) {
             localStorage.setItem("user_email", loginEmail);
             localStorage.setItem("pro_code", loginCode);
         } else {
-            setStatus("❌ error");
+            setStatus(data.error);
         }
     };
 
