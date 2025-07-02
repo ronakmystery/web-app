@@ -7,13 +7,23 @@ export default function About({ visible }) {
             style={{ display: visible ? "block" : "none" }}>
 
             <p>
-                🔓 <strong>Unlock Pro Mode</strong> to access these features:
+                🧑‍💻 PRO has to access these features:
             </p>
             <div id="pro-features">
                 <div>📤 Upload your own MIDI files</div>
                 <div>🔁 Reverse the MIDI file</div>
                 <div>🎮 Retro gameboy-style soundfont option</div>
             </div>
+
+            Get CODE for <strong>Pro Mode</strong> by supporting me on Patreon!
+            <a href="https://www.patreon.com/ronakmystery" className="app-link"
+                target='_blank' >
+                <button>PATREON</button>
+            </a>
+
+
+
+
 
             <div
                 id="about-footer"

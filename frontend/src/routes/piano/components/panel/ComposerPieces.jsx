@@ -8,33 +8,6 @@ export default function ComposerPieces() {
     const { selectedMidiPath, selectedComposer, collection, loadMidi } = usePiano()
 
 
-
-
-    const [files, setFiles] = useState([]);
-
-    const [loading, setLoading] = useState(true);     // for initial fetch
-
-
-    const fetchFiles = async () => {
-        try {
-            const res = await fetch("/backend/list");
-            if (!res.ok) throw new Error("Failed to load list");
-            const data = await res.json();
-            setFiles(data);
-        } catch (err) {
-            console.error("❌ Error fetching files:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
-
-    useEffect(() => {
-        fetchFiles();
-    }, []);
-
-
     return (
         <div id="composer-pieces">
 

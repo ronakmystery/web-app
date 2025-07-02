@@ -114,7 +114,7 @@ export default function Pro({ visible, setLayer }) {
         const savedCode = localStorage.getItem("pro_code");
 
         if (savedEmail && savedCode) {
-            alert(`Welcome back ${savedEmail}! Automatically logging you in...`);
+
 
             setEmail(savedEmail);
             setCode(savedCode);
@@ -124,7 +124,7 @@ export default function Pro({ visible, setLayer }) {
 
             fetchFiles(userid);
         }
-    }, []);
+    }, [userid]);
 
 
     const handleLogin = async (emailArg, codeArg) => {
@@ -140,7 +140,6 @@ export default function Pro({ visible, setLayer }) {
         });
 
         const data = await res.json();
-        console.log("Login response:", data);
 
         if (data?.status === "pro_verified") {
             setUserid(data.uuid);
@@ -182,7 +181,7 @@ export default function Pro({ visible, setLayer }) {
                     {
                         (status === "❌ error") && (
                             <div>
-                                <p>Invalid code, grab the latest version from Patreon</p>
+                                Invalid code, grab the latest version from
                                 <a href="https://www.patreon.com/ronakmystery" className="app-link"
                                     target='_blank' >
                                     <button>PATREON</button>
@@ -199,7 +198,7 @@ export default function Pro({ visible, setLayer }) {
                 userid && <div id="pro-user">
 
                     <button onClick={() => document.getElementById('uploadDialog').showModal()}>
-                        📁 Upload MIDI
+                        📤 Upload MIDI
                     </button>
 
                     <dialog id="uploadDialog">
@@ -231,7 +230,7 @@ export default function Pro({ visible, setLayer }) {
                                         type="checkbox"
                                         checked={retro}
                                         onChange={(e) => setRetro(e.target.checked)}
-                                    /> Retro Sound
+                                    />🎮 Retro Sound
                                 </label>
 
                                 <label>
@@ -239,7 +238,7 @@ export default function Pro({ visible, setLayer }) {
                                         type="checkbox"
                                         checked={reverse}
                                         onChange={(e) => setReverse(e.target.checked)}
-                                    /> Reverse
+                                    />🔁 Reverse
                                 </label>
                             </div>
 

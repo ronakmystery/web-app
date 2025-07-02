@@ -16,6 +16,9 @@ def test():
     return jsonify("server running")
 
 
+
+
+
 USERS_FILE = "users.json"
 CODE_FILE = "code.json"
 
@@ -28,7 +31,25 @@ def load_json(path):
 def save_json(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
+        
+@app.route('/patreon/webhook', methods=['POST'])
+def patreon_webhook():
+    data = request.json
+    print("📩 Patreon Webhook:", json.dumps(data, indent=2))
 
+    # Only handle pledge creation
+    if data.get("event_type") == "members:pledge:create":
+        email = data.get("data", {}).get("attributes", {}).get("email")
+
+        if email:
+            email = email.lower()
+            users = load_json(USERS_FILE)
+
+            if email not in users:
+                users[email] = str(uuid.uuid4())
+                save_json(USERS_FILE, users)
+
+    return '', 204
 
 @app.route("/verify", methods=["POST"])
 def verify():

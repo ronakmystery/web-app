@@ -1,13 +1,13 @@
 services:
 
-  midi2mp3:
-    build: ./midi2mp3
-    container_name: midi2mp3
+  backend:
+    build: ./backend
+    container_name: backend
     restart: always
     volumes:
-      - ./midi2mp3:/app                   # sync source code (hot reload)
-      - ./midi2mp3/converted:/app/converted        # sync output folder
-      - ./midi2mp3/piano.sf2:/app/piano.sf2        # make sure SoundFont is accessible
+      - ./backend:/app                   # sync source code (hot reload)
+      - ./backend/converted:/app/converted        # sync output folder
+      - ./backend/piano.sf2:/app/piano.sf2        # make sure SoundFont is accessible
     environment:
       - FLASK_ENV=development
     command: flask --app app run --host=0.0.0.0 --port=5000 --reload --with-threads

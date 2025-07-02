@@ -1,14 +1,16 @@
 services:
 
-  midi2mp3:
-    build: ./midi2mp3
-    container_name: midi2mp3
+  backend:
+    build: ./backend
+    container_name: backend
     restart: always
     volumes:
-      - ./midi2mp3:/app
-      - ./midi2mp3/converted:/app/converted
-      - ./midi2mp3/piano.sf2:/app/piano.sf2
-    command: gunicorn -w 4 -b 0.0.0.0:5000 app:app
+      - ./backend:/app
+      - ./backend/converted:/app/converted
+      - ./backend/piano.sf2:/app/piano.sf2
+    environment:
+      - FLASK_ENV=production
+    command: gunicorn --bind 0.0.0.0:5000 app:app --workers 4 --threads 4
     expose:
       - "5000"
     networks:
