@@ -2,6 +2,7 @@
   --shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 3px 6px rgba(0, 0, 0, .23);
   --inset-shadow: #000 1px 1px 3px 0 inset;
   --green: rgb(102, 187, 106);
+  --red: #ef5350;
   --font: "Roboto", sans-serif;
   --white: rgba(255, 255, 255, 0.3);
 }

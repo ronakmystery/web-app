@@ -1,7 +1,8 @@
 p
 __pycache__
 
-converted
+backend/converted
+backend/data
 
 users.json
 code.json

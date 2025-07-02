@@ -3,11 +3,11 @@ import os, uuid, subprocess, time
 import threading
 import json
 
+
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024  # 200 KB max upload
 
 BASE_FOLDER = "data"
-SF2_PATH = "sf2/wii.sf2"
 
 os.makedirs(BASE_FOLDER, exist_ok=True)
 
@@ -76,20 +76,25 @@ def reverse_midi(input_path):
 
 @app.route('/upload', methods=['POST'])
 def upload_midi():
-    global SF2_PATH
+
     file = request.files.get('file')
     userid = request.form.get('userid')
+    if not file.filename.endswith(".mid"):
+        return jsonify({"error": "Invalid file type"}), 400
+
+
+    users = load_json(USERS_FILE)
+    if userid not in users.values():
+        return jsonify({"error": "Invalid user"}), 403
+
+    
     reverse_flag = request.form.get("reverse") == "true"
     retro_flag = request.form.get("retro") == "true"
-    if retro_flag:
-        SF2_PATH = "sf2/8b.sf2"
-    else:
-        SF2_PATH = "sf2/wii.sf2"
+    sf2_path = "sf2/8b.sf2" if retro_flag else "sf2/wii.sf2"
+
 
     if not file or not userid:
         return jsonify({"error": "MissingFileOrUser", "message": "Both file and userid are required"}), 400
-
-    print(f"📥 Received file from user {userid}: {file.filename}")
 
     uid = str(uuid.uuid4())
     user_base = os.path.join(BASE_FOLDER, userid)
@@ -114,7 +119,7 @@ def upload_midi():
         with open(status_path, "w") as f:
             f.write("processing")
 
-        subprocess.run(["fluidsynth", "-ni", SF2_PATH, midi_path, "-F", wav_path, "-r", "44100"], check=True)
+        subprocess.run(["fluidsynth", "-ni", sf2_path, midi_path, "-F", wav_path, "-r", "44100"], check=True)
         subprocess.run(["ffmpeg", "-y", "-i", wav_path, "-codec:a", "libmp3lame", "-qscale:a", "2", mp3_path], check=True)
 
         with open(status_path, "w") as f:
@@ -147,14 +152,18 @@ def upload_midi():
 
 
         threading.Thread(target=delayed_cleanup, daemon=True).start()
-
         return jsonify({"id": uid})
 
     except subprocess.CalledProcessError as e:
+        with open(status_path, "w") as f:
+            f.write("failed")
         return jsonify({"error": "ProcessingError", "message": str(e)}), 500
 
     except Exception as e:
+        with open(status_path, "w") as f:
+            f.write("failed")
         return jsonify({"error": "InternalError", "message": str(e)}), 500
+
 
 
 @app.route('/converted/<userid>/<filename>')
@@ -208,6 +217,10 @@ def list_user_midis():
 
 @app.route("/delete/<userid>/<uid>", methods=["DELETE"])
 def delete_file(userid, uid):
+    users = load_json(USERS_FILE)
+    if userid not in users.values():
+        return jsonify({"error": "Invalid user"}), 403
+    
     converted_path = os.path.join(BASE_FOLDER, userid, "processed", "converted")
     removed = []
 

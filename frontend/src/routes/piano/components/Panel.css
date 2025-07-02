@@ -91,8 +91,8 @@
             #composer-pieces {
                 overflow: scroll;
                 width: 60%;
-                height: calc(100% - 20px);
-                padding: 10px 0;
+                height: calc(100% - 10px);
+                padding: 5px 0;
 
                 button {
                     width: calc(100% - 20px);

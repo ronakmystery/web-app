@@ -15,10 +15,10 @@ export default function About({ visible }) {
                 <div>🎮 Retro gameboy-style soundfont option</div>
             </div>
 
-            Get CODE for <strong>Pro Mode</strong> by supporting me on Patreon!
+            Get code by supporting me on Patreon!
             <a href="https://www.patreon.com/ronakmystery" className="app-link"
                 target='_blank' >
-                <button>PATREON</button>
+                <button>🔓 PATREON</button>
             </a>
 
 

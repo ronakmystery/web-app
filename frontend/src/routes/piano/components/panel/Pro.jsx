@@ -131,8 +131,6 @@ export default function Pro({ visible, setLayer }) {
         const loginEmail = emailArg ?? email;
         const loginCode = codeArg ?? code;
 
-        setStatus("Checking...");
-
         const res = await fetch("/backend/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -145,6 +143,7 @@ export default function Pro({ visible, setLayer }) {
             setUserid(data.uuid);
             localStorage.setItem("user_email", loginEmail);
             localStorage.setItem("pro_code", loginCode);
+            setStatus("");
         } else {
             setStatus(data.error);
         }
@@ -166,102 +165,131 @@ export default function Pro({ visible, setLayer }) {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="PATREON email"
+                        placeholder="Email"
                     />
                     <input
-                        type="code"
+                        type="password"
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
-                        placeholder="CODE"
+                        placeholder="Code"
                     />
                     <button onClick={() => handleLogin()}
                     >
-                        Login
+                        🔑 Login
                     </button>
-                    {
-                        (status === "❌ error") && (
-                            <div>
-                                Invalid code, grab the latest version from
-                                <a href="https://www.patreon.com/ronakmystery" className="app-link"
-                                    target='_blank' >
-                                    <button>PATREON</button>
-                                </a>
-                            </div>
+                    {status && <p className="status">🚷{status}</p>}
+                    <div id="about">
 
-                        )
-                    }
+                        <p>
+                            🧑‍💻 PRO users have access to these features
+                        </p>
+                        <div id="pro-features">
+                            <div>📤 Upload your own midi files</div>
+                            <div>🔁 Reverse the midi file</div>
+                            <div>🎮 Retro gameboy-style soundfont option</div>
+                        </div>
+
+                        Get code by supporting me on Patreon!
+                        <a href="https://www.patreon.com/ronakmystery" className="app-link"
+                            target='_blank' >
+                            <button>🔓 PATREON</button>
+                        </a>
+
+                    </div>
+
+
+
                 </div>
             }
+
 
 
             {
                 userid && <div id="pro-user">
 
-                    <button onClick={() => document.getElementById('uploadDialog').showModal()}>
-                        📤 Upload MIDI
-                    </button>
 
-                    <dialog id="uploadDialog">
 
-                        <form
-                            method="dialog"
-                            onSubmit={handleUpload}
-                            id="upload-form"
-                        >
-                            <input
-                                id="choose-file"
-                                type="file"
-                                name="file"
-                                ref={fileRef}
-                                accept=".mid,.midi,audio/midi"
-                                disabled={uploading}
-                                onChange={(e) => {
-                                    const file = e.target.files[0];
-                                    if (file && file.size > 200 * 1024) {
-                                        alert(`❌ File too large. Max allowed is 200KB.`);
-                                        e.target.value = "";
-                                    }
-                                }}
-                            />
+                    <div id="user-buttons">
 
-                            <div id="upload-options">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={retro}
-                                        onChange={(e) => setRetro(e.target.checked)}
-                                    />🎮 Retro Sound
-                                </label>
+                        <button onClick={() => document.getElementById('uploadDialog').showModal()}>
+                            📂 Upload MIDI
+                        </button>
 
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={reverse}
-                                        onChange={(e) => setReverse(e.target.checked)}
-                                    />🔁 Reverse
-                                </label>
-                            </div>
+                        <dialog id="uploadDialog">
 
-                            <button
-                                type="submit"
-                                disabled={uploading}
+                            <form
+                                method="dialog"
+                                onSubmit={handleUpload}
+                                id="upload-form"
                             >
-                                {uploading ? "🔄 Processing..." : "📤 UPLOAD"}
-                            </button>
+                                <input
+                                    id="choose-file"
+                                    type="file"
+                                    name="file"
+                                    ref={fileRef}
+                                    accept=".mid,.midi,audio/midi"
+                                    disabled={uploading}
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file && file.size > 200 * 1024) {
+                                            alert(`❌ File too large. Max allowed is 200KB.`);
+                                            e.target.value = "";
+                                        }
+                                    }}
+                                />
 
-                            <button onClick={(e) => {
-                                e.preventDefault();
-                                document.getElementById('uploadDialog').close()
-                            }}>
-                                CLOSE
-                            </button>
+                                <div id="upload-options">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={retro}
+                                            onChange={(e) => setRetro(e.target.checked)}
+                                        />🎮 Retro Sound
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={reverse}
+                                            onChange={(e) => setReverse(e.target.checked)}
+                                        />🔁 Reverse
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={uploading}
+                                >
+                                    {uploading ? "🔄 Processing..." : "📤 UPLOAD"}
+                                </button>
+
+                                <button onClick={(e) => {
+                                    e.preventDefault();
+                                    document.getElementById('uploadDialog').close()
+                                }}>
+                                    CANCEL
+                                </button>
 
 
-                        </form>
-                    </dialog>
+                            </form>
+                        </dialog>
 
 
+                        <button
+                            id="logout-button"
+                            onClick={() => {
+                                if (window.confirm("Are you sure you want to log out?")) {
+                                    setUserid(null);
+                                    localStorage.removeItem("user_email");
+                                    localStorage.removeItem("pro_code");
+                                }
+                            }}
+                        >
+                            LOGOUT
+                        </button>
 
+
+                    </div>
 
                     {loading ? (
                         <p>Loading...</p>
@@ -286,7 +314,7 @@ export default function Pro({ visible, setLayer }) {
                                         }
                                     }}
                                     onTouchStart={() => {
-                                        f._holdTimeout = setTimeout(() => handleDelete(f.id), 300);
+                                        f._holdTimeout = setTimeout(() => handleDelete(f.id), 500);
                                     }}
                                     onTouchEnd={() => clearTimeout(f._holdTimeout)}
                                     onTouchCancel={() => clearTimeout(f._holdTimeout)}
@@ -300,13 +328,7 @@ export default function Pro({ visible, setLayer }) {
                     )}
 
 
-                    <button id="logout-button"
-                        onClick={() => {
-                            setUserid(null);
-                            localStorage.removeItem("user_email");
-                            localStorage.removeItem("pro_code");
-                        }}
-                    >LOGOUT</button>
+
 
                 </div>
 
