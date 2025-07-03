@@ -6,5 +6,6 @@ backend/data
 
 users.json
 code.json
+emails.txt
 
-code.py
+patreon.py

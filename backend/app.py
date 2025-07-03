@@ -31,26 +31,35 @@ def load_json(path):
 def save_json(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
+
+def load_email_list(path="emails.txt"):
+    with open(path) as f:
+        return [line.strip() for line in f if line.strip()]
+
         
-
-
 @app.route("/verify", methods=["POST"])
 def verify():
     data = request.json
     email = data.get("email")
     code = data.get("code")
-    
-    users = load_json(USERS_FILE)
-    pro_code = load_json(CODE_FILE)
 
-    if pro_code["code"] != code:
+    users = load_json(USERS_FILE)        
+    pro_code = load_json(CODE_FILE)["code"] 
+    pro_emails =load_email_list() 
+
+    if code != pro_code:
         return jsonify({"error": "Invalid code"}), 401
 
     if email not in users:
         return jsonify({"error": "Invalid email"}), 401
 
+    if email not in pro_emails:
+        return jsonify({"error": "Not a patreon"}), 403
 
-    return jsonify({"uuid": users[email], "status": "pro_verified"})
+    return jsonify({
+        "uuid": users[email],
+        "status": "pro_verified"
+    })
 
 import pretty_midi
 
