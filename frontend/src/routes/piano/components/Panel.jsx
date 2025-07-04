@@ -35,7 +35,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
     }
     const layerNames = {
-        samples: " 🎵",
+        samples: "🎶",
         pro: "🧑‍💻",
     };
 
@@ -72,7 +72,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                                 layerNames[key]
                             ) : (
                                 <>
-                                    {layerNames[key]} {key}
+                                    {layerNames[key]}
                                 </>
                             )}
                         </button>

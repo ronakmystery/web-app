@@ -93,7 +93,11 @@ export default function Piano() {
 
             <div id="piano-canvas"
                 onClick={() => {
+
                     const audio = audioRef.current;
+                    if (!audio.src) return;
+
+
 
                     if (!audio.paused) {
                         audio.pause();

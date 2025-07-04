@@ -19,7 +19,7 @@ export default function ComposerPieces() {
                             id={`${item.path === selectedMidiPath ? "selected-midi" : ""}`}
 
                         >
-                            🎵  {fileName}
+                            {fileName}
                         </button>
                     );
                 })

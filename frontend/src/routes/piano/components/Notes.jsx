@@ -26,7 +26,6 @@ export default function Notes({ width }) {
 
     const scrollableHeight = maxTime * scrollSpeed;
 
-
     function noteColor(isB, track) {
         return track === 1
             ? isB ? "#1565C0" : "#42A5F5"
@@ -46,7 +45,7 @@ export default function Notes({ width }) {
         const y = currentTime * scrollSpeed;
 
         window.scrollTo({
-            top: scrollableHeight - y + 100,behavior: "auto"
+            top: scrollableHeight - y + 100, behavior: "auto"
         });
 
 
@@ -105,6 +104,7 @@ export default function Notes({ width }) {
                         key={i}
                         onClick={(e) => {
                             e.stopPropagation()
+
                             playpause(note.time)
 
                         }}

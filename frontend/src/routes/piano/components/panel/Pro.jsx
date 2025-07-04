@@ -14,12 +14,13 @@ export default function Pro({ visible, setLayer }) {
 
 
     const [files, setFiles] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [userid, setUserid] = useState(null);
     const [reverse, setReverse] = useState(false);
     const [retro, setRetro] = useState(false);
     const fileRef = useRef(null);
+
+
 
 
     const fetchFiles = async () => {
@@ -28,13 +29,18 @@ export default function Pro({ visible, setLayer }) {
 
             if (!res.ok) throw new Error("Failed to load list");
             const data = await res.json();
-            setFiles(data.filter((f) => f.userid === userid));
+            setFiles(data);
         } catch (err) {
             console.error("❌ Error fetching files:", err);
-        } finally {
-            setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (userid) {
+
+            fetchFiles();
+        }
+    }, [userid]);
 
 
 
@@ -95,7 +101,7 @@ export default function Pro({ visible, setLayer }) {
         });
 
         if (res.ok) {
-            setFiles((prev) => prev.filter((f) => f.id !== id));
+            fetchFiles();
         } else {
             alert("❌ Failed to delete.");
         }
@@ -108,41 +114,55 @@ export default function Pro({ visible, setLayer }) {
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState("");
     const [code, setCode] = useState("");
+    const [password, setPassword] = useState("");
+
 
     useEffect(() => {
-        const savedEmail = localStorage.getItem("user_email");
-        const savedCode = localStorage.getItem("pro_code");
 
-        if (savedEmail && savedCode) {
+        setLayer("pro");
 
 
-            setEmail(savedEmail);
-            setCode(savedCode);
-            handleLogin(savedEmail, savedCode);
+        const uuid = localStorage.getItem("uuid");
+        const code = localStorage.getItem("code");
 
-            setLayer("pro");
-
-            fetchFiles(userid);
-        }
-    }, [userid]);
+        if (!uuid || !code) return;
 
 
-    const handleLogin = async (emailArg, codeArg) => {
-        const loginEmail = emailArg ?? email;
-        const loginCode = codeArg ?? code;
+
+        fetch("/backend/verify_uuid", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uuid, code }),
+        })
+            .then(res => res.ok ? res.json() : Promise.reject())
+            .then(() => {
+                setUserid(uuid);
+                setCode(code);
+                setStatus("");
+            })
+            .catch(() => {
+                localStorage.removeItem("uuid");
+                localStorage.removeItem("code");
+                setStatus("Auto-login failed...");
+            });
+    }, []);
+
+
+
+    const handleLogin = async () => {
 
         const res = await fetch("/backend/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: loginEmail, code: loginCode }),
+            body: JSON.stringify({ email, code, password }),
         });
 
         const data = await res.json();
 
         if (data?.status === "pro_verified") {
+            localStorage.setItem("uuid", data.uuid);
+            localStorage.setItem("code", code);
             setUserid(data.uuid);
-            localStorage.setItem("user_email", loginEmail);
-            localStorage.setItem("pro_code", loginCode);
             setStatus("");
         } else {
             setStatus(data.error);
@@ -160,18 +180,28 @@ export default function Pro({ visible, setLayer }) {
                     id="pro-login"
                 >
 
+
                     <h3>🔓 Unlock Pro Mode</h3>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                    />
+
                     <input
                         type="password"
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         placeholder="Code"
+                    />
+
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Username"
+                    />
+
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
                     />
                     <button onClick={() => handleLogin()}
                     >
@@ -214,6 +244,7 @@ export default function Pro({ visible, setLayer }) {
                         <button onClick={() => document.getElementById('uploadDialog').showModal()}>
                             📂 Upload MIDI
                         </button>
+
 
                         <dialog id="uploadDialog">
 
@@ -263,12 +294,14 @@ export default function Pro({ visible, setLayer }) {
                                     {uploading ? "🔄 Processing..." : "📤 UPLOAD"}
                                 </button>
 
-                                <button onClick={(e) => {
-                                    e.preventDefault();
-                                    document.getElementById('uploadDialog').close()
-                                }}>
-                                    CANCEL
-                                </button>
+                                <div
+                                    id="close-dialog-button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        document.getElementById('uploadDialog').close()
+                                    }}>
+                                    ↩️
+                                </div>
 
 
                             </form>
@@ -279,9 +312,9 @@ export default function Pro({ visible, setLayer }) {
                             id="logout-button"
                             onClick={() => {
                                 if (window.confirm("Are you sure you want to log out?")) {
-                                    setUserid(null);
-                                    localStorage.removeItem("user_email");
-                                    localStorage.removeItem("pro_code");
+                                    localStorage.removeItem("uuid");
+                                    localStorage.removeItem("code");
+                                    window.location.reload();
                                 }
                             }}
                         >
@@ -291,41 +324,43 @@ export default function Pro({ visible, setLayer }) {
 
                     </div>
 
-                    {loading ? (
-                        <p>Loading...</p>
-                    ) : files.length === 0 ? (
+
+
+                    {files.length === 0 ? (
                         <p>No MIDI files...</p>
                     ) : (
-                        <div id="user-files">
-                            {files.map((f) => (
+                        (() => {
+                            let holdTimeout = null;
 
-                                <button key={f.id}
-                                    onClick={() => {
-                                        setSelectedFile(f.id);
-                                        loadMidi(`/backend/converted/${userid}/${f.id}.mid`)
-                                    }
-                                    }
-                                    className={`user-midi ${selectedFile === f.id ? "selected-user-midi" : ""}`}
+                            return (
+                                <div id="user-files">
+                                    {files.map((name) => (
+                                        <button
+                                            className={`user-midi ${selectedFile === name ? "selected-user-midi" : ""}`}
+                                            key={name}
+                                            onClick={() => {
+                                                setSelectedFile(name);
+                                                loadMidi(`/backend/converted/${userid}/${name}.mid`);
+                                            }}
 
-                                    onContextMenu={(e) => {
-                                        e.preventDefault(); // Prevent the browser's context menu
-                                        if (window.confirm(`Delete "${f.id}"?`)) {
-                                            handleDelete(f.id);
-                                        }
-                                    }}
-                                    onTouchStart={() => {
-                                        f._holdTimeout = setTimeout(() => handleDelete(f.id), 500);
-                                    }}
-                                    onTouchEnd={() => clearTimeout(f._holdTimeout)}
-                                    onTouchCancel={() => clearTimeout(f._holdTimeout)}
-                                > 🎵 {f.id}
-                                </button>
+                                        >
+                                            {name}
 
+                                            {selectedFile === name &&
+                                                <div
+                                                    className="delete-button "
+                                                    onClick={() => handleDelete(name)}>
+                                                    <span className="delete-icon">🗑️</span  >
 
-
-                            ))}
-                        </div>
+                                                </div>
+                                            }
+                                        </button>
+                                    ))}
+                                </div>
+                            );
+                        })()
                     )}
+
 
 
 

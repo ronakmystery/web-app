@@ -52,19 +52,18 @@
     #select-layer {
         background: rgba(255, 255, 255, 0.1);
         box-shadow: var(--shadow);
-        width: 80px;
+        width: 60px;
 
         button {
             text-transform: uppercase;
             height: 40px;
-            width: 60px;
-            font-size: 8px;
+            width: 40px;
+            font-size: 15px;
             margin: 10px;
             margin-bottom: 0;
         }
 
         #selected-layer {
-            font-size: 14px;
             background: var(--green);
             transition: all .2s ease-in-out;
             box-shadow: 0 0 10px 0px white;
@@ -76,7 +75,7 @@
         overflow: hidden;
         background: rgba(255, 255, 255, 0.05);
         height: 100%;
-        width: calc(100% - 90px);
+        width: calc(100% - 70px);
 
         #samples {
             height: 100%;
@@ -127,4 +126,5 @@
         height: 100%;
         right: 0;
     }
+
 }

@@ -1,0 +1,11 @@
+#admin-page {
+    padding: 20px;
+
+    button {
+        color: white;
+    }
+
+    textarea {
+        height: 300px;
+    }
+}

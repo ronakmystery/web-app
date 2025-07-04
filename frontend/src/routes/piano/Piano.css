@@ -7,6 +7,7 @@
         width: 100vw;
         height: 100vh;
         background: url('/background.jpg') no-repeat center center fixed;
+        background-position-x: 20%;
         background-size: cover;
         z-index: -100;
         filter: brightness(0.5);

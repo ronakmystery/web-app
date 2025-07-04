@@ -69,6 +69,7 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         color: white;
+        height: 200px;
 
         #upload-options {
             margin: 10px;
@@ -78,6 +79,20 @@
                 display: block;
             }
         }
+
+        #close-dialog-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 12px;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
     }
 
     #user-files {
@@ -85,21 +100,42 @@
         text-align: left;
         box-sizing: border-box;
         box-shadow: var(--inset-shadow);
-        padding: 5px;
 
         border-radius: 5px;
         overflow: scroll;
+        padding-bottom: 10px;
+
 
         .user-midi {
-            width: fit-content;
-            max-width: calc(100% - 20px);
-            display: block;
-            height: fit-content;
+            text-align: left;
+            margin: 10px;
+            width: calc(100% - 20px);
+            margin-bottom: 0px;
             text-overflow: ellipsis;
             white-space: wrap;
             overflow: hidden;
             user-select: none;
-            margin-bottom: 10px
+            position: relative;
+            height: 30px;
+
+            .delete-button {
+                height: 30px;
+                width: 30px;
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                /* vertical center */
+                justify-content: center;
+                /* horizontal center */
+                cursor: pointer;
+
+            }
+
         }
 
         .selected-user-midi {
