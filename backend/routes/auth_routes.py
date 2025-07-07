@@ -56,4 +56,4 @@ def verify_uuid():
     if email not in pro_emails:
         return jsonify({"error": "Not a patreon"}), 403
 
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "ok", "email": email})

@@ -100,6 +100,12 @@ export function PianoProvider({ children }) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     }, [pianoHeight, scrollSpeed, selectedMidiPath, selectedComposer]);
 
+    const [userid, setUserid] = useState("");
+    const [email, setEmail] = useState("");
+
+    const [files, setFiles] = useState([]);
+
+
 
     return (
         <PianoContext.Provider value={{
@@ -109,7 +115,10 @@ export function PianoProvider({ children }) {
             audioRef, currentTime, setCurrentTimeInternal,
             selectedMidiPath, parseMidi, loadMidi,
             collection, selectedComposer, setSelectedComposer,
-            isPlaying, setIsPlaying
+            isPlaying, setIsPlaying,
+            userid, setUserid,
+            email, setEmail,
+            files, setFiles,
         }}>
             {children}
         </PianoContext.Provider>

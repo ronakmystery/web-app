@@ -47,13 +47,23 @@
     }
 
     #user-buttons {
-        height: 80px;
+
+        height: 40px;
         overflow: hidden;
         position: relative;
 
         button {
             display: block;
             margin-bottom: 10px;
+        }
+
+        .file-settings {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 15px;
+            cursor: pointer;
+
         }
     }
 
@@ -72,6 +82,11 @@
         height: 200px;
 
         #upload-options {
+
+            .upload-info {
+                font-size: 10px;
+            }
+
             margin: 10px;
 
             label {
@@ -96,7 +111,7 @@
     }
 
     #user-files {
-        height: calc(100% - 60px);
+        height: calc(100% - 20px);
         text-align: left;
         box-sizing: border-box;
         box-shadow: var(--inset-shadow);
@@ -107,6 +122,11 @@
 
 
         .user-midi {
+            font-size: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            box-sizing: border-box;
+            padding: 10px;
             text-align: left;
             margin: 10px;
             width: calc(100% - 20px);
@@ -116,25 +136,14 @@
             overflow: hidden;
             user-select: none;
             position: relative;
-            height: 30px;
 
-            .delete-button {
-                height: 30px;
-                width: 30px;
-                position: absolute;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                font-size: 10px;
-                display: flex;
-                align-items: center;
-                /* vertical center */
-                justify-content: center;
-                /* horizontal center */
-                cursor: pointer;
-
+            button {
+                background: rgba(0, 0, 0, .5);
             }
+
+
+
+
 
         }
 

@@ -1,219 +1,216 @@
 {
   "bach": [
     {
-      "path": "/midis/bach/988-aria.mid"
+      "path": "/samples/bach/988-aria.mid"
     },
     {
-      "path": "/midis/bach/988-v01.mid"
+      "path": "/samples/bach/988-v01.mid"
     },
     {
-      "path": "/midis/bach/988-v02.mid"
+      "path": "/samples/bach/988-v02.mid"
     },
     {
-      "path": "/midis/bach/988-v03.mid"
+      "path": "/samples/bach/988-v03.mid"
     },
     {
-      "path": "/midis/bach/988-v04.mid"
+      "path": "/samples/bach/988-v04.mid"
     },
     {
-      "path": "/midis/bach/988-v05.mid"
+      "path": "/samples/bach/988-v05.mid"
     },
     {
-      "path": "/midis/bach/988-v06.mid"
+      "path": "/samples/bach/988-v06.mid"
     },
     {
-      "path": "/midis/bach/988-v07.mid"
+      "path": "/samples/bach/988-v07.mid"
     },
     {
-      "path": "/midis/bach/988-v08.mid"
+      "path": "/samples/bach/988-v08.mid"
     },
     {
-      "path": "/midis/bach/988-v09.mid"
+      "path": "/samples/bach/988-v09.mid"
     },
     {
-      "path": "/midis/bach/988-v10.mid"
+      "path": "/samples/bach/988-v10.mid"
     },
     {
-      "path": "/midis/bach/988-v11.mid"
+      "path": "/samples/bach/988-v11.mid"
     },
     {
-      "path": "/midis/bach/988-v12.mid"
+      "path": "/samples/bach/988-v12.mid"
     },
     {
-      "path": "/midis/bach/988-v13.mid"
+      "path": "/samples/bach/988-v13.mid"
     },
     {
-      "path": "/midis/bach/988-v14.mid"
+      "path": "/samples/bach/988-v14.mid"
     },
     {
-      "path": "/midis/bach/988-v15.mid"
+      "path": "/samples/bach/988-v15.mid"
     },
     {
-      "path": "/midis/bach/988-v16.mid"
+      "path": "/samples/bach/988-v16.mid"
     },
     {
-      "path": "/midis/bach/988-v17.mid"
+      "path": "/samples/bach/988-v17.mid"
     },
     {
-      "path": "/midis/bach/988-v18.mid"
+      "path": "/samples/bach/988-v18.mid"
     },
     {
-      "path": "/midis/bach/988-v19.mid"
+      "path": "/samples/bach/988-v19.mid"
     },
     {
-      "path": "/midis/bach/988-v20.mid"
+      "path": "/samples/bach/988-v20.mid"
     },
     {
-      "path": "/midis/bach/988-v21.mid"
+      "path": "/samples/bach/988-v21.mid"
     },
     {
-      "path": "/midis/bach/988-v22.mid"
+      "path": "/samples/bach/988-v22.mid"
     },
     {
-      "path": "/midis/bach/988-v23.mid"
+      "path": "/samples/bach/988-v23.mid"
     },
     {
-      "path": "/midis/bach/988-v24.mid"
+      "path": "/samples/bach/988-v24.mid"
     },
     {
-      "path": "/midis/bach/988-v25.mid"
+      "path": "/samples/bach/988-v25.mid"
     },
     {
-      "path": "/midis/bach/988-v26.mid"
+      "path": "/samples/bach/988-v26.mid"
     },
     {
-      "path": "/midis/bach/988-v27.mid"
+      "path": "/samples/bach/988-v27.mid"
     },
     {
-      "path": "/midis/bach/988-v28.mid"
+      "path": "/samples/bach/988-v28.mid"
     },
     {
-      "path": "/midis/bach/988-v29.mid"
+      "path": "/samples/bach/988-v29.mid"
     },
     {
-      "path": "/midis/bach/988-v30.mid"
-    },
-    {
-      "path": "/midis/bach/bwv1087.mid"
+      "path": "/samples/bach/988-v30.mid"
     }
   ],
   "chopin": [
     {
-      "path": "/midis/chopin/N1.mid"
+      "path": "/samples/chopin/N1.mid"
     },
     {
-      "path": "/midis/chopin/N10.mid"
+      "path": "/samples/chopin/N10.mid"
     },
     {
-      "path": "/midis/chopin/N11.mid"
+      "path": "/samples/chopin/N11.mid"
     },
     {
-      "path": "/midis/chopin/N12.mid"
+      "path": "/samples/chopin/N12.mid"
     },
     {
-      "path": "/midis/chopin/N13.mid"
+      "path": "/samples/chopin/N13.mid"
     },
     {
-      "path": "/midis/chopin/N14.mid"
+      "path": "/samples/chopin/N14.mid"
     },
     {
-      "path": "/midis/chopin/N15.mid"
+      "path": "/samples/chopin/N15.mid"
     },
     {
-      "path": "/midis/chopin/N16.mid"
+      "path": "/samples/chopin/N16.mid"
     },
     {
-      "path": "/midis/chopin/N17.mid"
+      "path": "/samples/chopin/N17.mid"
     },
     {
-      "path": "/midis/chopin/N18.mid"
+      "path": "/samples/chopin/N18.mid"
     },
     {
-      "path": "/midis/chopin/N19.mid"
+      "path": "/samples/chopin/N19.mid"
     },
     {
-      "path": "/midis/chopin/N2.mid"
+      "path": "/samples/chopin/N2.mid"
     },
     {
-      "path": "/midis/chopin/N20.mid"
+      "path": "/samples/chopin/N20.mid"
     },
     {
-      "path": "/midis/chopin/N3.mid"
+      "path": "/samples/chopin/N3.mid"
     },
     {
-      "path": "/midis/chopin/N4.mid"
+      "path": "/samples/chopin/N4.mid"
     },
     {
-      "path": "/midis/chopin/N5.mid"
+      "path": "/samples/chopin/N5.mid"
     },
     {
-      "path": "/midis/chopin/N6.mid"
+      "path": "/samples/chopin/N6.mid"
     },
     {
-      "path": "/midis/chopin/N7.mid"
+      "path": "/samples/chopin/N7.mid"
     },
     {
-      "path": "/midis/chopin/N8.mid"
+      "path": "/samples/chopin/N8.mid"
     },
     {
-      "path": "/midis/chopin/N9.mid"
+      "path": "/samples/chopin/N9.mid"
     },
     {
-      "path": "/midis/chopin/W1.mid"
+      "path": "/samples/chopin/W1.mid"
     },
     {
-      "path": "/midis/chopin/W10.mid"
+      "path": "/samples/chopin/W10.mid"
     },
     {
-      "path": "/midis/chopin/W11.mid"
+      "path": "/samples/chopin/W11.mid"
     },
     {
-      "path": "/midis/chopin/W12.mid"
+      "path": "/samples/chopin/W12.mid"
     },
     {
-      "path": "/midis/chopin/W13.mid"
+      "path": "/samples/chopin/W13.mid"
     },
     {
-      "path": "/midis/chopin/W14.mid"
+      "path": "/samples/chopin/W14.mid"
     },
     {
-      "path": "/midis/chopin/W15.mid"
+      "path": "/samples/chopin/W15.mid"
     },
     {
-      "path": "/midis/chopin/W16.mid"
+      "path": "/samples/chopin/W16.mid"
     },
     {
-      "path": "/midis/chopin/W17.mid"
+      "path": "/samples/chopin/W17.mid"
     },
     {
-      "path": "/midis/chopin/W18.mid"
+      "path": "/samples/chopin/W18.mid"
     },
     {
-      "path": "/midis/chopin/W19.mid"
+      "path": "/samples/chopin/W19.mid"
     },
     {
-      "path": "/midis/chopin/W2.mid"
+      "path": "/samples/chopin/W2.mid"
     },
     {
-      "path": "/midis/chopin/W3.mid"
+      "path": "/samples/chopin/W3.mid"
     },
     {
-      "path": "/midis/chopin/W4.mid"
+      "path": "/samples/chopin/W4.mid"
     },
     {
-      "path": "/midis/chopin/W5.mid"
+      "path": "/samples/chopin/W5.mid"
     },
     {
-      "path": "/midis/chopin/W6.mid"
+      "path": "/samples/chopin/W6.mid"
     },
     {
-      "path": "/midis/chopin/W7.mid"
+      "path": "/samples/chopin/W7.mid"
     },
     {
-      "path": "/midis/chopin/W8.mid"
+      "path": "/samples/chopin/W8.mid"
     },
     {
-      "path": "/midis/chopin/W9.mid"
+      "path": "/samples/chopin/W9.mid"
     }
   ]
 }

@@ -1,6 +1,6 @@
 import os, json
 
-MIDI_ROOT = "midis"
+MIDI_ROOT = "samples"
 OUTPUT_JSON = "midis.json"
 
 collections = {}

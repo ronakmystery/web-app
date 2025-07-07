@@ -9,13 +9,11 @@ export default function Pro({ visible, setLayer }) {
 
 
 
-    const { loadMidi } = usePiano()
+    const { loadMidi, userid, setUserid, email, setEmail, files, setFiles } = usePiano()
 
 
 
-    const [files, setFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
-    const [userid, setUserid] = useState(null);
     const [reverse, setReverse] = useState(false);
     const [retro, setRetro] = useState(false);
     const fileRef = useRef(null);
@@ -111,34 +109,37 @@ export default function Pro({ visible, setLayer }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const [email, setEmail] = useState("");
     const [status, setStatus] = useState("");
     const [code, setCode] = useState("");
     const [password, setPassword] = useState("");
 
 
+
+    //autologin
     useEffect(() => {
-
         setLayer("pro");
-
 
         const uuid = localStorage.getItem("uuid");
         const code = localStorage.getItem("code");
 
         if (!uuid || !code) return;
 
-
-
         fetch("/backend/verify_uuid", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uuid, code }),
         })
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(() => {
+            .then(async (res) => {
+                if (!res.ok) throw new Error("Verification failed");
+                return res.json();
+            })
+            .then((data) => {
                 setUserid(uuid);
                 setCode(code);
-                setStatus("");
+                setStatus(""); // clear status if previously failed
+                if (data.email) {
+                    setEmail(data.email);
+                }
             })
             .catch(() => {
                 localStorage.removeItem("uuid");
@@ -146,8 +147,6 @@ export default function Pro({ visible, setLayer }) {
                 setStatus("Auto-login failed...");
             });
     }, []);
-
-
 
     const handleLogin = async () => {
 
@@ -169,6 +168,8 @@ export default function Pro({ visible, setLayer }) {
         }
     };
 
+
+    const [fileSettings, setFileSettings] = useState(false)
 
 
     return (
@@ -242,8 +243,17 @@ export default function Pro({ visible, setLayer }) {
                     <div id="user-buttons">
 
                         <button onClick={() => document.getElementById('uploadDialog').showModal()}>
-                            📂 Upload MIDI
+                            📤 Upload MIDI
                         </button>
+
+                        <div
+                            className="file-settings"
+                            onClick={() => {
+                                setFileSettings(!fileSettings);
+                            }}
+                        >{
+                                fileSettings ? "📂" : "📁"
+                            }</div>
 
 
                         <dialog id="uploadDialog">
@@ -270,12 +280,22 @@ export default function Pro({ visible, setLayer }) {
                                 />
 
                                 <div id="upload-options">
+                                    <div className="upload-info">   Saves midi to cloud to generate mp3 for playback</div>
+
+
+
+                                    <button
+                                        type="submit"
+                                        disabled={uploading}
+                                    >
+                                        {uploading ? "🔄 Processing..." : "📤 UPLOAD"}
+                                    </button>
                                     <label>
                                         <input
                                             type="checkbox"
                                             checked={retro}
                                             onChange={(e) => setRetro(e.target.checked)}
-                                        />🎮 Retro Sound
+                                        />🎮 Use retro soundfont
                                     </label>
 
                                     <label>
@@ -283,16 +303,10 @@ export default function Pro({ visible, setLayer }) {
                                             type="checkbox"
                                             checked={reverse}
                                             onChange={(e) => setReverse(e.target.checked)}
-                                        />🔁 Reverse
+                                        />🔁 Reverse music
                                     </label>
                                 </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={uploading}
-                                >
-                                    {uploading ? "🔄 Processing..." : "📤 UPLOAD"}
-                                </button>
 
                                 <div
                                     id="close-dialog-button"
@@ -308,18 +322,6 @@ export default function Pro({ visible, setLayer }) {
                         </dialog>
 
 
-                        <button
-                            id="logout-button"
-                            onClick={() => {
-                                if (window.confirm("Are you sure you want to log out?")) {
-                                    localStorage.removeItem("uuid");
-                                    localStorage.removeItem("code");
-                                    window.location.reload();
-                                }
-                            }}
-                        >
-                            LOGOUT
-                        </button>
 
 
                     </div>
@@ -330,12 +332,11 @@ export default function Pro({ visible, setLayer }) {
                         <p>No MIDI files...</p>
                     ) : (
                         (() => {
-                            let holdTimeout = null;
 
                             return (
                                 <div id="user-files">
                                     {files.map((name) => (
-                                        <button
+                                        <div
                                             className={`user-midi ${selectedFile === name ? "selected-user-midi" : ""}`}
                                             key={name}
                                             onClick={() => {
@@ -346,15 +347,37 @@ export default function Pro({ visible, setLayer }) {
                                         >
                                             {name}
 
-                                            {selectedFile === name &&
-                                                <div
+
+
+                                            {fileSettings && <div className="download-buttons">
+                                                <a
+                                                    href={`/backend/converted/${userid}/${name}.mp3`}
+                                                    download
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    <button>📥 MP3</button>
+
+                                                </a>
+
+                                                <a
+                                                    href={`/backend/converted/${userid}/${name}.mid`}
+                                                    download
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    style={{ marginLeft: "10px" }}
+                                                >
+                                                    <button> 📥 MIDI</button>
+                                                </a>
+
+                                                <button
                                                     className="delete-button "
                                                     onClick={() => handleDelete(name)}>
-                                                    <span className="delete-icon">🗑️</span  >
+                                                    🗑️</button>
+                                            </div>
 
-                                                </div>
                                             }
-                                        </button>
+                                        </div>
                                     ))}
                                 </div>
                             );
@@ -376,6 +399,6 @@ export default function Pro({ visible, setLayer }) {
 
 
 
-        </div>
+        </div >
     );
 }

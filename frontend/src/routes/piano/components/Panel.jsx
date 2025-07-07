@@ -4,6 +4,7 @@ import { usePiano } from "../PianoContext"
 import Composers from "./panel/Composers";
 import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
+import Settings from "./panel/Settings"
 
 import "./Panel.css"
 
@@ -32,11 +33,13 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
         "samples": <Samples />,
         "pro": <Pro />,
+        "settings": <Settings />,
 
     }
     const layerNames = {
         samples: "🎶",
         pro: "🧑‍💻",
+        settings: "⚙️",
     };
 
 
@@ -83,6 +86,9 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
             <div id="current-layer">
                 <Samples visible={layer === "samples"} />
                 <Pro visible={layer === "pro"} setLayer={setLayer} />
+                <Settings visible={layer === "settings"} />
+
+
             </div>
 
 
