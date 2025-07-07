@@ -1,4 +1,12 @@
 #settings {
     margin: 20px;
+    position: relative;
+    height: calc(100% - 40px);
+
+    #app-updates {
+        font-size: 10px;
+        position: absolute;
+        bottom: 0;
+    }
 
 }

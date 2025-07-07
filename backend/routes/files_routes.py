@@ -30,9 +30,10 @@ def delete_file(userid, uid):
     converted_path = os.path.join("data", userid, "processed", "converted")
     removed = []
 
-    for filename in os.listdir(converted_path):
-        if uid in filename and filename.endswith((".mid", ".mp3")):
-            path = os.path.join(converted_path, filename)
+    for ext in [".mid", ".mp3"]:
+        filename = f"{uid}{ext}"
+        path = os.path.join(converted_path, filename)
+        if os.path.exists(path):
             os.remove(path)
             removed.append(filename)
 

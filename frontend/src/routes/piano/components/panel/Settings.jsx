@@ -32,7 +32,7 @@ export default function Settings() {
             }
 
 
-
+            <div id="app-updates">   v1.0</div>
 
 
 

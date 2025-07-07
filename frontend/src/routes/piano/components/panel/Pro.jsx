@@ -5,11 +5,132 @@ import { usePiano } from "../../PianoContext"
 import "./Pro.css"
 
 
+
+
+function Login({ status, setStatus, setLayer }) {
+
+    const { setUserid, email, setEmail } = usePiano();
+
+    const [code, setCode] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async () => {
+
+        const res = await fetch("/backend/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, code, password }),
+        });
+
+        const data = await res.json();
+
+        if (data?.status === "pro_verified") {
+            localStorage.setItem("uuid", data.uuid);
+            localStorage.setItem("code", code);
+            setUserid(data.uuid);
+            setStatus("");
+        } else {
+            setStatus(data.error);
+        }
+    };
+
+    //autologin
+    useEffect(() => {
+        setLayer("pro");
+
+        const uuid = localStorage.getItem("uuid");
+        const code = localStorage.getItem("code");
+
+        if (!uuid || !code) return;
+
+        fetch("/backend/verify_uuid", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uuid, code }),
+        })
+            .then(async (res) => {
+                if (!res.ok) throw new Error("Verification failed");
+                return res.json();
+            })
+            .then((data) => {
+                setUserid(uuid);
+                setCode(code);
+                setStatus(""); // clear status if previously failed
+                if (data.email) {
+                    setEmail(data.email);
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem("uuid");
+                localStorage.removeItem("code");
+                setStatus("Auto-login failed...");
+            });
+    }, []);
+
+
+    return (
+        <div id="pro-login">
+
+
+            <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Code"
+            />
+
+            <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Username"
+            />
+
+            <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+            />
+            <button onClick={() => handleLogin()}
+            >
+                🔑 Login
+            </button>
+            {status && <p className="status">🚷{status}</p>}
+            <div id="about">
+
+                <p>
+                    🧑‍💻 PRO users have access to these features
+                </p>
+                <div id="pro-features">
+                    <div>📤 Upload your own midi files</div>
+                    <div>🔁 Reverse the midi file</div>
+                    <div>🎮 Retro gameboy-style soundfont option</div>
+                    <div>📥 Download converted midis and mp3s</div>
+                </div>
+
+                Get code by supporting me on Patreon!
+                <a href="https://www.patreon.com/ronakmystery" className="app-link"
+                    target='_blank' >
+                    <button>🔓 PATREON</button>
+                </a>
+
+            </div>
+
+
+
+
+        </div>
+    )
+}
+
+
+
 export default function Pro({ visible, setLayer }) {
 
 
 
-    const { loadMidi, userid, setUserid, email, setEmail, files, setFiles } = usePiano()
+    const { loadMidi, userid, files, setFiles } = usePiano()
 
 
 
@@ -110,64 +231,6 @@ export default function Pro({ visible, setLayer }) {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const [status, setStatus] = useState("");
-    const [code, setCode] = useState("");
-    const [password, setPassword] = useState("");
-
-
-
-    //autologin
-    useEffect(() => {
-        setLayer("pro");
-
-        const uuid = localStorage.getItem("uuid");
-        const code = localStorage.getItem("code");
-
-        if (!uuid || !code) return;
-
-        fetch("/backend/verify_uuid", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uuid, code }),
-        })
-            .then(async (res) => {
-                if (!res.ok) throw new Error("Verification failed");
-                return res.json();
-            })
-            .then((data) => {
-                setUserid(uuid);
-                setCode(code);
-                setStatus(""); // clear status if previously failed
-                if (data.email) {
-                    setEmail(data.email);
-                }
-            })
-            .catch(() => {
-                localStorage.removeItem("uuid");
-                localStorage.removeItem("code");
-                setStatus("Auto-login failed...");
-            });
-    }, []);
-
-    const handleLogin = async () => {
-
-        const res = await fetch("/backend/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, code, password }),
-        });
-
-        const data = await res.json();
-
-        if (data?.status === "pro_verified") {
-            localStorage.setItem("uuid", data.uuid);
-            localStorage.setItem("code", code);
-            setUserid(data.uuid);
-            setStatus("");
-        } else {
-            setStatus(data.error);
-        }
-    };
-
 
     const [fileSettings, setFileSettings] = useState(false)
 
@@ -177,60 +240,8 @@ export default function Pro({ visible, setLayer }) {
             style={{ display: visible ? "block" : "none" }}>
 
             {
-                !userid && <div
-                    id="pro-login"
-                >
-
-
-                    <h3>🔓 Unlock Pro Mode</h3>
-
-                    <input
-                        type="password"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="Code"
-                    />
-
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Username"
-                    />
-
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                    />
-                    <button onClick={() => handleLogin()}
-                    >
-                        🔑 Login
-                    </button>
-                    {status && <p className="status">🚷{status}</p>}
-                    <div id="about">
-
-                        <p>
-                            🧑‍💻 PRO users have access to these features
-                        </p>
-                        <div id="pro-features">
-                            <div>📤 Upload your own midi files</div>
-                            <div>🔁 Reverse the midi file</div>
-                            <div>🎮 Retro gameboy-style soundfont option</div>
-                        </div>
-
-                        Get code by supporting me on Patreon!
-                        <a href="https://www.patreon.com/ronakmystery" className="app-link"
-                            target='_blank' >
-                            <button>🔓 PATREON</button>
-                        </a>
-
-                    </div>
-
-
-
-                </div>
+                !userid && <Login status={status} setStatus={setStatus}
+                    setLayer={setLayer} />
             }
 
 
@@ -372,7 +383,12 @@ export default function Pro({ visible, setLayer }) {
 
                                                 <button
                                                     className="delete-button "
-                                                    onClick={() => handleDelete(name)}>
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDelete(name);
+                                                    }}
+
+                                                >
                                                     🗑️</button>
                                             </div>
 

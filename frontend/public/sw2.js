@@ -1,14 +1,27 @@
-const CACHE_NAME = "v3.1.0"; // Increment this to force update
+const CACHE_VERSION = "v3.2.1";
+const CACHE_NAME = `my-cache-${CACHE_VERSION}`;
 
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // Immediately activate
+  console.log("Service worker: installed");
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  clients.claim(); // Take control right away
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      );
+      await clients.claim();
+      console.log("Service worker: activated");
+    })()
+  );
 });
 
+// Optional cache logic
 self.addEventListener("fetch", (event) => {
-  // 🚫 No caching — always go to network
   event.respondWith(fetch(event.request));
 });
