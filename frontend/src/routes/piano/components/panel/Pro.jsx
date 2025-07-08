@@ -4,133 +4,14 @@ import { usePiano } from "../../PianoContext"
 
 import "./Pro.css"
 
-
-
-
-function Login({ status, setStatus, setLayer }) {
-
-    const { setUserid, email, setEmail } = usePiano();
-
-    const [code, setCode] = useState("");
-    const [password, setPassword] = useState("");
-
-    const handleLogin = async () => {
-
-        const res = await fetch("/backend/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, code, password }),
-        });
-
-        const data = await res.json();
-
-        if (data?.status === "pro_verified") {
-            localStorage.setItem("uuid", data.uuid);
-            localStorage.setItem("code", code);
-            setUserid(data.uuid);
-            setStatus("");
-        } else {
-            setStatus(data.error);
-        }
-    };
-
-    //autologin
-    useEffect(() => {
-        setLayer("pro");
-
-        const uuid = localStorage.getItem("uuid");
-        const code = localStorage.getItem("code");
-
-        if (!uuid || !code) return;
-
-        fetch("/backend/verify_uuid", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uuid, code }),
-        })
-            .then(async (res) => {
-                if (!res.ok) throw new Error("Verification failed");
-                return res.json();
-            })
-            .then((data) => {
-                setUserid(uuid);
-                setCode(code);
-                setStatus(""); // clear status if previously failed
-                if (data.email) {
-                    setEmail(data.email);
-                }
-            })
-            .catch(() => {
-                localStorage.removeItem("uuid");
-                localStorage.removeItem("code");
-                setStatus("Auto-login failed...");
-            });
-    }, []);
-
-
-    return (
-        <div id="pro-login">
-
-
-            <input
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Code"
-            />
-
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Username"
-            />
-
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-            <button onClick={() => handleLogin()}
-            >
-                🔑 Login
-            </button>
-            {status && <p className="status">🚷{status}</p>}
-            <div id="about">
-
-                <p>
-                    🧑‍💻 PRO users have access to these features
-                </p>
-                <div id="pro-features">
-                    <div>📤 Upload your own midi files</div>
-                    <div>🔁 Reverse the midi file</div>
-                    <div>🎮 Retro gameboy-style soundfont option</div>
-                    <div>📥 Download converted midis and mp3s</div>
-                </div>
-
-                Get code by supporting me on Patreon!
-                <a href="https://www.patreon.com/ronakmystery" className="app-link"
-                    target='_blank' >
-                    <button>🔓 PATREON</button>
-                </a>
-
-            </div>
-
-
-
-
-        </div>
-    )
-}
-
+import Login from "./Login";
 
 
 export default function Pro({ visible, setLayer }) {
 
 
 
-    const { loadMidi, userid, files, setFiles } = usePiano()
+    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath } = usePiano()
 
 
 
@@ -160,8 +41,6 @@ export default function Pro({ visible, setLayer }) {
             fetchFiles();
         }
     }, [userid]);
-
-
 
 
 
@@ -228,10 +107,6 @@ export default function Pro({ visible, setLayer }) {
 
 
 
-    const [selectedFile, setSelectedFile] = useState(null);
-
-    const [status, setStatus] = useState("");
-
     const [fileSettings, setFileSettings] = useState(false)
 
 
@@ -239,8 +114,9 @@ export default function Pro({ visible, setLayer }) {
         <div id="pro"
             style={{ display: visible ? "block" : "none" }}>
 
+
             {
-                !userid && <Login status={status} setStatus={setStatus}
+                !userid && <Login
                     setLayer={setLayer} />
             }
 
@@ -344,14 +220,15 @@ export default function Pro({ visible, setLayer }) {
                     ) : (
                         (() => {
 
+                            console.log("Files:", files);
+
                             return (
                                 <div id="user-files">
                                     {files.map((name) => (
                                         <div
-                                            className={`user-midi ${selectedFile === name ? "selected-user-midi" : ""}`}
+                                            className={`user-midi ${selectedMidiPath === `/backend/converted/${userid}/${name}.mid` ? "selected-user-midi" : ""}`}
                                             key={name}
                                             onClick={() => {
-                                                setSelectedFile(name);
                                                 loadMidi(`/backend/converted/${userid}/${name}.mid`);
                                             }}
 

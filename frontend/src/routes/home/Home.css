@@ -11,7 +11,22 @@
     }
 
     button {
-        background: white;
         cursor: pointer;
+        color: white;
+    }
+
+    #qr-code {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 20px;
+        width: 100px;
+        border-radius: 5px;
+
+        img {
+            width: 100%;
+            filter: brightness(0.5) invert(1);
+        }
+
     }
 }

@@ -33,6 +33,11 @@ export default function Home() {
 
             </div>
 
+
+            <div id="qr-code">
+                <img src="/qr.png" alt="QR Code" />
+            </div>
+
         </div>
     );
 }

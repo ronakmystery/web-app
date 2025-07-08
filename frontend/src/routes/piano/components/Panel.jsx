@@ -28,7 +28,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
     const { setPianoHeight, setScrollSpeed, isPlaying } = usePiano()
 
-    const [layer, setLayer] = useState("samples");
+    const [layer, setLayer] = useState("pro");
     let layers = {
 
         "samples": <Samples />,

@@ -105,6 +105,8 @@ export function PianoProvider({ children }) {
 
     const [files, setFiles] = useState([]);
 
+    const [selectedFile, setSelectedFile] = useState(null);
+
 
 
     return (
@@ -119,6 +121,7 @@ export function PianoProvider({ children }) {
             userid, setUserid,
             email, setEmail,
             files, setFiles,
+            selectedFile, setSelectedFile,
         }}>
             {children}
         </PianoContext.Provider>

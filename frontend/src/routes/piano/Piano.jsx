@@ -114,7 +114,6 @@ export default function Piano() {
                 <Notes width={canvasWidth} />
             </div>
 
-            <div id="piano-background"></div>
 
 
 
