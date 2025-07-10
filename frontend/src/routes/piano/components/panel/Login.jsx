@@ -65,27 +65,23 @@ export default function Login({ setLayer }) {
     }, []);
 
 
+    const features = [
+        { icon: "📤", text: "Upload your own MIDI files" },
+        { icon: "🔁", text: "Reverse the MIDI file" },
+        { icon: "🎮", text: "Retro Gameboy-style soundfont" },
+        { icon: "📥", text: "Download converted MIDIs and MP3s" },
+    ];
+
     return (
         <div id="pro-login">
-            🧑‍💻 PRO users have access to these features
-
-            <div id="about">
 
 
-                <div id="pro-features">
-                    <div>📤 Upload your own midi files</div>
-                    <div>🔁 Reverse the midi file</div>
-                    <div>🎮 Retro gameboy-style soundfont option</div>
-                    <div>📥 Download converted midis and mp3s</div>
-                </div>
 
-                🔑 Get latest key from
-                <a href="https://www.patreon.com/ronakmystery" className="app-link"
-                    target='_blank' >
-                    <button>  PATREON</button>
-                </a>
-
-            </div>
+            🔑 Get latest key from
+            <a href="https://www.patreon.com/ronakmystery" className="app-link"
+                target='_blank' >
+                <button>  PATREON</button>
+            </a>
 
             <div id="pro-inputs">  <input
                 type="text"
@@ -109,12 +105,29 @@ export default function Login({ setLayer }) {
                 />
                 <button onClick={() => handleLogin()}
                 >
-                    🔒 LOGIN {status && <div>🚷{status}</div>}
+                    🔒 LOGIN {status && <div className="login-error">🚷 {status}</div>}
                 </button>
 
 
             </div>
 
+            <div id="about">
+
+                🧑‍💻 Pro features
+
+                <div id="pro-features">
+                    {features.map((item, index) => (
+                        <div
+                            key={index}
+                            className="feature"
+                        >
+                            <div className="feature-icon">{item.icon}</div>
+                            <div className="feature-text">{item.text}</div>
+                        </div>
+                    ))}
+                </div>
+
+            </div>
 
 
 

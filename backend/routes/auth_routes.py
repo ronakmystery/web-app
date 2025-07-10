@@ -13,7 +13,7 @@ def verify():
     pro_code = load_json("code.json").get("code")
 
     if code != pro_code:
-        return jsonify({"error": "Wrong code"}), 403
+        return jsonify({"error": "Wrong key"}), 403
 
     users = load_json("users.json")
     passwords = load_json("passwords.json")
@@ -43,7 +43,7 @@ def verify_uuid():
     code = data.get("code")
 
     if code != load_json("code.json").get("code"):
-        return jsonify({"error": "Wrong code"}), 403
+        return jsonify({"error": "Wrong key"}), 403
 
     users = load_json("users.json")
     pro_emails = set(load_email_list())

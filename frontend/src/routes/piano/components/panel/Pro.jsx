@@ -133,14 +133,14 @@ export default function Pro({ visible, setLayer }) {
                             📤 Upload MIDI
                         </button>
 
-                        <div
+                        <button
                             className="file-settings"
                             onClick={() => {
                                 setFileSettings(!fileSettings);
                             }}
                         >{
                                 fileSettings ? "📂" : "📁"
-                            }</div>
+                            }</button>
 
 
                         <dialog id="uploadDialog">
@@ -219,8 +219,6 @@ export default function Pro({ visible, setLayer }) {
                         <p>No MIDI files...</p>
                     ) : (
                         (() => {
-
-                            console.log("Files:", files);
 
                             return (
                                 <div id="user-files">

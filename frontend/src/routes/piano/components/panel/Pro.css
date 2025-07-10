@@ -23,8 +23,10 @@
 
         }
 
-        .status {
+        .login-error {
+            font-size: 10px;
             color: var(--red);
+            margin: 10px 0 0 0;
         }
 
 
@@ -32,14 +34,23 @@
 
     #about {
         text-align: center;
+        font-size: 15px;
 
         #pro-features {
-            font-size: 10px;
             margin: 10px;
             text-align: left;
 
-            div {
+            .feature {
                 margin: 10px 20px;
+
+                .feature-icon {
+                    font-size: 15px;
+                }
+
+                .feature-text {
+                    margin: 10px;
+                    font-size: 10px;
+                }
             }
         }
 
@@ -70,9 +81,7 @@
             position: absolute;
             right: 0;
             top: 0;
-            font-size: 15px;
-            cursor: pointer;
-
+            font-size: 10px;
         }
     }
 
