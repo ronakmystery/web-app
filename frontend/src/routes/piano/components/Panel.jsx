@@ -5,13 +5,14 @@ import Composers from "./panel/Composers";
 import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
 import Settings from "./panel/Settings"
+import Record from "./panel/Record";
 
 import "./Panel.css"
 
 import { motion } from "framer-motion";
 
-const Samples = ({ visible }) => (
-    <div id="samples" style={{ display: visible ? "block" : "none" }}>
+const Samples = () => (
+    <div id="samples">
         <div
             id="samples-container"
         >
@@ -26,20 +27,20 @@ const Samples = ({ visible }) => (
 export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
-    const { setPianoHeight, setScrollSpeed, isPlaying } = usePiano()
+    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer } = usePiano()
 
-    const [layer, setLayer] = useState("pro");
-    let layers = {
-
+    const layers = {
         "samples": <Samples />,
         "pro": <Pro />,
+        "record": <Record />,
         "settings": <Settings />,
+    };
 
-    }
     const layerNames = {
-        samples: "🎶",
-        pro: "🧑‍💻",
-        settings: "⚙️",
+        "samples": "🎶",
+        "pro": "🧑‍💻",
+        "record": "🎤",
+        "settings": "⚙️",
     };
 
 
@@ -68,8 +69,14 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
             <div id="select-layer">
                 {
                     Object.keys(layers).map((key) => (
-                        <button key={key} onClick={() => setLayer(key)}
-                            id={`${layer === key ? "selected-layer" : ""}`}
+                        <button key={key} onClick={() => {
+                            setLayer(key)
+
+
+                        }
+
+                        }
+                            className={layer === key ? "selected-layer" : ""}
                         >
                             {layer === key ? (
                                 layerNames[key]
@@ -83,13 +90,13 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                 }
             </div>
 
+
+
             <div id="current-layer">
-                <Samples visible={layer === "samples"} />
-                <Pro visible={layer === "pro"} setLayer={setLayer} />
-                <Settings visible={layer === "settings"} />
-
-
+                {layers[layer]}
             </div>
+
+
 
 
             <div id="controls">

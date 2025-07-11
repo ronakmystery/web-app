@@ -3,7 +3,7 @@
     background: black;
 
     #piano-canvas {
-        padding-top: calc(100vh - 50px);
+        padding-top: calc(100vh - 100px);
     }
 
     #show-panel {

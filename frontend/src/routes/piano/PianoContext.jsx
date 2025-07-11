@@ -15,7 +15,7 @@ export function PianoProvider({ children }) {
 
     //load collection
     useEffect(() => {
-        fetch(`/midis.json?cb=${Date.now()}`)  // ⬅ Cache-busting query param
+        fetch(`/midis.json?cb=${Date.now()}`)
             .then((res) => res.json())
             .then((data) => setCollection(data))
             .catch((err) => console.error("Failed to load MIDI list", err));
@@ -72,6 +72,7 @@ export function PianoProvider({ children }) {
         const midi = new Midi(buffer);
         setSelectedMidiPath(path);
         parseMidi(midi);
+        setIsPlaying(false);
     };
 
 
@@ -107,6 +108,23 @@ export function PianoProvider({ children }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
+    const [layer, setLayer] = useState("record");
+
+
+    const [recordingNotes, setRecordingNotes] = useState(null);
+    let playpause = (time) => {
+        const audio = audioRef.current;
+        audio.currentTime = time
+        if (audio.paused) {
+            audio.play();
+            setIsPlaying(true)
+        } else {
+            audio.pause();
+            setIsPlaying(false)
+        }
+    }
+
+    const [recordingTime, setRecordingTime] = useState(0);
 
 
     return (
@@ -115,13 +133,20 @@ export function PianoProvider({ children }) {
             pianoHeight, setPianoHeight,
             scrollSpeed, setScrollSpeed,
             audioRef, currentTime, setCurrentTimeInternal,
-            selectedMidiPath, parseMidi, loadMidi,
+            selectedMidiPath, setSelectedMidiPath, parseMidi, loadMidi,
             collection, selectedComposer, setSelectedComposer,
             isPlaying, setIsPlaying,
             userid, setUserid,
             email, setEmail,
             files, setFiles,
             selectedFile, setSelectedFile,
+            layer, setLayer,
+
+            recordingNotes, setRecordingNotes,
+
+            playpause,
+
+            recordingTime, setRecordingTime,
         }}>
             {children}
         </PianoContext.Provider>

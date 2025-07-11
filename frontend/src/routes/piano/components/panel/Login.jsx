@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePiano } from "../../PianoContext";
-export default function Login({ setLayer }) {
+export default function Login() {
 
     const { setUserid, email, setEmail } = usePiano();
 
@@ -33,7 +33,6 @@ export default function Login({ setLayer }) {
 
     //autologin
     useEffect(() => {
-        setLayer("pro");
 
         const uuid = localStorage.getItem("uuid");
         const code = localStorage.getItem("code");

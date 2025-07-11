@@ -6,12 +6,14 @@ import { usePiano } from "./PianoContext"
 import Panel from "./components/Panel";
 import Keys from "./components/Keys";
 import Notes from "./components/Notes"
+import RecordingNotes from "./components/RecordingNotes";
+import RecordingKeys from "./components/RecordingKeys";
 
 
 export default function Piano() {
 
 
-    const { audioRef, selectedMidiPath, isPlaying, setIsPlaying } = usePiano()
+    const { audioRef, selectedMidiPath, isPlaying, layer } = usePiano()
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
@@ -92,26 +94,18 @@ export default function Piano() {
             )}
 
             <div id="piano-canvas"
-                onClick={() => {
 
-                    const audio = audioRef.current;
-                    if (!audio.src) return;
-
-
-
-                    if (!audio.paused) {
-                        audio.pause();
-                        setIsPlaying(false)
-                    } else {
-                        audio.play()
-                        setIsPlaying(true)
-                    }
-
-
-                }}
             >
-                <Keys width={canvasWidth} />
-                <Notes width={canvasWidth} />
+                {
+                    layer == "record" ? <RecordingKeys width={canvasWidth} /> :
+                        <Keys width={canvasWidth} />
+                }
+
+                {
+                    layer == "record" ? <RecordingNotes width={canvasWidth} /> :
+                        <Notes width={canvasWidth} />
+                }
+
             </div>
 
 

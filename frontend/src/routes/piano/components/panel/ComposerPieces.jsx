@@ -1,6 +1,5 @@
 
 import { usePiano } from "../../PianoContext"
-import { useEffect, useState } from "react";
 
 export default function ComposerPieces() {
 

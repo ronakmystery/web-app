@@ -5,7 +5,7 @@ import "./Notes.css"
 
 export default function Notes({ width }) {
 
-    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime } = usePiano()
+    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime, playpause } = usePiano()
 
 
     const whiteKeyCount = 52;
@@ -54,18 +54,6 @@ export default function Notes({ width }) {
 
 
 
-    let playpause = (time) => {
-        const audio = audioRef.current;
-        audio.currentTime = time
-        if (audio.paused) {
-            audio.play();
-            setIsPlaying(true)
-
-        }
-    }
-
-
-
 
 
 
@@ -77,6 +65,10 @@ export default function Notes({ width }) {
 
             style={{
                 height: scrollableHeight + 100
+            }}
+
+            onClick={() => {
+                playpause(currentTime);
             }}
 
         >
@@ -119,7 +111,7 @@ export default function Notes({ width }) {
                             backgroundColor: isActive ? "white" : color,
                             borderRadius: 10,
                             zIndex: isB ? 2 : 1,
-                            transform: isActive ? "scale(1.5) scaleY(-1)" : "scale(1) scaleY(-1)",
+                            transform: isActive ? "scale(1.3)" : "scale(1)",
                             boxShadow: isActive ? `0 0 10px 2px ${color}` : "",
                             animation: isActive ? "pop 0.3s forwards" : "none",
                             transition: "transform 0.3s, box-shadow 0.3s",

@@ -7,7 +7,7 @@ import "./Pro.css"
 import Login from "./Login";
 
 
-export default function Pro({ visible, setLayer }) {
+export default function Pro() {
 
 
 
@@ -111,13 +111,11 @@ export default function Pro({ visible, setLayer }) {
 
 
     return (
-        <div id="pro"
-            style={{ display: visible ? "block" : "none" }}>
+        <div id="pro">
 
 
             {
-                !userid && <Login
-                    setLayer={setLayer} />
+                !userid && <Login />
             }
 
 

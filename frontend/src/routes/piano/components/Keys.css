@@ -1,5 +1,6 @@
   #piano-keys {
       border-top: 2px solid #D32F2F;
+      opacity: 0.8;
 
       display: flex;
       position: fixed;
