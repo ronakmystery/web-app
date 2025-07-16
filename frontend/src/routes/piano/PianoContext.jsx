@@ -7,6 +7,29 @@ const PianoContext = createContext();
 
 const STORAGE_KEY = "PIANO";
 
+
+import * as Tone from "tone"; // ✅ Needed for Midi conversion and playback
+// 🎹 Load Sampler
+const pianoSounds = new Tone.Sampler({
+    urls: {
+        "A0": "A0.mp3", "C1": "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
+        "A1": "A1.mp3", "C2": "C2.mp3", "D#2": "Ds2.mp3", "F#2": "Fs2.mp3",
+        "A2": "A2.mp3", "C3": "C3.mp3", "D#3": "Ds3.mp3", "F#3": "Fs3.mp3",
+        "A3": "A3.mp3", "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3",
+        "A4": "A4.mp3", "C5": "C5.mp3", "D#5": "Ds5.mp3", "F#5": "Fs5.mp3",
+        "A5": "A5.mp3", "C6": "C6.mp3", "D#6": "Ds6.mp3", "F#6": "Fs6.mp3",
+        "A6": "A6.mp3", "C7": "C7.mp3", "D#7": "Ds7.mp3", "F#7": "Fs7.mp3",
+        "A7": "A7.mp3", "C8": "C8.mp3"
+    },
+    release: 1,
+    baseUrl: "https://tonejs.github.io/audio/salamander/",
+}).toDestination();
+
+await Tone.loaded(); // ✅ Ensure the samples are ready before interaction
+
+
+
+
 export function PianoProvider({ children }) {
     const [notes, setNotes] = useState([]);
 
@@ -127,6 +150,115 @@ export function PianoProvider({ children }) {
     const [recordingTime, setRecordingTime] = useState(0);
 
 
+
+    const partRef = useRef(null);
+    const rafRef = useRef(null); // Track animation frame
+    const playback = async ({ notes, pedal }, startOffset = 0) => {
+        cancelAnimationFrame(rafRef.current); // cancel any old end check
+
+        await Tone.start();
+        Tone.getTransport().stop();
+        Tone.getTransport().cancel();
+
+        // Filter and shift events based on startOffset
+        const events = notes
+            .filter(note => note.time + note.duration >= startOffset)
+            .map(note => ({
+                time: note.time - startOffset,
+                note: Tone.Midi(note.midi).toNote(),
+                duration: note.duration,
+                velocity: note.velocity || 0.8
+            }));
+
+        let sustain = false;
+        const heldByPedal = new Map();
+        const currentlyHeldKeys = new Set();
+
+        // Filter and shift pedal events
+        pedal
+            .filter(event => event.time >= startOffset)
+            .forEach(event => {
+                Tone.getTransport().schedule(() => {
+                    sustain = event.down;
+                    if (!event.down) {
+                        for (const [note] of heldByPedal) {
+                            if (!currentlyHeldKeys.has(note)) {
+                                pianoSounds.triggerRelease(note, Tone.now());
+                            }
+                        }
+                        heldByPedal.clear();
+                    }
+                }, event.time - startOffset);
+            });
+
+        partRef.current = new Tone.Part((time, value) => {
+            const note = value.note;
+            currentlyHeldKeys.add(note);
+            pianoSounds.triggerAttack(note, time, value.velocity);
+
+            Tone.getTransport().schedule((releaseTime) => {
+                currentlyHeldKeys.delete(note);
+                if (!sustain) {
+                    pianoSounds.triggerRelease(note, releaseTime);
+                } else {
+                    heldByPedal.set(note, releaseTime);
+                }
+            }, value.time + value.duration);
+        }, events).start(0);
+
+        Tone.getTransport().bpm.value = 120;
+
+        const checkEnd = () => {
+            const noteEnd = notes.length ? Math.max(...notes.map(n => n.time + n.duration)) : 0;
+            const pedalEnd = pedal.length ? Math.max(...pedal.map(p => p.time + (p.duration || 0))) : 0;
+            const maxTime = Math.max(noteEnd, pedalEnd) - startOffset;
+
+            const rel = Tone.getTransport().seconds;
+            setRecordingTime(rel + startOffset);
+
+            if (rel < maxTime + 2) {
+                rafRef.current = requestAnimationFrame(checkEnd);
+            } else {
+                for (const [note] of heldByPedal) {
+                    if (!currentlyHeldKeys.has(note)) {
+                        pianoSounds.triggerRelease(note, Tone.now());
+                    }
+                }
+                heldByPedal.clear();
+                currentlyHeldKeys.clear();
+
+                setIsPlaying(false);
+                setRecordingTime(0);
+                partRef.current?.dispose();
+                partRef.current = null;
+                Tone.getTransport().stop();
+                Tone.getTransport().cancel();
+            }
+        };
+
+        Tone.getTransport().start();
+        setIsPlaying(true);
+        checkEnd();
+    };
+
+    const resetPlayback = () => {
+        // Stop transport and cancel scheduled events
+        Tone.getTransport().stop();
+        Tone.getTransport().cancel();
+
+        // Cancel animation frame loop (checkEnd)
+        cancelAnimationFrame(rafRef.current);
+
+        // Dispose existing part
+        partRef.current?.dispose();
+        partRef.current = null;
+
+        // Reset UI state
+        setIsPlaying(false);
+        setRecordingTime(0);
+    };
+
+
     return (
         <PianoContext.Provider value={{
             notes, setNotes,
@@ -147,6 +279,12 @@ export function PianoProvider({ children }) {
             playpause,
 
             recordingTime, setRecordingTime,
+
+            pianoSounds,
+
+            playback,
+            partRef, rafRef,
+            resetPlayback
         }}>
             {children}
         </PianoContext.Provider>
