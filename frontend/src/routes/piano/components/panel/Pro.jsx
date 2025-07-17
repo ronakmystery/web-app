@@ -11,7 +11,7 @@ export default function Pro() {
 
 
 
-    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath } = usePiano()
+    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath, audioRef, setIsPlaying, setNotes } = usePiano()
 
 
 
@@ -100,6 +100,10 @@ export default function Pro() {
 
         if (res.ok) {
             fetchFiles();
+            audioRef.current.pause();
+            setIsPlaying(false);
+            setNotes([]);
+
         } else {
             alert("❌ Failed to delete.");
         }
@@ -108,6 +112,18 @@ export default function Pro() {
 
 
     const [fileSettings, setFileSettings] = useState(false)
+
+    useEffect(() => {
+        return () => {
+            audioRef.current.pause();
+            setIsPlaying(false);
+            setNotes([]);
+            setSelectedMidiPath(null);
+        };
+    }, []);
+
+
+    const [selectedFileName, setSelectedFileName] = useState("");
 
 
     return (
@@ -148,6 +164,10 @@ export default function Pro() {
                                 onSubmit={handleUpload}
                                 id="upload-form"
                             >
+                                <label htmlFor="choose-file" className="styled-upload-button">
+                                    {selectedFileName || "🎵 Choose MIDI"}
+                                </label>
+
                                 <input
                                     id="choose-file"
                                     type="file"
@@ -160,9 +180,14 @@ export default function Pro() {
                                         if (file && file.size > 200 * 1024) {
                                             alert(`❌ File too large. Max allowed is 200KB.`);
                                             e.target.value = "";
+                                            setSelectedFileName("");
+                                        } else if (file) {
+                                            setSelectedFileName(file.name);
                                         }
                                     }}
+                                    style={{ display: "none" }}  // hide native input
                                 />
+
 
                                 <div id="upload-options">
                                     <div className="upload-info">   Saves midi to cloud to generate mp3 for playback</div>
@@ -188,7 +213,7 @@ export default function Pro() {
                                             type="checkbox"
                                             checked={reverse}
                                             onChange={(e) => setReverse(e.target.checked)}
-                                        />🔁 Reverse music
+                                        />🔁 Reverse the notes
                                     </label>
                                 </div>
 

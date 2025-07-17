@@ -31,44 +31,14 @@ export default function Login() {
         }
     };
 
-    //autologin
-    useEffect(() => {
 
-        const uuid = localStorage.getItem("uuid");
-        const code = localStorage.getItem("code");
-
-        if (!uuid || !code) return;
-
-        fetch("/backend/verify_uuid", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uuid, code }),
-        })
-            .then(async (res) => {
-                if (!res.ok) throw new Error("Verification failed");
-                return res.json();
-            })
-            .then((data) => {
-                setUserid(uuid);
-                setCode(code);
-                setStatus(""); // clear status if previously failed
-                if (data.email) {
-                    setEmail(data.email);
-                }
-            })
-            .catch(() => {
-                localStorage.removeItem("uuid");
-                localStorage.removeItem("code");
-                setStatus("Auto-login failed...");
-            });
-    }, []);
 
 
     const features = [
-        { icon: "📤", text: "Upload your own MIDI files" },
-        { icon: "🔁", text: "Reverse the MIDI file" },
-        { icon: "🎮", text: "Retro Gameboy-style soundfont" },
-        { icon: "📥", text: "Download converted MIDIs and MP3s" },
+        { icon: "📤", text: "Upload your own MIDI files and apply special effects like reverse the notes or use a gameboy soundfont" },
+        { icon: "📥", text: "Download the processed MIDIs and MP3s" },
+        { icon: "❤️", text: "Upload your recordings to share them with the community" },
+        { icon: "🏆", text: "Every month the user with the most likes will receive a reward" },
     ];
 
     return (

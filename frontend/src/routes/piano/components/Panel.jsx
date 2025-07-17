@@ -5,7 +5,8 @@ import Composers from "./panel/Composers";
 import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
 import Settings from "./panel/Settings"
-import Record from "./panel/Record";
+import Record from "./panel/Record/Record";
+import Community from "./panel/Community";
 
 import "./Panel.css"
 
@@ -27,12 +28,13 @@ const Samples = () => (
 export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
-    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer } = usePiano()
+    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording } = usePiano()
 
     const layers = {
         "samples": <Samples />,
         "pro": <Pro />,
         "record": <Record />,
+        "community": <Community />,
         "settings": <Settings />,
     };
 
@@ -40,6 +42,7 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
         "samples": "🎶",
         "pro": "🧑‍💻",
         "record": "🎤",
+        "community": "🌍",
         "settings": "⚙️",
     };
 
@@ -101,21 +104,18 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
             <div id="controls">
 
+
                 <div>
-                    <button onClick={() => setPianoHeight(h => h + 5)}>+</button>🎹
-                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>-</button>
+                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>↕️
+                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
                 </div>
 
-                <div
-                    onClick={() => {
-                        setPanelState(false)
-                        setCanvasWidth(window.innerWidth)
 
-                    }}
+                <div
                 >
 
                     <img
-                        className={isPlaying ? 'playing' : ''}
+                        className={`${isPlaying ? 'playing-glow' : ''} ${recording ? 'recording-glow' : ''}`}
 
                         id="close-panel"
                         src="logo.png"
@@ -126,9 +126,12 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                     />
 
                 </div>
+
+
+
                 <div>
-                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>↕️
-                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
+                    <button onClick={() => setPianoHeight(h => h + 5)}>+</button>🎹
+                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>-</button>
                 </div>
 
             </div>

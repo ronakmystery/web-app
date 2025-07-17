@@ -64,7 +64,7 @@ export default function Notes({ width }) {
             id="piano-notes"
 
             style={{
-                height: scrollableHeight + 100
+                height: scrollableHeight + 100, width
             }}
 
             onClick={() => {

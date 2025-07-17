@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { createContext, useContext, useEffect, useState, useRef, use } from 'react';
 
 import { Midi } from "@tonejs/midi";
 
@@ -131,7 +131,7 @@ export function PianoProvider({ children }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const [layer, setLayer] = useState("record");
+    const [layer, setLayer] = useState("pro");
 
 
     const [recordingNotes, setRecordingNotes] = useState(null);
@@ -256,7 +256,23 @@ export function PianoProvider({ children }) {
         // Reset UI state
         setIsPlaying(false);
         setRecordingTime(0);
+
     };
+
+    useEffect(() => {
+        resetPlayback();
+    }, [recordingNotes]);
+
+    const [recordings, setRecordings] = useState([]);
+    const [selectedRecording, setSelectedRecording] = useState(null);
+
+    const fetchRecordings = async () => {
+        const res = await fetch(`/backend/recordings/${userid}`);
+        const data = await res.json();
+        setRecordings(data);
+    };
+
+    const [recording, setRecording] = useState(false);
 
 
     return (
@@ -284,7 +300,11 @@ export function PianoProvider({ children }) {
 
             playback,
             partRef, rafRef,
-            resetPlayback
+            resetPlayback,
+            recordings, setRecordings, fetchRecordings,
+            selectedRecording, setSelectedRecording,
+
+            recording, setRecording,
         }}>
             {children}
         </PianoContext.Provider>

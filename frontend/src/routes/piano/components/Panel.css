@@ -108,6 +108,13 @@
         }
 
 
+        .selected-recording {
+            background: var(--green);
+            transition: all .2s ease-in-out;
+            box-shadow: 0 0 10px 0px white;
+        }
+
+
 
     }
 

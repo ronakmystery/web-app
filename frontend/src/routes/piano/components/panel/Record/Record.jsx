@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
-import { usePiano } from "../../PianoContext";
+import { usePiano } from "../../../PianoContext";
+
+import ProRecordings from "./ProRecordings";
+
+import "./Record.css";
 
 export default function Record() {
     const {
         recordingNotes, setRecordingNotes,
-        audioRef, setRecordingTime, setIsPlaying, pianoSounds, playback, rafRef, partRef, resetPlayback
+        audioRef, setRecordingTime, setIsPlaying, pianoSounds, playback, rafRef, partRef, resetPlayback,
+        userid, fetchRecordings, selectedRecording, setSelectedRecording,
+        recording, setRecording
     } = usePiano();
 
-    const [recording, setRecording] = useState(false);
     const [savedRecordings, setSavedRecordings] = useState([]);
 
     const midiAccessRef = useRef(null);
@@ -22,13 +27,23 @@ export default function Record() {
         audioRef.current.pause();
         setIsPlaying(false);
 
-        navigator.requestMIDIAccess?.().then(
-            (midiAccess) => {
+        const initMIDI = async () => {
+            if (!navigator.requestMIDIAccess) {
+                alert("⚠️ Your browser does not support Web MIDI.");
+                return;
+            }
+
+            try {
+                const midiAccess = await navigator.requestMIDIAccess();
                 midiAccessRef.current = midiAccess;
-            },
-            () => alert("⚠️ MIDI Access Denied.")
-        );
+            } catch (err) {
+                alert("⚠️ MIDI Access was denied by the user or blocked.");
+            }
+        };
+
+        initMIDI();
     }, []);
+
 
     const startRecording = async () => {
         setRecordingNotes(null);
@@ -67,16 +82,22 @@ export default function Record() {
         const shiftedPedal = pedal.map(p => ({ ...p, time: Math.max(0, p.time - shift) }));
 
         const newRecording = { notes: shiftedNotes, pedal: shiftedPedal };
-        setRecordingNotes(newRecording);
 
         const existing = JSON.parse(localStorage.getItem("recordings") || "[]");
-        existing.push({
+
+        const newRec = {
             id: Date.now(),
             label: `Recording ${existing.length + 1}`,
             data: newRecording
-        });
+        };
+
+        existing.push(newRec);
         localStorage.setItem("recordings", JSON.stringify(existing));
-        console.log("🛑 Saved Recording", newRecording);
+
+        setSelectedRecording(newRec.id);
+        setRecordingNotes(newRecording);
+
+
     };
 
     const handleMIDIMessage = ({ data }) => {
@@ -112,32 +133,72 @@ export default function Record() {
 
 
 
+
+
     useEffect(() => {
         const recs = JSON.parse(localStorage.getItem("recordings") || "[]");
         setSavedRecordings(recs);
     }, [recordingNotes]);
 
     const loadRecording = (data) => {
-        resetPlayback();
         setRecordingNotes(data);
     };
 
     const deleteRecording = (id) => {
         const updated = savedRecordings.filter(r => r.id !== id);
         setSavedRecordings(updated);
+        setRecordingNotes(null);
         localStorage.setItem("recordings", JSON.stringify(updated));
+    };
+
+
+
+
+
+    const uploadRecordingJSON = async (rec) => {
+        const label = prompt("Enter a title for your recording:");
+        if (!label) {
+            console.log("⚠️ Upload canceled (no title).");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("userid", userid);
+        formData.append("recording", JSON.stringify(rec.data));
+        formData.append("label", label);
+        formData.append("datetime", rec.id);
+
+        try {
+            const res = await fetch("/backend/upload_recording", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await res.json();
+            if (data.status === "ok") {
+                deleteRecording(rec.id); // ✅ Now this works
+                fetchRecordings();
+            } else {
+                console.error("❌ Upload failed:", data);
+            }
+        } catch (err) {
+            console.error("❌ Upload error:", err);
+        }
     };
 
 
     useEffect(() => {
         return () => {
+            setSelectedRecording(null);
+            setRecordingNotes(null);
             resetPlayback(); // Cleanup when component unmounts
         };
     }, []);
 
 
+
     return (
-        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <div id="record">
             {recording ? (
                 <button onClick={stopRecording}>⏹️ Stop</button>
             ) : (
@@ -147,17 +208,34 @@ export default function Record() {
             )}
 
             <div id="saved-recordings">
-                {savedRecordings.map((rec) => (
-                    <div key={rec.id}>
-                        <button onClick={() => loadRecording(rec.data)}>
-                            {rec.label}
-                        </button>
-                        <button onClick={() => deleteRecording(rec.id)}>
-                            🗑️
-                        </button>
-                    </div>
-                ))}
+                recordings
+                {savedRecordings
+                    .sort((a, b) => b.id - a.id)
+                    .map((rec) => (
+                        <div key={rec.id} >
+                            <button
+                                className={`recording ${selectedRecording === rec.id ? "selected-recording" : ""}`}
+                                onClick={() => {
+                                    loadRecording(rec.data);
+                                    setSelectedRecording(rec.id);
+                                }}>
+                                {rec.label}
+                            </button>
+                            <button onClick={() => deleteRecording(rec.id)}>
+                                🗑️
+                            </button>
+                            {
+                                userid ? <button onClick={() => uploadRecordingJSON(rec)}>
+                                    ⬆️
+                                </button> : <div>Login to upload recordings</div>
+                            }
+
+                        </div>
+                    ))}
             </div>
+
+            {userid && <ProRecordings />}
+
         </div>
     );
 }

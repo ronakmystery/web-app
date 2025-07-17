@@ -1,6 +1,18 @@
 #piano-app {
 
-    background: black;
+    #background {
+        background-image: url("/background.jpg");
+        background-position: 20% center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 120vw;
+        height: 120vh;
+        z-index: -1;
+    }
+
 
     #piano-canvas {
         padding-top: calc(100vh - 100px);
@@ -23,11 +35,15 @@
 
 
 
-    .playing {
+    .playing-glow {
         border: 2px solid white;
         box-shadow: 0 0 10px 0px white;
-
-
     }
+
+    .recording-glow {
+        border: 2px solid red;
+        box-shadow: 0 0 10px 0px red;
+    }
+
 
 }

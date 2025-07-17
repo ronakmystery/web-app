@@ -1,10 +1,19 @@
-
+import React, { useEffect } from "react";
 import { usePiano } from "../../PianoContext"
 import "./Composers.css"
 
 export default function Composers() {
 
-    const { selectedComposer, setSelectedComposer, collection } = usePiano()
+    const { selectedComposer, setSelectedComposer, collection, setNotes, audioRef, setIsPlaying } = usePiano()
+
+
+    useEffect(() => {
+        return () => {
+            audioRef.current.pause();
+            setIsPlaying(false);
+            setNotes([]);
+        };
+    }, []);
 
     return (
         <div id="composers">

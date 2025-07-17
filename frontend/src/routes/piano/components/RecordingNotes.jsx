@@ -3,7 +3,6 @@ import { usePiano } from "../PianoContext";
 import * as Tone from "tone"; // ✅ Needed for Midi conversion and playback
 import "./Notes.css";
 
-
 export default function RecordingNotes({ width }) {
     const { scrollSpeed, recordingNotes, recordingTime, isPlaying, setIsPlaying, playback } = usePiano();
 
@@ -63,6 +62,7 @@ export default function RecordingNotes({ width }) {
             ref={scrollRef}
             style={{
                 height: scrollableHeight + 100,
+                width
 
             }}
 

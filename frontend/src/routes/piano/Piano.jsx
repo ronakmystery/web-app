@@ -13,7 +13,7 @@ import RecordingKeys from "./components/RecordingKeys";
 export default function Piano() {
 
 
-    const { audioRef, selectedMidiPath, isPlaying, layer } = usePiano()
+    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid } = usePiano()
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
@@ -49,6 +49,33 @@ export default function Piano() {
     }, [isPlaying]);
 
 
+    //autologin
+    useEffect(() => {
+
+        const uuid = localStorage.getItem("uuid");
+        const code = localStorage.getItem("code");
+
+        if (!uuid || !code) return;
+
+        fetch("/backend/verify_uuid", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uuid, code }),
+        })
+            .then(async (res) => {
+                if (!res.ok) throw new Error("Verification failed");
+                return res.json();
+            })
+            .then((data) => {
+                if (data.email) {
+                    setEmail(data.email);
+                    setUserid(uuid);
+                }
+            })
+
+    }, []);
+
+
 
 
 
@@ -58,6 +85,8 @@ export default function Piano() {
 
 
         >
+
+            <div id="background"></div>
             {panelState ? (
                 <Panel setPanelState={setPanelState}
                     setCanvasWidth={setCanvasWidth}
@@ -97,12 +126,12 @@ export default function Piano() {
 
             >
                 {
-                    layer == "record" ? <RecordingKeys width={canvasWidth} /> :
+                    layer == "record" || layer == "community" ? <RecordingKeys width={canvasWidth} /> :
                         <Keys width={canvasWidth} />
                 }
 
                 {
-                    layer == "record" ? <RecordingNotes width={canvasWidth} /> :
+                    layer == "record" || layer == "community" ? <RecordingNotes width={canvasWidth} /> :
                         <Notes width={canvasWidth} />
                 }
 
