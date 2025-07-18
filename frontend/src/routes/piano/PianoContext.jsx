@@ -131,21 +131,31 @@ export function PianoProvider({ children }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const [layer, setLayer] = useState("pro");
+    const [layer, setLayer] = useState("record");
 
 
     const [recordingNotes, setRecordingNotes] = useState(null);
-    let playpause = (time) => {
+    let playpause = async (time) => {
         const audio = audioRef.current;
-        audio.currentTime = time
-        if (audio.paused) {
-            audio.play();
-            setIsPlaying(true)
-        } else {
-            audio.pause();
-            setIsPlaying(false)
+        if (!audio) return;
+
+        audio.currentTime = time;
+
+        try {
+            if (audio.paused) {
+                await audio.play(); // ✅ wait for browser to handle play
+                setIsPlaying(true);
+            } else {
+                audio.pause(); // no need to await pause
+                setIsPlaying(false);
+            }
+        } catch (err) {
+            if (err.name !== "AbortError") {
+                console.error("⚠️ playpause error:", err);
+            }
         }
-    }
+    };
+
 
     const [recordingTime, setRecordingTime] = useState(0);
 

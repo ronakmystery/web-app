@@ -5,7 +5,7 @@ import Composers from "./panel/Composers";
 import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
 import Settings from "./panel/Settings"
-import Record from "./panel/Record/Record";
+import Record from "./panel/Record";
 import Community from "./panel/Community";
 
 import "./Panel.css"
@@ -28,15 +28,20 @@ const Samples = () => (
 export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
-    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording } = usePiano()
+    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording, userid } = usePiano()
 
     const layers = {
         "samples": <Samples />,
         "pro": <Pro />,
         "record": <Record />,
-        "community": <Community />,
-        "settings": <Settings />,
+        ...(userid && {
+            "community": <Community />,
+            "settings": <Settings />
+        })
     };
+
+
+
 
     const layerNames = {
         "samples": "🎶",
@@ -91,6 +96,9 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                         </button>
                     ))
                 }
+
+                <div id="app-updates"> 📦 v1.3</div>
+
             </div>
 
 
@@ -106,8 +114,8 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
                 <div>
-                    <button onClick={() => setScrollSpeed(s => s + 5)}>+</button>↕️
-                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>-</button>
+                    <button onClick={() => setScrollSpeed(s => s + 5)}>➕</button>↕️
+                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>➖</button>
                 </div>
 
 
@@ -130,8 +138,8 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
                 <div>
-                    <button onClick={() => setPianoHeight(h => h + 5)}>+</button>🎹
-                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>-</button>
+                    <button onClick={() => setPianoHeight(h => h + 5)}>➕</button>🎹
+                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>➖</button>
                 </div>
 
             </div>

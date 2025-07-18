@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import "./Piano.css"
 
+import * as Tone from "tone"; // ✅ Needed for Midi conversion and playback
+
+
 import { usePiano } from "./PianoContext"
 
 import Panel from "./components/Panel";
@@ -13,7 +16,7 @@ import RecordingKeys from "./components/RecordingKeys";
 export default function Piano() {
 
 
-    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid } = usePiano()
+    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid, recordingTime, setIsPlaying, playback, recordingNotes, playpause, currentTime } = usePiano()
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
@@ -122,20 +125,37 @@ export default function Piano() {
                 </div>
             )}
 
-            <div id="piano-canvas"
+            {(layer === "record" || layer === "community") ? (
+                <div
+                    id="piano-canvas"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (!recordingNotes) return;
 
-            >
-                {
-                    layer == "record" || layer == "community" ? <RecordingKeys width={canvasWidth} /> :
-                        <Keys width={canvasWidth} />
-                }
+                        if (isPlaying) {
+                            Tone.getTransport().pause();
+                        } else {
+                            playback(recordingNotes, recordingTime);
+                        }
+                        setIsPlaying(!isPlaying);
+                    }}
+                >
+                    <RecordingKeys width={canvasWidth} />
+                    <RecordingNotes width={canvasWidth} />
+                </div>
+            ) : (
+                <div
+                    id="piano-canvas"
+                    onClick={() => {
+                        playpause(currentTime);
+                    }}
+                >
+                    <Keys width={canvasWidth} />
+                    <Notes width={canvasWidth} />
+                </div>
+            )}
 
-                {
-                    layer == "record" || layer == "community" ? <RecordingNotes width={canvasWidth} /> :
-                        <Notes width={canvasWidth} />
-                }
 
-            </div>
 
 
 

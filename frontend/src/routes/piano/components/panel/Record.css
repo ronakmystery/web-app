@@ -1,0 +1,58 @@
+#record {
+    padding: 10px;
+    font-size: 10px;
+    position: relative;
+    text-align: left;
+    height: 100%;
+
+
+    #recording-buttons {
+        height: 40px;
+        text-align: center;
+
+        button {
+            font-size: 10px;
+        }
+
+        margin-bottom: 5px;
+
+    }
+
+    #saved-recordings {
+        height: calc(100% - 65px);
+        overflow: scroll;
+        border-radius: 5px;
+        box-shadow: var(--inset-shadow);
+        text-align: right;
+
+        .recording {
+            background: rgba(0, 0, 0, .3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+
+            .recording-label {
+                text-align: left;
+            }
+
+
+            button {
+                display: inline-block;
+                background: rgba(0, 0, 0, .5);
+            }
+
+
+
+        }
+
+        .selected-recording {
+            background: var(--green);
+            transition: all .2s ease-in-out;
+            box-shadow: 0 0 10px 0px white;
+
+        }
+    }
+}

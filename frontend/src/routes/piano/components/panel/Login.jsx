@@ -35,10 +35,11 @@ export default function Login() {
 
 
     const features = [
-        { icon: "📤", text: "Upload your own MIDI files and apply special effects like reverse the notes or use a gameboy soundfont" },
+        { icon: "📤", text: "Upload your own MIDI files and apply special effects" },
         { icon: "📥", text: "Download the processed MIDIs and MP3s" },
         { icon: "❤️", text: "Upload your recordings to share them with the community" },
-        { icon: "🏆", text: "Every month the user with the most likes will receive a reward" },
+        { icon: "🌍", text: "Explore community recordings" },
+        // { icon: "🏆", text: "Every month the user with the most likes will receive a reward" },
     ];
 
     return (
@@ -72,7 +73,9 @@ export default function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                 />
-                <button onClick={() => handleLogin()}
+                <button
+                    id="login-button"
+                    onClick={() => handleLogin()}
                 >
                     🔒 LOGIN {status && <div className="login-error">🚷 {status}</div>}
                 </button>
@@ -95,6 +98,11 @@ export default function Login() {
                         </div>
                     ))}
                 </div>
+
+
+
+
+
 
             </div>
 

@@ -1,22 +1,35 @@
 import { useEffect, useState } from "react";
-
-
 import { usePiano } from "../../PianoContext";
 
+import "./Community.css";
 
 export default function Community() {
     const [recordings, setRecordings] = useState([]);
-    const { setRecordingNotes, resetPlayback } = usePiano();
-
     const [selectedRecording, setSelectedRecording] = useState(null);
 
-    useEffect(() => {
-        fetch("/backend/recordings/latest")
-            .then(res => res.json())
-            .then(setRecordings)
-            .catch(err => console.error("❌ Failed to load community recordings:", err));
-    }, []);
+    const { setRecordingNotes, resetPlayback, userid } = usePiano();
 
+    useEffect(() => {
+        if (!userid) return;
+
+
+        fetch("/backend/recordings/latest", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ userid })
+        })
+            .then(res => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setRecordings(data);
+                } else {
+                    console.warn("Unexpected response:", data);
+                }
+            })
+            .catch(err => console.error("❌ Failed to load community recordings:", err));
+    }, [userid]);
 
     useEffect(() => {
         return () => {
@@ -29,33 +42,49 @@ export default function Community() {
     return (
         <div id="community">
 
-            {recordings.length === 0 ? (
-                <p>No pro uploads yet.</p>
-            ) : (
-                <ul style={{ listStyle: "none", padding: 0 }}>
-                    {recordings
-                        .sort((a, b) => b.timestamp - a.timestamp) // newest first
-                        .map((rec) => (
-                            <li
-                                key={rec.id}
-
-                            >
-                                <div><strong>{rec.label}</strong></div>
-                                <div>by <em>{rec.user}</em></div>
-                                <div>{new Date(rec.timestamp * 1000).toLocaleString()}</div>
-                                <button
+            <div id="pro-recordings">  {
+                userid ? (
+                    recordings.length === 0 ? (
+                        <p>No pro uploads... </p>
+                    ) : (
+                        recordings
+                            .sort((a, b) => b.timestamp - a.timestamp)
+                            .map((rec) => (
+                                <div key={rec.id}
                                     className={`recording ${selectedRecording === rec.id ? "selected-recording" : ""}`}
                                     onClick={() => {
                                         setRecordingNotes(rec.data);
                                         setSelectedRecording(rec.id);
                                     }}
                                 >
-                                    ▶️ Load
-                                </button>
-                            </li>
-                        ))}
-                </ul>
-            )}
+                                    <div className="recording-label">{rec.label}</div>
+                                    <div className="recording-user">by <em >{rec.user}</em></div>
+                                    <div className="recording-timestamp">
+                                        {new Date(rec.timestamp * 1000)
+                                            .toLocaleString("en-US", {
+                                                weekday: "short",      // Mon
+                                                hour: "numeric",       // 3
+                                                minute: "2-digit",     // 23
+                                                hour12: true           // pm
+                                            })
+
+                                        }, {new Date(rec.timestamp * 1000).toLocaleDateString("en-US", {
+                                            month: "short",        // Mar
+                                            day: "numeric"         // 18
+                                        })}
+                                    </div>
+
+
+
+                                </div>
+                            ))
+                    )
+                ) : (
+                    <div>Please log in to view community recordings.</div>
+                )
+            }</div>
+
+
         </div>
     );
 }

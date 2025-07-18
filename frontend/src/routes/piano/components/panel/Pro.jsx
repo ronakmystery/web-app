@@ -78,7 +78,9 @@ export default function Pro() {
                     stream.close();
                     alert("Your MIDI file has been processed and is ready to play!");
                     setUploading(false);
-                    fileRef.current.value = "";
+                    if (fileRef.current) {
+                        fileRef.current.value = "";
+                    }
                     fetchFiles();
                 } else {
                     alert(`Error: ${e.data}`);
@@ -111,7 +113,6 @@ export default function Pro() {
 
 
 
-    const [fileSettings, setFileSettings] = useState(false)
 
     useEffect(() => {
         return () => {
@@ -144,17 +145,9 @@ export default function Pro() {
                     <div id="user-buttons">
 
                         <button onClick={() => document.getElementById('uploadDialog').showModal()}>
-                            📤 Upload MIDI
+                            📤 MIDI Upload
                         </button>
 
-                        <button
-                            className="file-settings"
-                            onClick={() => {
-                                setFileSettings(!fileSettings);
-                            }}
-                        >{
-                                fileSettings ? "📂" : "📁"
-                            }</button>
 
 
                         <dialog id="uploadDialog">
@@ -258,7 +251,7 @@ export default function Pro() {
 
 
 
-                                            {fileSettings && <div className="download-buttons">
+                                            <div className="download-buttons">
                                                 <a
                                                     href={`/backend/converted/${userid}/${name}.mp3`}
                                                     download
@@ -287,10 +280,10 @@ export default function Pro() {
                                                     }}
 
                                                 >
-                                                    🗑️</button>
+                                                    🗑️ Delete</button>
                                             </div>
 
-                                            }
+
                                         </div>
                                     ))}
                                 </div>

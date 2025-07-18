@@ -11,11 +11,12 @@
         width: 120vw;
         height: 120vh;
         z-index: -1;
+        filter: brightness(.5);
     }
 
 
     #piano-canvas {
-        padding-top: calc(100vh - 100px);
+        padding-top: 100vh;
     }
 
     #show-panel {

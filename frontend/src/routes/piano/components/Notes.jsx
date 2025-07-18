@@ -5,7 +5,7 @@ import "./Notes.css"
 
 export default function Notes({ width }) {
 
-    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime, playpause } = usePiano()
+    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime, playpause, pianoHeight } = usePiano()
 
 
     const whiteKeyCount = 52;
@@ -45,7 +45,7 @@ export default function Notes({ width }) {
         const y = currentTime * scrollSpeed;
 
         window.scrollTo({
-            top: scrollableHeight - y + 100, behavior: "auto"
+            top: scrollableHeight - y + pianoHeight, behavior: "auto"
         });
 
 
@@ -53,6 +53,31 @@ export default function Notes({ width }) {
     }, [currentTime, scrollSpeed]);
 
 
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        const handleEnded = () => {
+            setIsPlaying(false);
+            const y = document.body.scrollHeight;
+            window.scrollTo({ top: y, behavior: "auto" });
+        };
+
+        // Optional safety for partial listens
+        const checkEnded = () => {
+            if (audio.currentTime >= audio.duration - 0.1) {
+                handleEnded();
+            }
+        };
+
+        audio.addEventListener("ended", handleEnded);
+        audio.addEventListener("timeupdate", checkEnded); // in case .ended doesn't fire reliably
+
+        return () => {
+            audio.removeEventListener("ended", handleEnded);
+            audio.removeEventListener("timeupdate", checkEnded);
+        };
+    }, [audioRef, setIsPlaying]);
 
 
 
@@ -64,12 +89,10 @@ export default function Notes({ width }) {
             id="piano-notes"
 
             style={{
-                height: scrollableHeight + 100, width
+                height: scrollableHeight + pianoHeight, width
             }}
 
-            onClick={() => {
-                playpause(currentTime);
-            }}
+
 
         >
 

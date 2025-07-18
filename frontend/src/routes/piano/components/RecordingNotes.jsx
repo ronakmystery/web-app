@@ -4,7 +4,7 @@ import * as Tone from "tone"; // ✅ Needed for Midi conversion and playback
 import "./Notes.css";
 
 export default function RecordingNotes({ width }) {
-    const { scrollSpeed, recordingNotes, recordingTime, isPlaying, setIsPlaying, playback } = usePiano();
+    const { scrollSpeed, recordingNotes, recordingTime, isPlaying, setIsPlaying, playback, pianoHeight } = usePiano();
 
     const scrollRef = useRef(null);
 
@@ -41,7 +41,7 @@ export default function RecordingNotes({ width }) {
         const y = recordingTime * scrollSpeed;
 
         window.scrollTo({
-            top: scrollableHeight - y + 100, behavior: "auto"
+            top: scrollableHeight - y + pianoHeight, behavior: "auto"
         });
 
 
@@ -61,16 +61,12 @@ export default function RecordingNotes({ width }) {
             id="piano-notes"
             ref={scrollRef}
             style={{
-                height: scrollableHeight + 100,
+                height: scrollableHeight + pianoHeight,
                 width
 
             }}
 
-            onClick={(e) => {
-                e.stopPropagation();
-                isPlaying ? Tone.getTransport().pause() : playback(recordingNotes, recordingTime);
-                setIsPlaying(!isPlaying);
-            }}
+
         >
             {notes.map((note, i) => {
                 const isB = isBlack(note.midi);

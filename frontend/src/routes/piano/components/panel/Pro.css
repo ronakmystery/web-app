@@ -4,10 +4,11 @@
     text-align: center;
     padding: 10px;
     padding-bottom: 100px;
-    font-size: 12px;
+    font-size: 8px;
 
 
     #pro-login {
+
 
 
         input {
@@ -21,6 +22,11 @@
             border: none;
             box-sizing: border-box;
 
+        }
+
+        #login-button {
+            display: block;
+            margin: auto;
         }
 
         .login-error {
@@ -52,6 +58,8 @@
             }
         }
 
+
+
     }
 
     #pro-user {
@@ -71,16 +79,12 @@
         position: relative;
 
         button {
-            display: block;
             margin-bottom: 10px;
         }
 
-        .file-settings {
-            position: absolute;
-            right: 0;
-            top: 0;
-            font-size: 10px;
-        }
+
+        margin-bottom: 5px;
+
     }
 
     #uploadDialog {
@@ -90,7 +94,7 @@
         margin: 20px auto;
         padding: 10px;
         border-radius: 5px;
-        background: rgba(102, 187, 106, 0.05);
+        background: rgba(0, 0, 0, .3);
         border: 1px solid rgba(255, 255, 255, 0.3);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
@@ -127,8 +131,7 @@
     }
 
     #user-files {
-        height: calc(100% - 20px);
-        text-align: left;
+        height: calc(100% - 25px);
         box-sizing: border-box;
         box-shadow: var(--inset-shadow);
 
@@ -139,6 +142,7 @@
 
         .user-midi {
             font-size: 10px;
+            background: rgba(0, 0, 0, .3);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 5px;
             box-sizing: border-box;
@@ -152,6 +156,10 @@
             overflow: hidden;
             user-select: none;
             position: relative;
+
+            .download-buttons {
+                text-align: right;
+            }
 
             button {
                 background: rgba(0, 0, 0, .5);

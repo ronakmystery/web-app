@@ -28,6 +28,7 @@ button {
   padding: 5px 10px;
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, .3);
   box-shadow: var(--shadow);
 
   &:active {

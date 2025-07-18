@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
-import { usePiano } from "../../../PianoContext";
-
-import ProRecordings from "./ProRecordings";
+import { usePiano } from "../../PianoContext";
 
 import "./Record.css";
 
@@ -11,7 +9,7 @@ export default function Record() {
         recordingNotes, setRecordingNotes,
         audioRef, setRecordingTime, setIsPlaying, pianoSounds, playback, rafRef, partRef, resetPlayback,
         userid, fetchRecordings, selectedRecording, setSelectedRecording,
-        recording, setRecording
+        recording, setRecording, recordings, setRecordings
     } = usePiano();
 
     const [savedRecordings, setSavedRecordings] = useState([]);
@@ -75,8 +73,7 @@ export default function Record() {
         const earliestNoteTime = Math.min(...notes.map(n => n.time));
         const earliestPedalTime = pedal.length ? Math.min(...pedal.map(p => p.time)) : Infinity;
         const earliestTime = Math.min(earliestNoteTime, earliestPedalTime);
-        const delayStart = 1;
-        const shift = earliestTime - delayStart;
+        const shift = earliestTime;
 
         const shiftedNotes = notes.map(n => ({ ...n, time: Math.max(0, n.time - shift) }));
         const shiftedPedal = pedal.map(p => ({ ...p, time: Math.max(0, p.time - shift) }));
@@ -145,9 +142,9 @@ export default function Record() {
     };
 
     const deleteRecording = (id) => {
+        setRecordingNotes(null);
         const updated = savedRecordings.filter(r => r.id !== id);
         setSavedRecordings(updated);
-        setRecordingNotes(null);
         localStorage.setItem("recordings", JSON.stringify(updated));
     };
 
@@ -156,11 +153,13 @@ export default function Record() {
 
 
     const uploadRecordingJSON = async (rec) => {
-        const label = prompt("Enter a title for your recording:");
+        let label = prompt("Enter a title for your recording:");
         if (!label) {
-            console.log("⚠️ Upload canceled (no title).");
             return;
         }
+
+        label = label.slice(0, 50);
+
 
         const formData = new FormData();
         formData.append("userid", userid);
@@ -176,8 +175,11 @@ export default function Record() {
 
             const data = await res.json();
             if (data.status === "ok") {
-                deleteRecording(rec.id); // ✅ Now this works
+                deleteRecording(rec.id);
                 fetchRecordings();
+                setRecordingNotes(null);
+                setSelectedRecording(null);
+
             } else {
                 console.error("❌ Upload failed:", data);
             }
@@ -197,44 +199,99 @@ export default function Record() {
 
 
 
+    useEffect(() => {
+        if (userid) fetchRecordings();
+    }, [userid]);
+
+
+
+
+    const deleteUploadedRecording = async (recordingId) => {
+        const res = await fetch(`/backend/recordings/${userid}/${recordingId}`, {
+            method: "DELETE"
+        });
+        const result = await res.json();
+
+        if (res.ok) {
+            fetchRecordings()
+            setRecordingNotes(null);
+            setSelectedRecording(null);
+            resetPlayback();
+        }
+    };
+
+
+
     return (
         <div id="record">
-            {recording ? (
-                <button onClick={stopRecording}>⏹️ Stop</button>
+
+            <div id="recording-buttons">    {recording ? (
+                <button onClick={stopRecording}>🛑</button>
             ) : (
                 <button onClick={startRecording} disabled={recording}>
-                    ▶️ Start Recording
+                    ⏺️
                 </button>
-            )}
+            )}</div>
+
 
             <div id="saved-recordings">
-                recordings
-                {savedRecordings
-                    .sort((a, b) => b.id - a.id)
-                    .map((rec) => (
-                        <div key={rec.id} >
-                            <button
-                                className={`recording ${selectedRecording === rec.id ? "selected-recording" : ""}`}
+                {
+                    savedRecordings
+                        .sort((a, b) => b.id - a.id)
+                        .map((rec) => (
+                            <div key={rec.id} className={`recording ${selectedRecording === rec.id ? "selected-recording" : ""}`}
+
                                 onClick={() => {
                                     loadRecording(rec.data);
                                     setSelectedRecording(rec.id);
-                                }}>
-                                {rec.label}
+                                }}
+                            >
+
+                                <div className="recording-label">{rec.label}</div>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!window.confirm(`Delete? ${rec.label}`)) return;
+                                        deleteRecording(rec.id);
+                                    }}>
+                                    🗑️ Delete
+                                </button>
+
+                                {
+                                    userid && <button onClick={() => uploadRecordingJSON(rec)}>
+                                        📤 Upload
+                                    </button>
+                                }
+
+                            </div>
+                        ))}
+
+                {recordings
+                    .sort((a, b) => b.datetime - a.datetime) // newest first
+                    .map((rec) => (
+                        <div key={rec.id}
+                            className={`recording ${selectedRecording === rec.id ? "selected-recording" : ""}`}
+                            onClick={async () => {
+                                setRecordingNotes(rec.data);
+                                setSelectedRecording(rec.id);
+                            }}
+                        >
+                            <div className="recording-label">{rec.label}</div>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (!window.confirm(`Delete? ${rec.label}`)) return;
+                                    deleteUploadedRecording(rec.id);
+                                }}
+                            >
+                                🗑️ Delete
                             </button>
-                            <button onClick={() => deleteRecording(rec.id)}>
-                                🗑️
-                            </button>
-                            {
-                                userid ? <button onClick={() => uploadRecordingJSON(rec)}>
-                                    ⬆️
-                                </button> : <div>Login to upload recordings</div>
-                            }
 
                         </div>
                     ))}
             </div>
 
-            {userid && <ProRecordings />}
 
         </div>
     );

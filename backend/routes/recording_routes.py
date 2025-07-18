@@ -78,9 +78,15 @@ def delete_user_recording(userid, recording_id):
     os.remove(path)
     return jsonify({"status": "deleted", "id": recording_id})
 
-@recordings_bp.route("/recordings/latest", methods=["GET"])
+
+@recordings_bp.route("/recordings/latest", methods=["POST"])
 def list_latest_recordings():
-    users = load_json("users.json")  
+    users = load_json("users.json")
+    data = request.get_json()
+    userid = data.get("userid")
+
+
+
 
     with open("emails.txt") as f:
         pro_usernames = {line.strip() for line in f if line.strip()}
@@ -88,8 +94,15 @@ def list_latest_recordings():
     pro_uuids = {users[u] for u in pro_usernames if u in users}
     uuid_to_username = {v: k for k, v in users.items()}
 
+    if userid not in users.values() or userid not in pro_uuids:
+        return jsonify({"error": "Access restricted to pro users only"}), 403
+
     base_dir = "recordings"
     all_recordings = []
+
+    print("Received userid:", userid)
+    print("All UUIDs:", list(users.values()))
+    print("Pro UUIDs:", list(pro_uuids))
 
     for user_uuid in os.listdir(base_dir):
         if user_uuid not in pro_uuids:
@@ -108,7 +121,7 @@ def list_latest_recordings():
                     with open(path) as f:
                         data = json.load(f)
                         all_recordings.append({
-                            "id": data.get("id"),
+                            "id": data.get("id", os.path.splitext(filename)[0]),
                             "user": username,
                             "label": data.get("label", data.get("id")),
                             "data": data.get("data"),
