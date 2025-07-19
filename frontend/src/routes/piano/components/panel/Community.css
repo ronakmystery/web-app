@@ -11,6 +11,12 @@
         border-radius: 5px;
         box-shadow: var(--inset-shadow);
 
+        #no-uploads {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-color);
+            margin-top: 20px;
+        }
 
 
         .recording {

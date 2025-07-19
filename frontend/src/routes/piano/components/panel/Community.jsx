@@ -9,10 +9,12 @@ export default function Community() {
 
     const { setRecordingNotes, resetPlayback, userid } = usePiano();
 
+
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (!userid) return;
 
-
+        setLoading(true);
         fetch("/backend/recordings/latest", {
             method: "POST",
             headers: {
@@ -22,11 +24,8 @@ export default function Community() {
         })
             .then(res => res.json())
             .then((data) => {
-                if (Array.isArray(data)) {
-                    setRecordings(data);
-                } else {
-                    console.warn("Unexpected response:", data);
-                }
+                setRecordings(data);
+                setLoading(false);
             })
             .catch(err => console.error("❌ Failed to load community recordings:", err));
     }, [userid]);
@@ -45,7 +44,7 @@ export default function Community() {
             <div id="pro-recordings">  {
                 userid ? (
                     recordings.length === 0 ? (
-                        <p>No pro uploads... </p>
+                        <div id="no-uploads">{loading ? "Loading..." : "No pro uploads... "}</div>
                     ) : (
                         recordings
                             .sort((a, b) => b.timestamp - a.timestamp)
@@ -68,7 +67,7 @@ export default function Community() {
                                                 hour12: true           // pm
                                             })
 
-                                        }, {new Date(rec.timestamp * 1000).toLocaleDateString("en-US", {
+                                        } {new Date(rec.timestamp * 1000).toLocaleDateString("en-US", {
                                             month: "short",        // Mar
                                             day: "numeric"         // 18
                                         })}

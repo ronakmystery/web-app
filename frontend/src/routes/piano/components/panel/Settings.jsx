@@ -24,7 +24,7 @@ export default function Settings() {
                         }
                     }}
                 >
-                    LOGOUT
+                    🔒 LOGOUT
                 </button>
 
 

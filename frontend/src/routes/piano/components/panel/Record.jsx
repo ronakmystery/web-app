@@ -45,7 +45,12 @@ export default function Record() {
 
     const startRecording = async () => {
         setRecordingNotes(null);
-        if (!midiAccessRef.current) return;
+        if (
+            !midiAccessRef.current ||
+            midiAccessRef.current.inputs.size === 0
+        ) {
+            return alert("⚠️ No MIDI device connected. Please connect a keyboard and try again.");
+        }
 
         await Tone.start();
         recordedNotesRef.current = [];
@@ -226,10 +231,10 @@ export default function Record() {
         <div id="record">
 
             <div id="recording-buttons">    {recording ? (
-                <button onClick={stopRecording}>🛑</button>
+                <button onClick={stopRecording}>🛑 Stop</button>
             ) : (
                 <button onClick={startRecording} disabled={recording}>
-                    ⏺️
+                    ⏺️ Record
                 </button>
             )}</div>
 

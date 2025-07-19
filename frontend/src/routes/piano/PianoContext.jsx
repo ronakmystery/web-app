@@ -25,8 +25,6 @@ const pianoSounds = new Tone.Sampler({
     baseUrl: "https://tonejs.github.io/audio/salamander/",
 }).toDestination();
 
-await Tone.loaded(); // ✅ Ensure the samples are ready before interaction
-
 
 
 
@@ -42,6 +40,13 @@ export function PianoProvider({ children }) {
             .then((res) => res.json())
             .then((data) => setCollection(data))
             .catch((err) => console.error("Failed to load MIDI list", err));
+
+        (async () => {
+            await Tone.loaded(); // ✅ wait for all Tone.js samples to load
+            console.log("🎹 Tone samples loaded.");
+        })();
+
+
     }, []);
 
 
@@ -131,7 +136,7 @@ export function PianoProvider({ children }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const [layer, setLayer] = useState("record");
+    const [layer, setLayer] = useState("pro");
 
 
     const [recordingNotes, setRecordingNotes] = useState(null);
