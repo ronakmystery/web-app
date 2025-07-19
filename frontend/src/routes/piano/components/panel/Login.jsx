@@ -57,21 +57,21 @@ export default function Login() {
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                placeholder="Key"
+                placeholder="🔑 Key"
             />
 
                 <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Username"
+                    placeholder="👨‍💻 Username"
                 />
 
                 <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
+                    placeholder="🔒 Password"
                 />
                 <button
                     id="login-button"

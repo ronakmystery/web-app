@@ -97,7 +97,6 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                     ))
                 }
 
-                <div id="app-updates"> 📦 v1.3</div>
 
             </div>
 

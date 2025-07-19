@@ -142,8 +142,15 @@ export function PianoProvider({ children }) {
     const [recordingNotes, setRecordingNotes] = useState(null);
     let playpause = async (time) => {
         const audio = audioRef.current;
-        if (!audio) return;
-
+        if (
+            !audio ||
+            !audio.src ||
+            audio.src === "" ||
+            audio.readyState === 0 ||          // Not ready
+            audio.networkState === 3           // No source
+        ) {
+            return; // silently skip
+        }
         audio.currentTime = time;
 
         try {
@@ -288,6 +295,21 @@ export function PianoProvider({ children }) {
     };
 
     const [recording, setRecording] = useState(false);
+
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            audioRef.current.src = "";
+            audioRef.current.load();
+
+            setIsPlaying(false);
+            setNotes([]);
+            setSelectedMidiPath(null);
+
+        }
+    }, [layer]);
 
 
     return (

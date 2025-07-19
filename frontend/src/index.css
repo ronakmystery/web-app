@@ -44,12 +44,12 @@ button {
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
-  background: none;
+  background: rgba(0, 0, 0, .3);
+
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: var(--shadow);
   display: inline-block;
   color: white;
-  background-color: rgba(255, 255, 255, 0.05);
   text-align: center;
 }
 

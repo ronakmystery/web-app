@@ -113,17 +113,6 @@ export default function Pro() {
 
 
 
-
-    useEffect(() => {
-        return () => {
-            audioRef.current.pause();
-            setIsPlaying(false);
-            setNotes([]);
-            setSelectedMidiPath(null);
-        };
-    }, []);
-
-
     const [selectedFileName, setSelectedFileName] = useState("");
 
 
@@ -145,7 +134,7 @@ export default function Pro() {
                     <div id="user-buttons">
 
                         <button onClick={() => document.getElementById('uploadDialog').showModal()}>
-                            📤 MIDI Upload
+                            📤 MIDI UPLOAD
                         </button>
 
 
@@ -158,7 +147,7 @@ export default function Pro() {
                                 id="upload-form"
                             >
                                 <label htmlFor="choose-file" className="styled-upload-button">
-                                    {selectedFileName || "🎵 Choose MIDI"}
+                                    {selectedFileName || "🎵 CHOOSE MIDI"}
                                 </label>
 
                                 <input
@@ -280,7 +269,7 @@ export default function Pro() {
                                                     }}
 
                                                 >
-                                                    🗑️ Delete</button>
+                                                    🗑️ DELETE</button>
                                             </div>
 
 

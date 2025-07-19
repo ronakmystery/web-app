@@ -1,11 +1,11 @@
   #piano-keys {
       border-top: 2px solid #D32F2F;
-      opacity: 0.8;
-
       display: flex;
       position: fixed;
       bottom: 0px;
       overflow: hidden;
+
+      z-index: 100;
 
       .piano-key {
           border-radius: 0 0 2px 2px;

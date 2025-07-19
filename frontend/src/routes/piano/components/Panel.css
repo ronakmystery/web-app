@@ -70,13 +70,7 @@
             box-shadow: 0 0 10px 0px white;
         }
 
-        #app-updates {
-            position: absolute;
-            font-size: 8px;
-            bottom: 0;
-            width: calc(100% - 20px);
-            margin: 10px;
-        }
+
 
     }
 
@@ -96,6 +90,8 @@
 
 
             #composer-pieces {
+                background: rgba(0, 0, 0, .3);
+
                 text-align: left;
                 overflow: scroll;
                 width: 60%;

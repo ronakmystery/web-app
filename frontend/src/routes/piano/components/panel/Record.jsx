@@ -231,10 +231,10 @@ export default function Record() {
         <div id="record">
 
             <div id="recording-buttons">    {recording ? (
-                <button onClick={stopRecording}>🛑 Stop</button>
+                <button onClick={stopRecording}>🛑 STOP</button>
             ) : (
                 <button onClick={startRecording} disabled={recording}>
-                    ⏺️ Record
+                    ⏺️ RECORD
                 </button>
             )}</div>
 
@@ -260,12 +260,12 @@ export default function Record() {
                                         if (!window.confirm(`Delete? ${rec.label}`)) return;
                                         deleteRecording(rec.id);
                                     }}>
-                                    🗑️ Delete
+                                    🗑️ DELETE
                                 </button>
 
                                 {
                                     userid && <button onClick={() => uploadRecordingJSON(rec)}>
-                                        📤 Upload
+                                        📤 UPLOAD
                                     </button>
                                 }
 
@@ -290,7 +290,7 @@ export default function Record() {
                                     deleteUploadedRecording(rec.id);
                                 }}
                             >
-                                🗑️ Delete
+                                🗑️ DELETE
                             </button>
 
                         </div>

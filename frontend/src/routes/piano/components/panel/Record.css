@@ -24,9 +24,9 @@
         border-radius: 5px;
         box-shadow: var(--inset-shadow);
         text-align: right;
+        background: rgba(0, 0, 0, .3);
 
         .recording {
-            background: rgba(0, 0, 0, .3);
             border: 1px solid rgba(255, 255, 255, 0.3);
             position: relative;
             padding: 10px;

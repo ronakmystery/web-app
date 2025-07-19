@@ -6,10 +6,12 @@
     position: relative;
 
     #pro-recordings {
-        height: calc(100% - 50px);
+        height: calc(100% - 20px);
         overflow: scroll;
         border-radius: 5px;
         box-shadow: var(--inset-shadow);
+        background: rgba(0, 0, 0, .3);
+
 
         #no-uploads {
             text-align: center;
@@ -22,7 +24,6 @@
         .recording {
             margin: 10px;
             position: relative;
-            background: rgba(0, 0, 0, .3);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 5px;
             padding: 10px;
