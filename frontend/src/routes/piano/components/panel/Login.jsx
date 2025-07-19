@@ -47,10 +47,10 @@ export default function Login() {
 
 
 
-            🔑 Get latest key from
+
             <a href="https://www.patreon.com/ronakmystery" className="app-link"
                 target='_blank' >
-                <button>  PATREON</button>
+                <button>Get latest key from Patreon</button>
             </a>
 
             <div id="pro-inputs">  <input
@@ -84,8 +84,7 @@ export default function Login() {
             </div>
 
             <div id="about">
-
-                🧑‍💻 Pro features
+                <div id="about-title">🧑‍💻 Pro features</div>
 
                 <div id="pro-features">
                     {features.map((item, index) => (
