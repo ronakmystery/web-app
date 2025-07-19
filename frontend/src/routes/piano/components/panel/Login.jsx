@@ -50,7 +50,7 @@ export default function Login() {
 
             <a href="https://www.patreon.com/ronakmystery" className="app-link"
                 target='_blank' >
-                <button>Get latest key from Patreon</button>
+                <button className="patreon-link">Get latest key from Patreon</button>
             </a>
 
             <div id="pro-inputs">  <input

@@ -104,6 +104,10 @@
                 margin: 5px;
             }
 
+            .recording-label {
+                text-align: left;
+            }
+
             .like-button {
                 position: absolute;
                 right: 0px;
