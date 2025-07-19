@@ -1,5 +1,4 @@
 #record {
-    padding: 10px;
     font-size: 10px;
     position: relative;
     text-align: left;
@@ -7,21 +6,20 @@
 
 
     #recording-buttons {
-        height: 40px;
+        height: 30px;
+        padding: 10px;
         text-align: center;
 
         button {
             font-size: 10px;
+            margin: 0;
         }
-
-        margin-bottom: 5px;
 
     }
 
     #saved-recordings {
-        height: calc(100% - 65px);
+        height: calc(100% - 30px);
         overflow: scroll;
-        border-radius: 5px;
         box-shadow: var(--inset-shadow);
         text-align: right;
         background: rgba(0, 0, 0, .3);
@@ -36,6 +34,14 @@
 
             .recording-label {
                 text-align: left;
+            }
+
+            .recording-likes {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                font-size: 10px;
+                margin: 5px;
             }
 
 
@@ -53,6 +59,12 @@
             transition: all .2s ease-in-out;
             box-shadow: 0 0 10px 0px white;
 
+        }
+
+        .no-recordings {
+            text-align: center;
+            color: var(--text-color);
+            margin-top: 20px;
         }
     }
 }

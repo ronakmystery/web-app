@@ -1,0 +1,125 @@
+#community {
+    font-size: 10px;
+    text-align: center;
+    height: 100%;
+    position: relative;
+
+    #community-buttons {
+        height: 30px;
+        padding: 10px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: scroll;
+        padding-right: 10px;
+
+        button {
+            margin: 0;
+            margin-right: 10px;
+            font-size: 10px;
+        }
+
+        .active-community-tab {
+            background: var(--green);
+            color: white;
+        }
+    }
+
+    #community-home {
+        .recording {
+            cursor: pointer;
+        }
+
+        #random-recording {
+
+            margin: 10px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            height: 40px;
+
+            .recording-label {
+                text-align: left;
+            }
+
+            .like-button {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                font-size: 10px;
+                margin: 5px;
+            }
+
+            .recording-user {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                margin: 5px;
+                font-size: 10px;
+            }
+
+        }
+
+    }
+
+    #community-top10 {
+        height: calc(100% - 30px);
+        overflow: scroll;
+        box-shadow: var(--inset-shadow);
+        background: rgba(0, 0, 0, .3);
+
+
+        #no-uploads {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-color);
+            margin-top: 20px;
+        }
+
+
+        .recording {
+            cursor: pointer;
+            margin: 10px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 5px;
+            height: 40px;
+
+
+            .recording-user {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                margin: 5px;
+                font-size: 10px;
+            }
+
+            .recording-timestamp {
+                font-size: 6px;
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                margin: 5px;
+            }
+
+            .like-button {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                cursor: pointer;
+                margin: 5px;
+            }
+        }
+
+
+    }
+
+    .selected-recording {
+        background: var(--green);
+        transition: all .2s ease-in-out;
+        box-shadow: 0 0 10px 0px white;
+
+    }
+}

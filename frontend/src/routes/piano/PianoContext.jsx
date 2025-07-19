@@ -307,9 +307,80 @@ export function PianoProvider({ children }) {
             setIsPlaying(false);
             setNotes([]);
             setSelectedMidiPath(null);
+            setSelectedRecording(null);
+            setRecordingNotes(null);
+            resetPlayback();
 
         }
     }, [layer]);
+
+    const fileRef = useRef(null);
+    const handleUpload = async (e) => {
+
+        document.getElementById('uploadDialog').close()
+
+
+        e.preventDefault();
+        const file = fileRef.current?.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("userid", userid);
+        formData.append("reverse", reverse ? "true" : "false");
+        formData.append("retro", retro ? "true" : "false");
+
+        setUploading(true);
+
+        try {
+            const res = await fetch("/backend/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) {
+                alert(`❌ Upload failed: ${res.statusText}`);
+                setUploading(false);
+                return;
+            }
+
+            const { id } = await res.json();
+
+            const stream = new EventSource(`/backend/status_stream/${userid}/${id}`);
+            stream.onmessage = (e) => {
+                if (e.data === "done") {
+                    stream.close();
+                    alert("✅ Your MIDI file has been processed and is ready to play!");
+                    setUploading(false);
+                    fetchFiles();
+
+
+                } else {
+                    alert(`Error: ${e.data}`);
+                }
+            };
+        } catch (err) {
+            alert("❌ Unexpected error");
+            console.error(err);
+            setUploading(false);
+        }
+    };
+    const [uploading, setUploading] = useState(false);
+    const fetchFiles = async () => {
+        try {
+            const res = await fetch(`/backend/list?uuid=${userid}`);
+
+            if (!res.ok) throw new Error("Failed to load list");
+            const data = await res.json();
+            setFiles(data);
+
+        } catch (err) {
+            console.error("❌ Error fetching files:", err);
+        }
+    };
+
+    const [reverse, setReverse] = useState(false);
+    const [retro, setRetro] = useState(false);
 
 
     return (
@@ -342,6 +413,8 @@ export function PianoProvider({ children }) {
             selectedRecording, setSelectedRecording,
 
             recording, setRecording,
+
+            uploading, setUploading, handleUpload, fileRef, retro, setRetro, reverse, setReverse, fetchFiles
         }}>
             {children}
         </PianoContext.Provider>

@@ -11,29 +11,10 @@ export default function Pro() {
 
 
 
-    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath, audioRef, setIsPlaying, setNotes } = usePiano()
+    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath, audioRef, setIsPlaying, setNotes, uploading, setUploading, handleUpload, fileRef, retro, setRetro, reverse, setReverse, fetchFiles } = usePiano()
 
 
 
-    const [uploading, setUploading] = useState(false);
-    const [reverse, setReverse] = useState(false);
-    const [retro, setRetro] = useState(false);
-    const fileRef = useRef(null);
-
-
-
-
-    const fetchFiles = async () => {
-        try {
-            const res = await fetch(`/backend/list?uuid=${userid}`);
-
-            if (!res.ok) throw new Error("Failed to load list");
-            const data = await res.json();
-            setFiles(data);
-        } catch (err) {
-            console.error("❌ Error fetching files:", err);
-        }
-    };
 
     useEffect(() => {
         if (userid) {
@@ -44,54 +25,7 @@ export default function Pro() {
 
 
 
-    const handleUpload = async (e) => {
 
-        e.preventDefault();
-        const file = fileRef.current?.files?.[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("userid", userid);
-        formData.append("reverse", reverse ? "true" : "false");
-        formData.append("retro", retro ? "true" : "false");
-
-        setUploading(true);
-
-        try {
-            const res = await fetch("/backend/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!res.ok) {
-                alert(`❌ Upload failed: ${res.statusText}`);
-                setUploading(false);
-                return;
-            }
-
-            const { id } = await res.json();
-
-            const stream = new EventSource(`/backend/status_stream/${userid}/${id}`);
-            stream.onmessage = (e) => {
-                if (e.data === "done") {
-                    stream.close();
-                    alert("Your MIDI file has been processed and is ready to play!");
-                    setUploading(false);
-                    if (fileRef.current) {
-                        fileRef.current.value = "";
-                    }
-                    fetchFiles();
-                } else {
-                    alert(`Error: ${e.data}`);
-                }
-            };
-        } catch (err) {
-            alert("❌ Unexpected error");
-            console.error(err);
-            setUploading(false);
-        }
-    };
 
     const handleDelete = async (id) => {
         if (!window.confirm(`Delete? ${id}`)) return;
@@ -133,9 +67,13 @@ export default function Pro() {
 
                     <div id="user-buttons">
 
-                        <button onClick={() => document.getElementById('uploadDialog').showModal()}>
-                            📤 MIDI UPLOAD
+                        <button
+                            onClick={() => document.getElementById('uploadDialog').showModal()}
+                            disabled={uploading}
+                        >
+                            {uploading ? "🔄 Processing..." : "📤 MIDI UPLOAD"}
                         </button>
+
 
 
 
@@ -172,7 +110,6 @@ export default function Pro() {
 
 
                                 <div id="upload-options">
-                                    <div className="upload-info">   Saves midi to cloud to generate mp3 for playback</div>
 
 
 
@@ -182,12 +119,15 @@ export default function Pro() {
                                     >
                                         {uploading ? "🔄 Processing..." : "📤 UPLOAD"}
                                     </button>
+
+                                    <div className="upload-info">   Saves midi to cloud to generate mp3 for playback</div>
+
                                     <label>
                                         <input
                                             type="checkbox"
                                             checked={retro}
                                             onChange={(e) => setRetro(e.target.checked)}
-                                        />🎮 Use retro soundfont
+                                        />🎮 Use a retro soundfont
                                     </label>
 
                                     <label>
@@ -219,66 +159,67 @@ export default function Pro() {
                     </div>
 
 
+                    <div id="user-files">
 
-                    {files.length === 0 ? (
-                        <p>No MIDI files...</p>
-                    ) : (
-                        (() => {
-
-                            return (
-                                <div id="user-files">
-                                    {files.map((name) => (
-                                        <div
-                                            className={`user-midi ${selectedMidiPath === `/backend/converted/${userid}/${name}.mid` ? "selected-user-midi" : ""}`}
-                                            key={name}
-                                            onClick={() => {
-                                                loadMidi(`/backend/converted/${userid}/${name}.mid`);
-                                            }}
-
-                                        >
-                                            {name}
+                        {files.length === 0 && (
+                            <div className="no-midi-files">
+                                No MIDI files...
+                            </div>
+                        )}
 
 
+                        {files
+                            .slice()
+                            .sort((a, b) => b.timestamp - a.timestamp) // newest first
+                            .map((file) => {
+                                const midiPath = `/backend/converted/${userid}/${file.id}.mid`;
 
-                                            <div className="download-buttons">
-                                                <a
-                                                    href={`/backend/converted/${userid}/${name}.mp3`}
-                                                    download
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    <button>📥 MP3</button>
+                                return (
+                                    <div
+                                        className={`user-midi ${selectedMidiPath === midiPath ? "selected-user-midi" : ""
+                                            }`}
+                                        key={file.id}
+                                        onClick={() => {
+                                            loadMidi(midiPath);
+                                        }}
+                                    >
+                                        {file.id}
 
-                                                </a>
+                                        <div className="download-buttons">
+                                            <a
+                                                href={`/backend/converted/${userid}/${file.id}.mp3`}
+                                                download
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                <button>📥 MP3</button>
+                                            </a>
 
-                                                <a
-                                                    href={`/backend/converted/${userid}/${name}.mid`}
-                                                    download
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    style={{ marginLeft: "10px" }}
-                                                >
-                                                    <button> 📥 MIDI</button>
-                                                </a>
+                                            <a
+                                                href={`/backend/converted/${userid}/${file.id}.mid`}
+                                                download
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                style={{ marginLeft: "10px" }}
+                                            >
+                                                <button>📥 MIDI</button>
+                                            </a>
 
-                                                <button
-                                                    className="delete-button "
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDelete(name);
-                                                    }}
-
-                                                >
-                                                    🗑️ DELETE</button>
-                                            </div>
-
-
+                                            <button
+                                                className="delete-button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(file.id);
+                                                }}
+                                            >
+                                                🗑️ DELETE
+                                            </button>
                                         </div>
-                                    ))}
-                                </div>
-                            );
-                        })()
-                    )}
+                                    </div>
+                                );
+                            })}
+                    </div>
+
 
 
 

@@ -1,6 +1,14 @@
 from flask import Blueprint, request, jsonify
 from utils.helpers import load_json, save_json
-import os, uuid, json,datetime
+import os, uuid, json
+from routes.community import get_month_filename
+
+from datetime import datetime, timezone
+
+# Get the first day of the current month at 00:00 UTC
+now = datetime.now(timezone.utc)
+start_of_month = datetime(now.year, now.month, 1, tzinfo=timezone.utc).timestamp()
+
 
 recordings_bp = Blueprint("recordings", __name__)
 
@@ -51,17 +59,31 @@ def list_user_recordings(userid):
     if not os.path.exists(user_dir):
         return jsonify([])
 
+    # Load current month's like data
+    like_path = os.path.join("community", "likes", get_month_filename())
+    likes_data = load_json(like_path) if os.path.exists(like_path) else {}
+
     recordings = []
     for filename in os.listdir(user_dir):
         if filename.endswith(".json"):
-            with open(os.path.join(user_dir, filename)) as f:
-                try:
+            path = os.path.join(user_dir, filename)
+            try:
+                with open(path) as f:
                     data = json.load(f)
-                    recordings.append(data)
-                except Exception:
-                    continue
+
+                file_id = data.get("id", os.path.splitext(filename)[0])
+                like_list = likes_data.get(file_id, [])
+
+                data["id"] = file_id
+                data["likes"] = len(like_list)
+                data["liked"] = userid in like_list
+
+                recordings.append(data)
+            except Exception:
+                continue
 
     return jsonify(recordings)
+
 
 @recordings_bp.route("/recordings/<userid>/<recording_id>", methods=["DELETE"])
 def delete_user_recording(userid, recording_id):
@@ -78,15 +100,11 @@ def delete_user_recording(userid, recording_id):
     os.remove(path)
     return jsonify({"status": "deleted", "id": recording_id})
 
-
-@recordings_bp.route("/recordings/latest", methods=["POST"])
-def list_latest_recordings():
+@recordings_bp.route("/recordings/top", methods=["POST"])
+def list_top_recordings():
     users = load_json("users.json")
     data = request.get_json()
     userid = data.get("userid")
-
-
-
 
     with open("emails.txt") as f:
         pro_usernames = {line.strip() for line in f if line.strip()}
@@ -94,15 +112,14 @@ def list_latest_recordings():
     pro_uuids = {users[u] for u in pro_usernames if u in users}
     uuid_to_username = {v: k for k, v in users.items()}
 
-    if userid not in users.values() or userid not in pro_uuids:
+    if userid not in pro_uuids:
         return jsonify({"error": "Access restricted to pro users only"}), 403
 
     base_dir = "recordings"
     all_recordings = []
 
-    print("Received userid:", userid)
-    print("All UUIDs:", list(users.values()))
-    print("Pro UUIDs:", list(pro_uuids))
+    like_path = os.path.join("community", "likes", get_month_filename())
+    likes_data = load_json(like_path) if os.path.exists(like_path) else {}
 
     for user_uuid in os.listdir(base_dir):
         if user_uuid not in pro_uuids:
@@ -119,16 +136,27 @@ def list_latest_recordings():
                 path = os.path.join(user_dir, filename)
                 try:
                     with open(path) as f:
-                        data = json.load(f)
-                        all_recordings.append({
-                            "id": data.get("id", os.path.splitext(filename)[0]),
-                            "user": username,
-                            "label": data.get("label", data.get("id")),
-                            "data": data.get("data"),
-                            "timestamp": os.path.getmtime(path)
-                        })
+                        rec_data = json.load(f)
+
+                    file_timestamp = os.path.getmtime(path)
+                    if file_timestamp < start_of_month:
+                        continue
+
+                    file_id = rec_data.get("id", os.path.splitext(filename)[0])
+                    like_list = likes_data.get(file_id, [])
+
+                    all_recordings.append({
+                        "id": file_id,
+                        "user": username,
+                        "label": rec_data.get("label", file_id),
+                        "data": rec_data.get("data"),
+                        "timestamp": file_timestamp,
+                        "likes": len(like_list),
+                        "liked": userid in like_list
+                    })
+
                 except Exception:
                     continue
 
-    all_recordings.sort(key=lambda x: x["timestamp"], reverse=True)
-    return jsonify(all_recordings[:100])
+    all_recordings.sort(key=lambda x: x["likes"], reverse=True)
+    return jsonify(all_recordings[:10])

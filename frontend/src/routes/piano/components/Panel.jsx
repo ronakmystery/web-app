@@ -6,7 +6,7 @@ import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
 import Settings from "./panel/Settings"
 import Record from "./panel/Record";
-import Community from "./panel/Community";
+import Community from "./panel/Community/Community";
 
 import "./Panel.css"
 

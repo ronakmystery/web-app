@@ -194,14 +194,6 @@ export default function Record() {
     };
 
 
-    useEffect(() => {
-        return () => {
-            setSelectedRecording(null);
-            setRecordingNotes(null);
-            resetPlayback(); // Cleanup when component unmounts
-        };
-    }, []);
-
 
 
     useEffect(() => {
@@ -241,6 +233,13 @@ export default function Record() {
 
             <div id="saved-recordings">
                 {
+                    savedRecordings.length === 0 && (
+                        <div className="no-recordings">No local recordings...</div>
+                    )
+                }
+
+
+                {
                     savedRecordings
                         .sort((a, b) => b.id - a.id)
                         .map((rec) => (
@@ -272,29 +271,41 @@ export default function Record() {
                             </div>
                         ))}
 
-                {recordings
-                    .sort((a, b) => b.datetime - a.datetime) // newest first
+                {
+                    userid && recordings.length === 0 && (
+                        <div className="no-recordings">No uploaded recordings...</div>
+                    )
+                }
+
+
+                {[...recordings]
+                    .sort((a, b) => b.timestamp - a.timestamp)
                     .map((rec) => (
-                        <div key={rec.id}
+                        <div
+                            key={rec.id}
                             className={`recording ${selectedRecording === rec.id ? "selected-recording" : ""}`}
-                            onClick={async () => {
+                            onClick={() => {
                                 setRecordingNotes(rec.data);
                                 setSelectedRecording(rec.id);
                             }}
                         >
                             <div className="recording-label">{rec.label}</div>
+                            <div className="recording-likes">
+                                {rec.likes ?? 0} ❤️
+                            </div>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    if (!window.confirm(`Delete? ${rec.label}`)) return;
-                                    deleteUploadedRecording(rec.id);
+                                    if (window.confirm(`Delete "${rec.label}"?`)) {
+                                        deleteUploadedRecording(rec.id);
+                                    }
                                 }}
                             >
                                 🗑️ DELETE
                             </button>
-
                         </div>
                     ))}
+
             </div>
 
 

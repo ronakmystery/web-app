@@ -14,7 +14,7 @@ export default function Home() {
                 <button>LinkedIn</button>
             </a>
 
-            <a href="https://www.youtube.com/@mysteryclassicalpianist" target='_blank' className='app-link'>
+            <a href="https://www.youtube.com/@ronakmystery" target='_blank' className='app-link'>
                 <button>YouTube</button>
             </a>
 

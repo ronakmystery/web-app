@@ -61,7 +61,7 @@ export default function RecordingNotes({ width }) {
             id="piano-notes"
             ref={scrollRef}
             style={{
-                height: scrollableHeight + pianoHeight,
+                height: scrollableHeight + pianoHeight + 20,
                 width
 
             }}

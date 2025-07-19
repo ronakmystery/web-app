@@ -1,7 +1,7 @@
 #panel {
     width: 100%;
     height: 300px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, .1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: var(--shadow);
@@ -66,7 +66,6 @@
 
         .selected-layer {
             background: var(--green);
-            transition: all .2s ease-in-out;
             box-shadow: 0 0 10px 0px white;
         }
 
@@ -84,19 +83,74 @@
         }
 
         #samples-container {
-            display: flex;
             height: 100%;
 
+            #composers {
+                white-space: nowrap;
+                overflow-x: scroll;
+                width: 100%;
+                height: 100px;
+                box-shadow: var(--shadow);
+                overflow: scroll;
+                box-sizing: border-box;
+                padding-right: 10px;
 
+                .composer {
+                    display: inline-block;
+                    transition: .3s;
+                    cursor: pointer;
+                    height: 80px;
+                    width: 50px;
+                    margin: 10px;
+                    margin-right: 0px;
+                    box-shadow: var(--shadow);
+                    overflow: hidden;
+                    position: relative;
+                    background: var(--green);
+                    border-radius: 5px;
+
+
+                    .composer-name {
+                        font-size: 0px;
+                        transition: .3s;
+                    }
+
+
+                    .composer-image {
+                        height: 100px;
+                    }
+
+                    &.selected-composer {
+                        box-shadow: 0 0 10px 0px white;
+
+
+
+                        .composer-name {
+                            font-size: 8px;
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            text-align: center;
+                            background: var(--green);
+                            border-radius: 0 0 5px 5px;
+                            padding: 2px;
+                        }
+                    }
+
+                }
+
+            }
 
             #composer-pieces {
                 background: rgba(0, 0, 0, .3);
 
-                text-align: left;
+                text-align: center;
                 overflow: scroll;
-                width: 60%;
-                height: calc(100% - 10px);
-                padding: 5px 0;
+                width: 100%;
+                height: calc(100% - 100px);
+                padding: 10px;
+                box-sizing: border-box;
 
                 button {
                     text-overflow: ellipsis;

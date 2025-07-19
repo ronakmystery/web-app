@@ -89,7 +89,7 @@ export default function Notes({ width }) {
             id="piano-notes"
 
             style={{
-                height: scrollableHeight + pianoHeight, width
+                height: scrollableHeight + pianoHeight + 20, width
             }}
 
 

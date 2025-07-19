@@ -11,15 +11,25 @@ def list_user_midis():
     users = load_json("users.json")
     if user_uuid not in users.values():
         return jsonify({"error": "Invalid user"}), 403
-    
+
     folder = os.path.join("data", user_uuid, "processed", "converted")
     if not os.path.isdir(folder):
         return jsonify([])
 
-    names = sorted([
-        os.path.splitext(f)[0] for f in os.listdir(folder) if f.endswith(".mid")
-    ])
-    return jsonify(names)
+    # Return filenames with timestamps
+    files = []
+    for filename in os.listdir(folder):
+        if filename.endswith(".mid"):
+            filepath = os.path.join(folder, filename)
+            stat = os.stat(filepath)
+            files.append({
+                "id": os.path.splitext(filename)[0],
+                "timestamp": int(stat.st_mtime)  # Use mtime (last modified) as a proxy for created time
+            })
+
+    files.sort(key=lambda x: x["timestamp"], reverse=True)
+    return jsonify(files)
+
 
 @files_bp.route("/delete/<userid>/<uid>", methods=["DELETE"])
 def delete_file(userid, uid):
