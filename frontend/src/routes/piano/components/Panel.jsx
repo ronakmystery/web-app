@@ -4,7 +4,6 @@ import { usePiano } from "../PianoContext"
 import Composers from "./panel/Composers";
 import ComposerPieces from "./panel/ComposerPieces";
 import Pro from "./panel/Pro"
-import Settings from "./panel/Settings"
 import Record from "./panel/Record";
 import Community from "./panel/Community/Community";
 
@@ -28,16 +27,13 @@ const Samples = () => (
 export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
-    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording, userid } = usePiano()
+    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording, userid, isPlayingRecording, setShowSettings, showSettings, isPortrait, setIsPortrait } = usePiano()
 
     const layers = {
         "samples": <Samples />,
         "pro": <Pro />,
         "record": <Record />,
-        ...(userid && {
-            "community": <Community />,
-            "settings": <Settings />
-        })
+        "community": <Community />,
     };
 
 
@@ -45,21 +41,13 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
     const layerNames = {
         "samples": "🎶",
-        "pro": "🧑‍💻",
+        "pro": "⭐",
         "record": "🎤",
         "community": "🌍",
-        "settings": "⚙️",
     };
 
 
 
-    const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
-
-    useEffect(() => {
-        const update = () => setIsPortrait(window.innerHeight > window.innerWidth);
-        window.addEventListener("resize", update);
-        return () => window.removeEventListener("resize", update);
-    }, []);
 
 
 
@@ -109,40 +97,29 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
 
-            <div id="controls">
 
 
-                <div>
-                    <button onClick={() => setScrollSpeed(s => s + 5)}>➕</button>↕️
-                    <button onClick={() => setScrollSpeed(s => Math.max(5, s - 5))}>➖</button>
-                </div>
+            <div id="right-side-panel">
 
+                <img
+                    onClick={() => {
+                        setPanelState(false);
+                    }}
+                    id="logo"
+                    className={`${isPlaying || isPlayingRecording ? 'playing-glow' : ''} ${recording ? 'recording-glow' : ''}`}
 
-                <div
-                >
+                    src="logo.png"
+                    style={{
+                        objectFit: "contain",
+                        transformOrigin: "center center",
+                    }}
+                />
+                <button id="settings-button" onClick={() => { setShowSettings(!showSettings) }}>
+                    ⚙️
+                </button>
 
-                    <img
-                        className={`${isPlaying ? 'playing-glow' : ''} ${recording ? 'recording-glow' : ''}`}
-
-                        id="close-panel"
-                        src="logo.png"
-                        style={{
-                            objectFit: "contain",
-                            transformOrigin: "center center",
-                        }}
-                    />
-
-                </div>
-
-
-
-                <div>
-                    <button onClick={() => setPianoHeight(h => h + 5)}>➕</button>🎹
-                    <button onClick={() => setPianoHeight(h => Math.max(5, h - 5))}>➖</button>
-                </div>
 
             </div>
-
 
 
 

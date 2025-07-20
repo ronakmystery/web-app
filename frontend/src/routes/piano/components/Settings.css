@@ -1,0 +1,45 @@
+  #settings {
+    z-index: 200;
+    padding: 10px;
+    box-shadow: var(--shadow);
+    overflow: scroll;
+    font-size: 10px;
+
+    background: rgba(0, 0, 0, .3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-sizing: border-box;
+    position: fixed;
+    right: 0;
+    z-index: 200;
+    top: 0;
+
+    button {
+      color: white;
+    }
+
+    #username {
+      font-size: 15px;
+    }
+
+    #controls {
+      margin: 10px;
+
+      div {
+        margin: 10px;
+
+        button {
+          margin: 5px;
+        }
+      }
+    }
+
+    #close-settings-button {
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      margin: 20px;
+      font-size: 20px;
+    }
+  }

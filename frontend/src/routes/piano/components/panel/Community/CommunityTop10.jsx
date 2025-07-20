@@ -35,7 +35,7 @@ export default function CommunityTop10() {
 
     return (
         <div id="community-top10">
-            {userid ? (
+            {userid && (
                 recordings.length === 0 ? (
                     <div id="no-uploads">{loading ? "Loading..." : "No pro uploads... "}</div>
                 ) : (
@@ -93,8 +93,6 @@ export default function CommunityTop10() {
                             </div>
                         ))
                 )
-            ) : (
-                <div>Please log in to view community recordings.</div>
             )}
         </div>
 

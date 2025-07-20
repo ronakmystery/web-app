@@ -11,7 +11,7 @@ export default function Pro() {
 
 
 
-    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath, audioRef, setIsPlaying, setNotes, uploading, setUploading, handleUpload, fileRef, retro, setRetro, reverse, setReverse, fetchFiles } = usePiano()
+    const { loadMidi, userid, files, setFiles, selectedMidiPath, setSelectedMidiPath, audioRef, setIsPlaying, setNotes, uploading, setUploading, handleUpload, fileRef, retro, setRetro, reverse, setReverse, fetchFiles, isPortrait } = usePiano()
 
 
 
@@ -50,6 +50,9 @@ export default function Pro() {
     const [selectedFileName, setSelectedFileName] = useState("");
 
 
+    const dialogRef = useRef(null);
+
+
     return (
         <div id="pro">
 
@@ -62,7 +65,6 @@ export default function Pro() {
 
             {
                 userid && <div id="pro-user">
-
 
 
                     <div id="user-buttons">
@@ -157,7 +159,6 @@ export default function Pro() {
 
 
                     </div>
-
 
                     <div id="user-files">
 

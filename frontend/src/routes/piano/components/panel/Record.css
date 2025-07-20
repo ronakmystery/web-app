@@ -18,7 +18,7 @@
     }
 
     #saved-recordings {
-        height: calc(100% - 30px);
+        height: calc(100% - 50px);
         overflow: scroll;
         box-shadow: var(--inset-shadow);
         text-align: right;
@@ -64,7 +64,7 @@
         .no-recordings {
             text-align: center;
             color: var(--text-color);
-            margin-top: 20px;
+            margin-top: 10px;
         }
     }
 }

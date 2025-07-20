@@ -29,6 +29,11 @@
             cursor: pointer;
         }
 
+        #community-home-info {
+            margin: 20px;
+
+        }
+
         #random-recording {
 
             margin: 10px;
@@ -63,7 +68,7 @@
     }
 
     #community-top10 {
-        height: calc(100% - 30px);
+        height: calc(100% - 50px);
         overflow: scroll;
         box-shadow: var(--inset-shadow);
         background: rgba(0, 0, 0, .3);
@@ -73,7 +78,7 @@
             text-align: center;
             font-size: 10px;
             color: var(--text-color);
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
 

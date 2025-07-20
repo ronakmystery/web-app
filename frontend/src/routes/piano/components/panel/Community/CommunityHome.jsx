@@ -36,24 +36,22 @@ export default function CommunityHome() {
             });
     };
 
-    useEffect(() => {
-        fetchRandom();
-    }, [userid]);
-
-    useEffect(() => {
-        return () => {
-            setSelectedRecording(null);
-            setRecordingNotes(null);
-            resetPlayback();
-        };
-    }, []);
-
     return (
         <div id="community-home">
 
-            <button onClick={fetchRandom} disabled={loading}>
-                {loading ? "🎲 Loading..." : "🎲 Random recording"}
-            </button>
+
+
+            {
+                !userid ? (
+                    <div id="community-home-info">
+                        <p>Please log in to access community features...</p>
+                    </div>
+                ) : (
+                    <button onClick={fetchRandom} disabled={loading}>
+                        {loading ? "🎲 Loading..." : "🎲 Random recording"}
+                    </button>
+                )
+            }
 
 
             {randomRec && (

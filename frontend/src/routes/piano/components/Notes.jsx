@@ -5,7 +5,7 @@ import "./Notes.css"
 
 export default function Notes({ width }) {
 
-    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime, playpause, pianoHeight } = usePiano()
+    const { notes, scrollSpeed, audioRef, setIsPlaying, currentTime, playpause, pianoHeight, offset } = usePiano()
 
 
     const whiteKeyCount = 52;
@@ -40,15 +40,14 @@ export default function Notes({ width }) {
         }
     }, [notes]);
 
+
     //autoscroll 
     useEffect(() => {
         const y = currentTime * scrollSpeed;
 
         window.scrollTo({
-            top: scrollableHeight - y + pianoHeight, behavior: "auto"
+            top: scrollableHeight - y + pianoHeight + offset, behavior: "auto"
         });
-
-
 
     }, [currentTime, scrollSpeed]);
 
@@ -89,12 +88,14 @@ export default function Notes({ width }) {
             id="piano-notes"
 
             style={{
-                height: scrollableHeight + pianoHeight + 20, width
+                height: scrollableHeight + pianoHeight, width
             }}
 
 
 
         >
+
+
 
             {notes.map((note, i) => {
                 const isB = isBlack(note.midi);

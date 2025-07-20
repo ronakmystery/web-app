@@ -4,7 +4,7 @@ import * as Tone from "tone"; // ✅ Needed for Midi conversion and playback
 import "./Notes.css";
 
 export default function RecordingNotes({ width }) {
-    const { scrollSpeed, recordingNotes, recordingTime, isPlaying, setIsPlaying, playback, pianoHeight } = usePiano();
+    const { scrollSpeed, recordingNotes, recordingTime, isPlaying, setIsPlaying, playback, pianoHeight, offset } = usePiano();
 
     const scrollRef = useRef(null);
 
@@ -28,9 +28,7 @@ export default function RecordingNotes({ width }) {
     };
 
     const noteColor = (isB, track) =>
-        track === 1
-            ? isB ? "#1565C0" : "#42A5F5"
-            : isB ? "#2E7D32" : "#66BB6A";
+        isB ? "#2E7D32" : "#66BB6A";
 
 
 
@@ -41,12 +39,13 @@ export default function RecordingNotes({ width }) {
         const y = recordingTime * scrollSpeed;
 
         window.scrollTo({
-            top: scrollableHeight - y + pianoHeight, behavior: "auto"
+            top: scrollableHeight - y + pianoHeight + offset, behavior: "auto"
         });
 
-
-
     }, [recordingTime, scrollSpeed]);
+
+
+
 
     useEffect(() => {
         if (notes.length) {
@@ -61,7 +60,7 @@ export default function RecordingNotes({ width }) {
             id="piano-notes"
             ref={scrollRef}
             style={{
-                height: scrollableHeight + pianoHeight + 20,
+                height: scrollableHeight + pianoHeight,
                 width
 
             }}

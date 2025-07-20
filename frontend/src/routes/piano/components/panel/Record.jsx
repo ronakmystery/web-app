@@ -20,11 +20,7 @@ export default function Record() {
     const recordedPedalRef = useRef([]);
     const recordingStartRef = useRef(0);
 
-
     useEffect(() => {
-        audioRef.current.pause();
-        setIsPlaying(false);
-
         const initMIDI = async () => {
             if (!navigator.requestMIDIAccess) {
                 alert("⚠️ Your browser does not support Web MIDI.");
@@ -32,10 +28,16 @@ export default function Record() {
             }
 
             try {
-                const midiAccess = await navigator.requestMIDIAccess();
+                const midiAccess = await navigator.requestMIDIAccess({ sysex: false });
                 midiAccessRef.current = midiAccess;
+
+                // Optional: listen for device changes
+                midiAccess.onstatechange = (e) => {
+                    console.log("🔄 MIDI device state changed:", e.port.name, e.port.state);
+                };
             } catch (err) {
-                alert("⚠️ MIDI Access was denied by the user or blocked.");
+                console.error("⚠️ MIDI access error:", err);
+                alert("⚠️ MIDI Access was denied or blocked.");
             }
         };
 
@@ -43,26 +45,34 @@ export default function Record() {
     }, []);
 
 
+
     const startRecording = async () => {
         setRecordingNotes(null);
-        if (
-            !midiAccessRef.current ||
-            midiAccessRef.current.inputs.size === 0
-        ) {
+
+        const midiAccess = midiAccessRef.current;
+        if (!midiAccess || midiAccess.inputs.size === 0) {
             return alert("⚠️ No MIDI device connected. Please connect a keyboard and try again.");
         }
 
-        await Tone.start();
+        try {
+            await Tone.start(); // Needed for browser audio context
+        } catch (err) {
+            console.error("⚠️ Tone.js could not start:", err);
+            return alert("⚠️ Audio could not start. Please interact with the page first.");
+        }
+
         recordedNotesRef.current = [];
         recordedPedalRef.current = [];
         activeNotesRef.current = new Map();
         recordingStartRef.current = performance.now() / 1000;
         setRecording(true);
 
-        for (const input of midiAccessRef.current.inputs.values()) {
+        for (const input of midiAccess.inputs.values()) {
             input.onmidimessage = handleMIDIMessage;
         }
     };
+
+
 
     const stopRecording = () => {
         setRecording(false);

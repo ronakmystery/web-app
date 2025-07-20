@@ -11,12 +11,13 @@ import Keys from "./components/Keys";
 import Notes from "./components/Notes"
 import RecordingNotes from "./components/RecordingNotes";
 import RecordingKeys from "./components/RecordingKeys";
+import Settings from "./components/Settings"
 
 
 export default function Piano() {
 
 
-    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid, recordingTime, setIsPlaying, playback, recordingNotes, playpause, currentTime } = usePiano()
+    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid, recordingTime, setIsPlaying, playback, recordingNotes, playpause, currentTime, recording, isPlayingRecording, setIsPlayingRecording, showSettings } = usePiano()
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
@@ -90,6 +91,7 @@ export default function Piano() {
         >
 
             <div id="background"></div>
+
             {panelState ? (
                 <Panel setPanelState={setPanelState}
                     setCanvasWidth={setCanvasWidth}
@@ -108,7 +110,9 @@ export default function Piano() {
                     style={{
                         display: "inline-block",
                     }}
-                    className={isPlaying ? 'playing' : ''}
+                    className={`${isPlaying ? 'playing-glow' : ''}
+                    ${isPlayingRecording ? 'playing-glow' : ''}
+                    ${recording ? 'recording-glow' : ''}`}
 
                 >
 
@@ -132,12 +136,12 @@ export default function Piano() {
                         e.stopPropagation();
                         if (!recordingNotes) return;
 
-                        if (isPlaying) {
+                        if (isPlayingRecording) {
                             Tone.getTransport().pause();
+                            setIsPlayingRecording(false);
                         } else {
                             playback(recordingNotes, recordingTime);
                         }
-                        setIsPlaying(!isPlaying);
                     }}
                 >
                     <RecordingKeys width={canvasWidth} />
@@ -157,6 +161,7 @@ export default function Piano() {
 
 
 
+            {showSettings && <Settings />}
 
 
 

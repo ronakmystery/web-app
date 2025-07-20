@@ -18,33 +18,37 @@
         color: white;
     }
 
-    #controls {
+    #right-side-panel {
         width: 60px;
-        flex-shrink: 0;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        padding: 10px;
         box-shadow: var(--shadow);
         position: absolute;
         right: 0;
         top: 0;
         bottom: 0;
 
-        button {
-            font-size: 10px;
-        }
-
-        #close-panel {
+        #logo {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 40px;
+            width: 40px;
+            margin: 10px;
             box-sizing: border-box;
             border-radius: 50%;
-            width: 40px;
             transition: .3s;
-            ;
+            box-shadow: var(--shadow);
         }
+
+
+        #settings-button {
+            position: absolute;
+            bottom: 5px;
+            right: 0;
+            font-size: 15px;
+        }
+
+
+
 
     }
 
@@ -93,15 +97,15 @@
                 box-shadow: var(--shadow);
                 overflow: scroll;
                 box-sizing: border-box;
-                padding-right: 10px;
+                padding-right: 20px;
 
                 .composer {
                     display: inline-block;
                     transition: .3s;
                     cursor: pointer;
-                    height: 80px;
+                    height: 60px;
                     width: 50px;
-                    margin: 10px;
+                    margin: 20px;
                     margin-right: 0px;
                     box-shadow: var(--shadow);
                     overflow: hidden;
@@ -171,6 +175,7 @@
 
 
     }
+
 
 
 

@@ -33,6 +33,8 @@ export function PianoProvider({ children }) {
 
     const [pianoHeight, setPianoHeight] = useState(60);
     const [scrollSpeed, setScrollSpeed] = useState(40);
+    const [offset, setoffset] = useState(0);
+
 
     //load collection
     useEffect(() => {
@@ -109,10 +111,12 @@ export function PianoProvider({ children }) {
         if (!raw) return;
 
         try {
-            const { pianoHeight, scrollSpeed } = JSON.parse(raw);
+            const { pianoHeight, scrollSpeed, offset } = JSON.parse(raw);
 
             if (pianoHeight !== undefined) setPianoHeight(pianoHeight);
             if (scrollSpeed !== undefined) setScrollSpeed(scrollSpeed);
+            if (offset !== undefined) setoffset(offset);
+
 
         } catch {
             console.warn("⚠️ Invalid localStorage settings");
@@ -125,9 +129,10 @@ export function PianoProvider({ children }) {
         const settings = {
             pianoHeight,
             scrollSpeed,
+            offset,
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    }, [pianoHeight, scrollSpeed, selectedMidiPath, selectedComposer]);
+    }, [pianoHeight, scrollSpeed, offset]);
 
     const [userid, setUserid] = useState("");
     const [email, setEmail] = useState("");
@@ -175,6 +180,7 @@ export function PianoProvider({ children }) {
 
     const partRef = useRef(null);
     const rafRef = useRef(null); // Track animation frame
+    const [isPlayingRecording, setIsPlayingRecording] = useState(false);
     const playback = async ({ notes, pedal }, startOffset = 0) => {
         cancelAnimationFrame(rafRef.current); // cancel any old end check
 
@@ -249,7 +255,7 @@ export function PianoProvider({ children }) {
                 heldByPedal.clear();
                 currentlyHeldKeys.clear();
 
-                setIsPlaying(false);
+                setIsPlayingRecording(false);
                 setRecordingTime(0);
                 partRef.current?.dispose();
                 partRef.current = null;
@@ -259,7 +265,7 @@ export function PianoProvider({ children }) {
         };
 
         Tone.getTransport().start();
-        setIsPlaying(true);
+        setIsPlayingRecording(true);
         checkEnd();
     };
 
@@ -296,23 +302,6 @@ export function PianoProvider({ children }) {
 
     const [recording, setRecording] = useState(false);
 
-
-    useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
-            audioRef.current.src = "";
-            audioRef.current.load();
-
-            setIsPlaying(false);
-            setNotes([]);
-            setSelectedMidiPath(null);
-            setSelectedRecording(null);
-            setRecordingNotes(null);
-            resetPlayback();
-
-        }
-    }, [layer]);
 
     const fileRef = useRef(null);
     const handleUpload = async (e) => {
@@ -383,6 +372,17 @@ export function PianoProvider({ children }) {
     const [retro, setRetro] = useState(false);
 
 
+
+    const [showSettings, setShowSettings] = useState(false);
+
+    const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
+
+    useEffect(() => {
+        const update = () => setIsPortrait(window.innerHeight > window.innerWidth);
+        window.addEventListener("resize", update);
+        return () => window.removeEventListener("resize", update);
+    }, []);
+
     return (
         <PianoContext.Provider value={{
             notes, setNotes,
@@ -414,7 +414,14 @@ export function PianoProvider({ children }) {
 
             recording, setRecording,
 
-            uploading, setUploading, handleUpload, fileRef, retro, setRetro, reverse, setReverse, fetchFiles
+            uploading, setUploading, handleUpload, fileRef, retro, setRetro, reverse, setReverse, fetchFiles,
+
+            offset, setoffset,
+            isPlayingRecording, setIsPlayingRecording,
+
+            setShowSettings, showSettings,
+
+            isPortrait, setIsPortrait
         }}>
             {children}
         </PianoContext.Provider>
