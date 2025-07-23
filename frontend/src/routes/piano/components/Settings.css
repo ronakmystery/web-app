@@ -24,6 +24,7 @@
 
     #controls {
       margin: 10px;
+      text-align: center;
 
       div {
         margin: 10px;
@@ -39,7 +40,7 @@
       position: absolute;
       bottom: 0;
       right: 0;
-      margin: 20px;
+      margin: 15px;
       font-size: 20px;
     }
   }
