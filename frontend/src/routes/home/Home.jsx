@@ -8,19 +8,19 @@ export default function Home() {
             id="home">
 
             <div id="name">Ronak Mistry</div>
-            <div>Software Engineer and Classical Pianist</div>
+            <div id="title">Software Engineer and Classical Pianist</div>
 
             <a href="https://www.linkedin.com/in/ronakmystery/" target="_blank" className='app-link'>
-                <button>LinkedIn</button>
+                <button>💼 LinkedIn</button>
             </a>
 
             <a href="https://www.youtube.com/@ronakmystery" target='_blank' className='app-link'>
-                <button>YouTube</button>
+                <button>▶️ YouTube</button>
             </a>
 
             <a href="mailto:ronakmystery@gmail.com" className="app-link"
                 target='_blank' >
-                <button>Email</button>
+                <button> ✉️ Email</button>
             </a>
 
 
@@ -28,7 +28,7 @@ export default function Home() {
             <div>Projects<br />
 
                 <Link to="/piano" className='app-link'>
-                    <button>Piano</button>
+                    <button>🎹 Piano</button>
                 </Link>
 
             </div>

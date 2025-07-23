@@ -26,7 +26,6 @@ export default function Settings() {
 
 
             {userid && <div>
-                <div id="username">⭐ {email}</div>
 
                 <button
                     id="logout-button"
@@ -38,7 +37,7 @@ export default function Settings() {
                         }
                     }}
                 >
-                    🔒 LOGOUT
+                    ⭐ {email}
                 </button>
 
 
@@ -46,7 +45,7 @@ export default function Settings() {
             }
 
             <div id="controls">
-                🎚️ Autoscroll Offset
+                🔄 Autoscroll Offset
 
                 <div>
                     <button onClick={() => setoffset(offset - 10)}>➖</button>

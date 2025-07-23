@@ -39,7 +39,7 @@ export default function Login() {
         { icon: "📥", text: "Download the processed MIDIs and MP3s" },
         { icon: "❤️", text: "Upload your recordings to share them with the community" },
         { icon: "🌍", text: "Explore community recordings" },
-        { icon: "🏆", text: "Monthly rankings for pros and recordings with the most likes" },
+        { icon: "🏆", text: "Monthly rankings for most likes" },
     ];
 
     return (
