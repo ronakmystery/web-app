@@ -108,8 +108,9 @@
                     cursor: pointer;
                     height: 70px;
                     width: 50px;
-                    margin: 15px;
+                    margin: 10px;
                     margin-right: 0px;
+                    margin-left: 20px;
                     box-shadow: var(--shadow);
                     overflow: hidden;
                     position: relative;

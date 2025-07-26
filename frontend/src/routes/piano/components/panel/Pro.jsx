@@ -126,18 +126,24 @@ export default function Pro() {
 
                                     <label>
                                         <input
+                                            id="retro-checkbox"
                                             type="checkbox"
                                             checked={retro}
                                             onChange={(e) => setRetro(e.target.checked)}
-                                        />🎮 Use a retro soundfont
+                                        />
+                                        <span>🎮</span>
+                                        Use a retro soundfont
                                     </label>
 
                                     <label>
                                         <input
+                                            id="reverse-checkbox"
                                             type="checkbox"
                                             checked={reverse}
                                             onChange={(e) => setReverse(e.target.checked)}
-                                        />🔁 Reverse the notes
+                                        />
+                                        <span>🔁</span>
+                                        Reverse the notes
                                     </label>
                                 </div>
 
