@@ -27,7 +27,7 @@ const Samples = () => (
 export default function Panel({ setPanelState, setCanvasWidth }) {
 
 
-    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording, userid, isPlayingRecording, setShowSettings, showSettings, isPortrait, setIsPortrait } = usePiano()
+    const { setPianoHeight, setScrollSpeed, isPlaying, setNotes, audioRef, setSelectedMidiPath, layer, setLayer, recording, userid, isPlayingRecording, setShowSettings, showSettings, isPortrait, setIsPortrait, midiKeyboard } = usePiano()
 
     const layers = {
         "samples": <Samples />,
@@ -106,7 +106,8 @@ export default function Panel({ setPanelState, setCanvasWidth }) {
                         setPanelState(false);
                     }}
                     id="logo"
-                    className={`${isPlaying || isPlayingRecording ? 'playing-glow' : ''} ${recording ? 'recording-glow' : ''}`}
+                    className={`${isPlaying || isPlayingRecording ? 'playing-glow' : ''} ${recording ? 'recording-glow' : ''}
+                    `}
 
                     src="logo.png"
                     style={{

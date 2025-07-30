@@ -9,7 +9,7 @@ export default function Record() {
         recordingNotes, setRecordingNotes,
         audioRef, setRecordingTime, setIsPlaying, pianoSounds, playback, rafRef, partRef, resetPlayback,
         userid, fetchRecordings, selectedRecording, setSelectedRecording,
-        recording, setRecording, recordings, setRecordings
+        recording, setRecording, recordings, setRecordings, midiKeyboard, setMidiKeyboard
     } = usePiano();
 
     const [savedRecordings, setSavedRecordings] = useState([]);
@@ -31,9 +31,21 @@ export default function Record() {
                 const midiAccess = await navigator.requestMIDIAccess({ sysex: false });
                 midiAccessRef.current = midiAccess;
 
+                // ✅ Check current state on init
+                const hasInputs = Array.from(midiAccess.inputs.values()).some(
+                    (input) => input.state === "connected"
+                );
+                setMidiKeyboard(hasInputs);
+
                 // Optional: listen for device changes
                 midiAccess.onstatechange = (e) => {
-                    console.log("🔄 MIDI device state changed:", e.port.name, e.port.state);
+                    if (e.port.type === "input") {
+                        if (e.port.state === "connected") {
+                            setMidiKeyboard(true);
+                        } else if (e.port.state === "disconnected") {
+                            setMidiKeyboard(false);
+                        }
+                    }
                 };
             } catch (err) {
                 console.error("⚠️ MIDI access error:", err);
@@ -231,14 +243,17 @@ export default function Record() {
 
     return (
         <div id="record">
+            {
+                midiKeyboard ? <div id="recording-buttons">    {recording ? (
+                    <button onClick={stopRecording}>🛑 STOP</button>
+                ) : (
+                    <button onClick={startRecording} disabled={recording}>
+                        ⏺️ RECORD
+                    </button>
+                )}</div> : <div className="no-midi-keyboard">⚠️ No MIDI keyboard connected</div>
+            }
 
-            <div id="recording-buttons">    {recording ? (
-                <button onClick={stopRecording}>🛑 STOP</button>
-            ) : (
-                <button onClick={startRecording} disabled={recording}>
-                    ⏺️ RECORD
-                </button>
-            )}</div>
+
 
 
             <div id="saved-recordings">

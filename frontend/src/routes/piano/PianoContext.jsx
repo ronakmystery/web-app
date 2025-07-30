@@ -383,6 +383,8 @@ export function PianoProvider({ children }) {
         return () => window.removeEventListener("resize", update);
     }, []);
 
+    const [midiKeyboard, setMidiKeyboard] = useState(null);
+
     return (
         <PianoContext.Provider value={{
             notes, setNotes,
@@ -421,7 +423,9 @@ export function PianoProvider({ children }) {
 
             setShowSettings, showSettings,
 
-            isPortrait, setIsPortrait
+            isPortrait, setIsPortrait,
+
+            midiKeyboard, setMidiKeyboard
         }}>
             {children}
         </PianoContext.Provider>

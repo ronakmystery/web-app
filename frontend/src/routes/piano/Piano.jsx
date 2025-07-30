@@ -14,10 +14,11 @@ import RecordingKeys from "./components/RecordingKeys";
 import Settings from "./components/Settings"
 
 
+
 export default function Piano() {
 
 
-    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid, recordingTime, setIsPlaying, playback, recordingNotes, playpause, currentTime, recording, isPlayingRecording, setIsPlayingRecording, showSettings } = usePiano()
+    const { audioRef, selectedMidiPath, isPlaying, layer, setEmail, setUserid, recordingTime, setIsPlaying, playback, recordingNotes, playpause, currentTime, recording, isPlayingRecording, setIsPlayingRecording, showSettings, midiKeyboard } = usePiano()
 
 
     const [canvasWidth, setCanvasWidth] = useState(0);
@@ -112,7 +113,8 @@ export default function Piano() {
                     }}
                     className={`${isPlaying ? 'playing-glow' : ''}
                     ${isPlayingRecording ? 'playing-glow' : ''}
-                    ${recording ? 'recording-glow' : ''}`}
+                    ${recording ? 'recording-glow' : ''}
+                    `}
 
                 >
 

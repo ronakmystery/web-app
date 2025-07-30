@@ -25,7 +25,7 @@ export default function Home() {
 
 
 
-            <div>Projects<br />
+            <div id="projects">Projects<br />
 
                 <Link to="/piano" className='app-link'>
                     <button>🎹 Piano</button>

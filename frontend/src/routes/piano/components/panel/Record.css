@@ -17,8 +17,18 @@
 
     }
 
+    .no-midi-keyboard {
+        text-align: center;
+        color: var(--text-color);
+        height: 30px;
+        font-size: 10px;
+        margin: 10px;
+        box-sizing: border-box;
+    }
+
     #saved-recordings {
-        height: calc(100% - 50px);
+        padding-bottom: 20px;
+        height: calc(100% - 60px);
         overflow: scroll;
         box-shadow: var(--inset-shadow);
         text-align: right;
@@ -31,6 +41,8 @@
             margin: 10px;
             border-radius: 5px;
             box-shadow: var(--shadow);
+            background: rgba(0, 0, 0, .3);
+            ;
 
             .recording-label {
                 text-align: left;

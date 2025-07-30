@@ -10,7 +10,7 @@
     }
 
     #title {
-        font-size: 16px;
+        font-size: 15px;
         margin: 10px 20px;
     }
 
@@ -20,6 +20,11 @@
         font-size: 12px;
         margin: 10px;
     }
+
+    #projects {
+        margin: 10px 20px;
+    }
+
 
     #qr-code {
         position: fixed;
