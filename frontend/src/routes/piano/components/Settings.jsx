@@ -48,9 +48,9 @@ export default function Settings() {
                 🔄 Autoscroll Offset
 
                 <div>
-                    <button onClick={() => setoffset(offset - 10)}>➖</button>
+                    <button onClick={() => setoffset(offset - 5)}>➖</button>
                     <button onClick={() => setoffset(0)}>{offset}</button>
-                    <button onClick={() => setoffset(offset + 10)}>➕</button>
+                    <button onClick={() => setoffset(offset + 5)}>➕</button>
 
 
                 </div>

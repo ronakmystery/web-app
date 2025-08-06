@@ -40,7 +40,7 @@
     #close-settings-button {
       cursor: pointer;
       position: absolute;
-      bottom: 0;
+      top: 0;
       right: 0;
       margin: 15px;
       font-size: 20px;

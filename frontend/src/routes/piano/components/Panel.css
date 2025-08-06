@@ -29,10 +29,11 @@
         #logo {
             position: absolute;
             top: 0;
+            bottom: 0;
             right: 0;
             height: 40px;
             width: 40px;
-            margin: 10px;
+            margin: auto 10px;
             box-sizing: border-box;
             border-radius: 50%;
             transition: .3s;
@@ -42,10 +43,9 @@
 
         #settings-button {
             position: absolute;
-            bottom: 10px;
+            top: 5px;
             right: 0;
             font-size: 15px;
-            margin: auto;
             left: 0;
             width: fit-content;
         }
