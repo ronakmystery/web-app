@@ -8,7 +8,6 @@ export default function Home() {
             id="home">
 
             <div id="name">Ronak Mistry</div>
-            <div id="title">Software Engineer and Classical Pianist</div>
 
             <a href="https://www.linkedin.com/in/ronakmystery/" target="_blank" className='app-link'>
                 <button>💼 LinkedIn</button>
@@ -25,11 +24,24 @@ export default function Home() {
 
 
 
+
+
+
             <div id="projects">Projects<br />
 
+
+
+                <a href="https://docs.google.com/document/d/1G9MBPFnRx0pElZVMMPjOrEdZZptabEYYqhq7d-aDQvM/edit?usp=sharing" target='_blank' className='app-link'>
+                    <button>📄 Piano Research</button>
+                </a>
+
                 <Link to="/piano" className='app-link'>
-                    <button>🎹 Piano</button>
+                    <button>🎹 Piano App</button>
                 </Link>
+
+                <a href="https://www.figma.com/board/J3vrG1tmGwh1iQtfzRRc1P/robot?node-id=0-1&t=GCfOxQNGabXSu1yf-1" target='_blank' className='app-link'>
+                    <button>🤖 Robot dog</button>
+                </a>
 
             </div>
 
